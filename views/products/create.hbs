@@ -1,0 +1,13 @@
+{{#extends 'base'}}
+{{#block 'content'}}
+<div class="container mt-2">
+    <h4>add a new figure</h4>
+    <form method="POST">
+        <div class="row">
+        {{{figureForm}}}
+        </div>
+        <input type="submit" value="Create new product" class="btn btn-primary mt-2"/>
+    </form>
+</div>
+{{/block}}
+{{/extends}}
