@@ -21,6 +21,9 @@ app.get('/', function(req,res){
     res.render('index')
 })
 
+const productRoutes = require('./routes/products');
+app.use('/products', productRoutes)
+
 app.listen(3000, function(){
     console.log('server started')
 })

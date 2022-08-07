@@ -1,0 +1,39 @@
+{{#extends 'base'}}
+{{#block 'content'}}
+<h4>product listings:</h4>
+<table class="table table-bordered border-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Cost ($)</th>
+            <th>Height (mm)</th>
+            <th>Lauched in market?</th>
+            <th>Release date</th>
+            <th>Quantity</th>
+            <th>Listing date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each figures}}
+        <tr>
+            <td>{{this.id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.cost}}</td>
+            <td>{{this.height}}</td>
+            <td>
+                {{#if this.launch_status}}
+                yes
+                {{else}}
+                no
+                {{/if}}
+            </td>
+            <td>{{this.release_date}}</td>
+            <td>{{this.quantity}}</td>
+            <td>{{this.listing_date}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/block}}
+{{/extends}}
