@@ -7,7 +7,7 @@ const { Figure } = require('../models')
 router.get('/', async function (req, res) {
     let figures = await Figure.collection().fetch();
     figures = figures.toJSON();
-    for (let each of figures){
+    for (let each of figures) {
         each.release_date = moment(each.release_date).format('L')
         each.listing_date = moment(each.listing_date).format('L, LTS')
     }
@@ -16,30 +16,75 @@ router.get('/', async function (req, res) {
     });
 })
 
-router.get('/create', async function(req,res){
+router.get('/create', async function (req, res) {
     const figureForm = createFigureForm().toHTML(bootstrapField);
     res.render('products/create', {
         figureForm
     })
 })
 
-router.post('/create', async function(req,res){
+router.post('/create', async function (req, res) {
     const figureForm = createFigureForm();
     figureForm.handle(req, {
-        success: async function(form){
+        success: async function (form) {
             const figure = new Figure();
             figure.set(form.data);
             figure.set('listing_date', moment().format());
             await figure.save();
             res.redirect('/products')
         },
-        error: async function(form){
+        error: async function (form) {
             res.render('products/create', {
                 figureForm: form.toHTML(bootstrapField)
             })
         }
     })
 
+})
+
+router.get('/:figure_id/update', async function (req, res) {
+    const figureID = req.params.figure_id;
+    let figure = await Figure.where({
+        id: figureID
+    }).fetch({
+        require: true
+    })
+
+    const figureForm = createFigureForm();
+    figureForm.fields.name.value = figure.get('name');
+    figureForm.fields.cost.value = figure.get('cost');
+    figureForm.fields.height.value = figure.get('height');
+    figureForm.fields.launch_status.value = figure.get('launch_status');
+    figureForm.fields.release_date.value = moment(figure.get('release_date')).format('YYYY-MM-DD');
+    figureForm.fields.quantity.value = figure.get('quantity');
+
+    res.render('products/update', {
+        form: figureForm.toHTML(bootstrapField),
+        figure: figure.toJSON()
+    })
+})
+
+router.post('/:figure_id/update', async function (req, res) {
+    let figureID = req.params.figure_id;
+    let figure = await Figure.where({
+        id: figureID
+    }).fetch({
+        require: true
+    })
+    const figureForm = createFigureForm();
+    figureForm.handle(req, {
+        success: async function(form){
+            figure.set(form.data);
+            figure.set('listing_date', moment().format('L', 'LTS'));
+            await figure.save();
+            res.redirect('/products');
+        },
+        error: async function(form){
+            res.render('products/update', {
+                form: form.toHTML(bootstrapField)
+            })
+        }
+    })
 })
 
 module.exports = router;

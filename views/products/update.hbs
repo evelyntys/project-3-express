@@ -1,0 +1,11 @@
+{{#extends 'base'}}
+{{#block 'content'}}
+<div class="container mt-2">
+    <h4>Updating {{this.figure.name}}</h4>
+<form method="POST">
+    {{{form}}}
+    <input type="submit" value="Update product" class="btn btn-primary mt-2"/>
+</form>
+</div>
+{{/block}}
+{{/extends}}
