@@ -87,4 +87,19 @@ router.post('/:figure_id/update', async function (req, res) {
     })
 })
 
+// router.get('/:figure_id/delete', async function(req,res){
+    
+// })
+
+router.post('/:figure_id/delete', async function(req,res){
+    let figureID = req.params.figure_id;
+    let figure = await Figure.where({
+        id: figureID
+    }).fetch({
+        require: true
+    })
+    await figure.destroy();
+    res.redirect('/products')
+})
+
 module.exports = router;

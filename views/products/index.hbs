@@ -12,6 +12,7 @@
             <th>Release date</th>
             <th>Quantity</th>
             <th>Listing date</th>
+            <th>Controls</th>
         </tr>
     </thead>
     <tbody>
@@ -31,9 +32,47 @@
             <td>{{this.release_date}}</td>
             <td>{{this.quantity}}</td>
             <td>{{this.listing_date}}</td>
+            <td>
+                <a href="/products/{{this.id}}/update" class="btn btn-primary my-1">update</a>
+                <a href="/products/{{this.id}}/delete" class="btn btn-danger my-1 delete-btn" data-figure-id="{{this.id}}"
+                    data-figure-name="{{this.name}}">delete</a>
+            </td>
         </tr>
         {{/each}}
     </tbody>
 </table>
+{{/block}}
+
+{{#block 'js'}}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    let deleteBtns = document.querySelectorAll('.delete-btn');
+    for (let each of deleteBtns) {
+        each.addEventListener('click', async function (e) {
+            e.preventDefault();
+            const result = await Swal.fire({
+                title: `Delete listing for ${e.target.dataset.figureName}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirm delete'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/products/${e.target.dataset.figureId}/delete`;
+                    document.querySelector('body').appendChild(form);
+                    form.submit();
+                    Swal.fire(
+                        'Deleted!',
+                        'Listing successfully deleted',
+                        'success'
+                    )
+                }
+            })
+        })
+    }
+</script>
 {{/block}}
 {{/extends}}
