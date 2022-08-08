@@ -8,10 +8,11 @@
             <th>Name</th>
             <th>Cost ($)</th>
             <th>Height (mm)</th>
+            <th>Figure Type</th>
             <th>Lauched in market?</th>
             <th>Release date</th>
             <th>Quantity</th>
-            <th>Listing date</th>
+            <th>Listing date (last updated)</th>
             <th>Controls</th>
         </tr>
     </thead>
@@ -22,6 +23,7 @@
             <td>{{this.name}}</td>
             <td>{{this.cost}}</td>
             <td>{{this.height}}</td>
+            <td>{{this.figure_type.figure_type}}</td>
             <td>
                 {{#if this.launch_status}}
                 yes

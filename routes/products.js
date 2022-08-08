@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 const moment = require('moment');
 const { createFigureForm, bootstrapField } = require('../forms');
-const { Figure } = require('../models')
+const { Figure, FigureType } = require('../models')
 
 router.get('/', async function (req, res) {
-    let figures = await Figure.collection().fetch();
+    let figures = await Figure.collection().fetch({
+        withRelated: ['figure_type']
+    });
     figures = figures.toJSON();
     for (let each of figures) {
         each.release_date = moment(each.release_date).format('L')
@@ -17,14 +19,20 @@ router.get('/', async function (req, res) {
 })
 
 router.get('/create', async function (req, res) {
-    const figureForm = createFigureForm().toHTML(bootstrapField);
+    let allFigureTypes = await FigureType.fetchAll().map(figureType => {
+        return [figureType.get('id'), figureType.get('figure_type')]
+    });
+    const figureForm = createFigureForm(allFigureTypes).toHTML(bootstrapField);
     res.render('products/create', {
         figureForm
     })
 })
 
 router.post('/create', async function (req, res) {
-    const figureForm = createFigureForm();
+    let allFigureTypes = await FigureType.fetchAll().map(figureType => {
+        return [figureType.get('id'), figureType.get('figure_type')]
+    });
+    const figureForm = createFigureForm(allFigureTypes);
     figureForm.handle(req, {
         success: async function (form) {
             const figure = new Figure();
@@ -49,14 +57,18 @@ router.get('/:figure_id/update', async function (req, res) {
     }).fetch({
         require: true
     })
-
-    const figureForm = createFigureForm();
+    let allFigureTypes = await FigureType.fetchAll().map(figureType => {
+        return [figureType.get('id'), figureType.get('figure_type')]
+    });
+    const figureForm = createFigureForm(allFigureTypes);
     figureForm.fields.name.value = figure.get('name');
     figureForm.fields.cost.value = figure.get('cost');
     figureForm.fields.height.value = figure.get('height');
     figureForm.fields.launch_status.value = figure.get('launch_status');
     figureForm.fields.release_date.value = moment(figure.get('release_date')).format('YYYY-MM-DD');
     figureForm.fields.quantity.value = figure.get('quantity');
+    figureForm.fields.figure_type_id.value = figure.get('figure_type_id');
+
 
     res.render('products/update', {
         form: figureForm.toHTML(bootstrapField),
@@ -70,16 +82,19 @@ router.post('/:figure_id/update', async function (req, res) {
         id: figureID
     }).fetch({
         require: true
-    })
-    const figureForm = createFigureForm();
+    });
+    let allFigureTypes = await FigureType.fetchAll().map(figureType => {
+        return [figureType.get('id'), figureType.get('figure_type')]
+    });
+    const figureForm = createFigureForm(allFigureTypes);
     figureForm.handle(req, {
-        success: async function(form){
+        success: async function (form) {
             figure.set(form.data);
-            figure.set('listing_date', moment().format('L', 'LTS'));
+            figure.set('listing_date', moment().format());
             await figure.save();
             res.redirect('/products');
         },
-        error: async function(form){
+        error: async function (form) {
             res.render('products/update', {
                 form: form.toHTML(bootstrapField)
             })
@@ -88,10 +103,10 @@ router.post('/:figure_id/update', async function (req, res) {
 })
 
 // router.get('/:figure_id/delete', async function(req,res){
-    
+
 // })
 
-router.post('/:figure_id/delete', async function(req,res){
+router.post('/:figure_id/delete', async function (req, res) {
     let figureID = req.params.figure_id;
     let figure = await Figure.where({
         id: figureID

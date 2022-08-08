@@ -23,7 +23,7 @@ var bootstrapField = function (name, object) {
     return '<div class="form-group">' + label + widget + error + '</div>';
 };
 
-const createFigureForm = () => {
+const createFigureForm = (figureType) => {
     return forms.create({
         name: fields.string({
             required: true,
@@ -58,6 +58,13 @@ const createFigureForm = () => {
             required: true,
             errorAfterField: true,
             validators: [validators.integer()]
+        }),
+        figure_type_id: fields.string({
+            label: 'Type of figure',
+            required: true,
+            errorAfterField: true,
+            widget: widgets.select(),
+            choices: figureType
         })
     })
 }

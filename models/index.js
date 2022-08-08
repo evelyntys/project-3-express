@@ -1,7 +1,17 @@
 const bookshelf = require('../bookshelf');
 
 const Figure = bookshelf.model('Figure', {
-    tableName: 'figures'
+    tableName: 'figures',
+    figure_type() {
+        return this.belongsTo('FigureType')
+    }
 })
 
-module.exports = { Figure };
+const FigureType = bookshelf.model('FigureType', {
+    tableName: 'figure_types',
+    figures() {
+        return this.hasMany('Figure')
+    }
+})
+
+module.exports = { Figure, FigureType };
