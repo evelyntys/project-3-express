@@ -33,7 +33,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  return null;
+  return db.dropColumn('figure_type_id')
 };
 
 exports._meta = {
