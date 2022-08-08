@@ -21,6 +21,8 @@ exports.up = function(db) {
   manufacturersToInsert.push(db.insert('manufacturers', ['manufacturer_name'], ['good smile company']));
   manufacturersToInsert.push(db.insert('manufacturers', ['manufacturer_name'], ['bandai']));
   manufacturersToInsert.push(db.insert('manufacturers', ['manufacturer_name'], ['aniplex']));
+  manufacturersToInsert.push(db.insert('manufacturers', ['manufacturer_name'], ['kotobukiya']));
+  manufacturersToInsert.push(db.insert('manufacturers', ['manufacturer_name'], ['megahouse']));
   for (let each of manufacturersToInsert){
     return each
   }
