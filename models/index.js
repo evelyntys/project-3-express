@@ -4,6 +4,9 @@ const Figure = bookshelf.model('Figure', {
     tableName: 'figures',
     figure_type() {
         return this.belongsTo('FigureType')
+    },
+    series(){
+        return this.belongsTo('Series')
     }
 })
 
@@ -14,4 +17,11 @@ const FigureType = bookshelf.model('FigureType', {
     }
 })
 
-module.exports = { Figure, FigureType };
+const Series = bookshelf.model('Series', {
+    tableName: 'series',
+    series(){
+        return this.hasMany('Figure')
+    }
+})
+
+module.exports = { Figure, FigureType, Series };
