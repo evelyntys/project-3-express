@@ -2,16 +2,26 @@ const express = require('express');
 const router = express.Router();
 const moment = require('moment');
 const { createFigureForm, bootstrapField } = require('../forms');
-const { Figure, FigureType, Series, Collection } = require('../models')
+const { Figure, FigureType, Series, Collection, Manufacturer } = require('../models')
 
 router.get('/', async function (req, res) {
     let figures = await Figure.collection().fetch({
         withRelated: ['figure_type', 'series', 'collection']
     });
     figures = figures.toJSON();
+    console.log(figures);
     for (let each of figures) {
-        each.release_date = moment(each.release_date).format('L')
-        each.listing_date = moment(each.listing_date).format('L, LTS')
+        each.release_date = moment(each.release_date).format('L');
+        each.listing_date = moment(each.listing_date).format('L, LTS');
+        let manufacturer = await Manufacturer.where({
+            id: each.collection.manufacturer_id
+        }).fetch({
+            require: true,
+        })
+        manufacturer = manufacturer.toJSON();
+        each.manufacturer = manufacturer;
+        // each.collection = collection
+        console.log(each)
     }
     res.render('products/index', {
         figures

@@ -31,7 +31,17 @@ const Collection = bookshelf.model('Collection', {
     tableName: 'collections',
     figures(){
         return this.hasMany('Figure')
+    },
+    manufacturer(){
+        return this.belongsTo('Manufacturer')
     }
 });
 
-module.exports = { Figure, FigureType, Series, Collection };
+const Manufacturer = bookshelf.model('Manufacturer', {
+    tableName: 'manufacturers',
+    collections(){
+        return this.hasMany('Collection')
+    }
+})
+
+module.exports = { Figure, FigureType, Series, Collection, Manufacturer };
