@@ -39,16 +39,55 @@ router.get('/create', async function (req, res) {
     let allSeries = await Series.fetchAll().map(series => {
         return [series.get('id'), series.get('series_name')]
     });
+    allSeries = [...allSeries, [0, 'add new']]
     let allCollections = await Collection.fetchAll().map(collection => {
         return [collection.get('id'), collection.get('collection_name')]
     });
     let allGroupings = await Grouping.fetchAll().map(grouping => {
         return [grouping.get('id'), grouping.get('group_name')]
     });
-    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allGroupings).toHTML(bootstrapField);
+    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allGroupings);
+    let series = await Series.fetchAll({
+        withRelated: ['groupings']
+    });
+    for (let each of series) {
+        let associatedGroupings = await each.related('groupings').pluck('id');
+        figureForm.fields.grouping_id.value = associatedGroupings;
+        // each.toJSON()['groupingID'] = associatedGroupings
+        // console.log(each.toJSON().groupingID)
+    }
+    // console.log(series.toJSON())
     res.render('products/create', {
-        figureForm
+        figureForm: figureForm.toHTML(bootstrapField),
+        series: series.toJSON()
     })
+});
+
+router.post('/create/change-series', async function(req,res){
+    console.log(req.body)
+    console.log(req.body.selectedSeries)
+    let series = await Series.where({
+        id: parseInt(req.body.selectedSeries)
+    }).fetch({
+        withRelated: ['groupings']
+    });
+    let allFigureTypes = await FigureType.fetchAll().map(figureType => {
+        return [figureType.get('id'), figureType.get('figure_type')]
+    });
+    let allSeries = await Series.fetchAll().map(series => {
+        return [series.get('id'), series.get('series_name')]
+    });
+    allSeries = [...allSeries, [0, 'add new']]
+    let allCollections = await Collection.fetchAll().map(collection => {
+        return [collection.get('id'), collection.get('collection_name')]
+    });
+    let allGroupings = await Grouping.fetchAll().map(grouping => {
+        return [grouping.get('id'), grouping.get('group_name')]
+    });
+    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allGroupings);
+    let selectedGroupings = await series.related('groupings').pluck('id');
+    figureForm.fields.grouping_id.value = selectedGroupings;
+
 })
 
 router.post('/create', async function (req, res) {
@@ -58,6 +97,7 @@ router.post('/create', async function (req, res) {
     let allSeries = await Series.fetchAll().map(series => {
         return [series.get('id'), series.get('series_name')]
     });
+    allSeries = [...allSeries, [0, 'add new']];
     let allCollections = await Collection.fetchAll().map(collection => {
         return [collection.get('id'), collection.get('collection_name')]
     });
@@ -68,15 +108,30 @@ router.post('/create', async function (req, res) {
     figureForm.handle(req, {
         success: async function (form) {
             const figure = new Figure();
-            let { grouping_id, ...figureData } = form.data;
-            const series = await Series.where({
-                id: figureData.series_id
-            }).fetch({
-                require: true
-            });
+            let { grouping_id, series_id, ...figureData } = form.data;
+            console.log(req.body['new-series']);
+            if (series_id == 0) {
+                const newSeries = new Series();
+                newSeries.set('series_name', req.body['new-series']);
+                await newSeries.save();
+                const addedSeries = await Series.where({
+                    series_name: req.body['new-series']
+                }).fetch({
+                    require: true
+                })
+                series_id = newSeries.toJSON().id
+                console.log(series_id)
+            }
             figure.set(figureData);
+            figure.set('series_id', series_id);
             figure.set('listing_date', moment().format());
             await figure.save();
+            const series = await Series.where({
+                id: series_id
+            }).fetch({
+                require: true,
+                withRelated: ['groupings']
+            });
             if (grouping_id) {
                 await series.groupings().attach(grouping_id.split(','));
             };

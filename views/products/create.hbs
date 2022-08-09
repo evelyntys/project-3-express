@@ -4,10 +4,45 @@
     <h4>add a new figure</h4>
     <form method="POST">
         <div class="row">
-        {{{figureForm}}}
+            {{{figureForm}}}
         </div>
-        <input type="submit" value="Create new product" class="btn btn-primary mt-2"/>
+        <input type="submit" value="Create new product" class="btn btn-primary mt-2" />
     </form>
 </div>
+{{/block}}
+
+{{#block 'js'}}
+<script>
+    let selectedSeries = document.querySelector('#id_series_id');
+    let newSeries = document.createElement('div');
+    newSeries.innerHTML = `
+        <label class="form-label">Series name: <label>
+        <input type="text" name="new-series" class="form-control"/>
+        `
+    let allFields = document.querySelectorAll('.form-group');
+    for (let each of allFields) {
+        if (each.innerHTML.includes('id_series_id')) {
+            each.appendChild(newSeries)
+        }
+    }
+    newSeries.style.display = 'none';
+    window.addEventListener('DOMContentLoaded', function () {
+        if (selectedSeries.value == 0) {
+            newSeries.style.display = 'block';
+        }
+    })
+    selectedSeries.addEventListener('change', function () {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/products/create/change-series';
+        document.querySelector('body').appendChild(form);
+        form.innerHTML = `<div><input type="text" name="selectedSeries" value='${selectedSeries.value}'></div>
+        `
+        form.submit();
+        if (selectedSeries.value == 0) {
+            newSeries.style.display = 'block';
+        }
+    })
+</script>
 {{/block}}
 {{/extends}}
