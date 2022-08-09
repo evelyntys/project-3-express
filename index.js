@@ -4,6 +4,7 @@ const wax = require('wax-on');
 const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
+const { CheckIfAdmin } = require('./middlewares');
 require('dotenv').config();
 
 let app = express();
@@ -29,6 +30,7 @@ app.use(session ({
 app.use(flash());
 
 app.use(function(req,res,next){
+    res.locals.admin = req.session.admin;
     res.locals.success_messages = req.flash('success_messages');
     res.locals.error_messages = req.flash('error_messages');
     next();
@@ -37,7 +39,7 @@ app.use(function(req,res,next){
 const landingRoutes = require('./routes/landing');
 const productRoutes = require('./routes/products');
 app.use('/', landingRoutes);
-app.use('/products', productRoutes);
+app.use('/products', CheckIfAdmin, productRoutes);
 
 app.listen(3000, function(){
     console.log('server started')

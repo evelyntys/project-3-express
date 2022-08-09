@@ -54,4 +54,8 @@ const Grouping = bookshelf.model('Grouping', {
     }
 });
 
-module.exports = { Figure, FigureType, Series, Collection, Manufacturer, Grouping };
+const Admin = bookshelf.model('Admin', {
+    tableName: 'admins'
+})
+
+module.exports = { Figure, FigureType, Series, Collection, Manufacturer, Grouping, Admin };

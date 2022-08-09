@@ -94,4 +94,17 @@ const createFigureForm = (figureType, series, collection, groupings) => {
     })
 }
 
-module.exports = { createFigureForm, bootstrapField }
+const createLoginForm = () => {
+   return forms.create({
+     email: fields.string({
+        required: true,
+        errorAfterField: true
+    }),
+    password: fields.password({
+        required: true,
+        errorAfterField: true
+    })
+})
+}
+
+module.exports = { createFigureForm, bootstrapField, createLoginForm }
