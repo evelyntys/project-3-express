@@ -68,7 +68,7 @@ router.post('/create', async function (req, res) {
     figureForm.handle(req, {
         success: async function (form) {
             const figure = new Figure();
-            let {grouping_id, ...figureData} = form.data;
+            let { grouping_id, ...figureData } = form.data;
             const series = await Series.where({
                 id: figureData.series_id
             }).fetch({
@@ -77,12 +77,14 @@ router.post('/create', async function (req, res) {
             figure.set(figureData);
             figure.set('listing_date', moment().format());
             await figure.save();
-            if (grouping_id){
+            if (grouping_id) {
                 await series.groupings().attach(grouping_id.split(','));
-            }
-            res.redirect('/products')
+            };
+            req.flash('success_messages', `new product ${figureData.name} has been added successfully`);
+            res.redirect('/products');
         },
         error: async function (form) {
+            req.flash('error_messages', 'please check the fields again')
             res.render('products/create', {
                 figureForm: form.toHTML(bootstrapField)
             })
@@ -158,7 +160,7 @@ router.post('/:figure_id/update', async function (req, res) {
     const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allGroupings);
     figureForm.handle(req, {
         success: async function (form) {
-            let {grouping_id, ...figureData} = form.data;
+            let { grouping_id, ...figureData } = form.data;
             figure.set(figureData);
             figure.set('listing_date', moment().format());
             await figure.save();
@@ -168,15 +170,17 @@ router.post('/:figure_id/update', async function (req, res) {
                 require: true,
                 withRelated: ['groupings']
             });
-            console.log(series.toJSON())
+            console.log(series.toJSON());
             let selectedGroupings = grouping_id.split(',').map(id => parseInt(id));
             let existingGroupingIds = await series.related('groupings').pluck('id');
-            let toRemove = existingGroupingIds.filter( id => !selectedGroupings.includes(id));
+            let toRemove = existingGroupingIds.filter(id => !selectedGroupings.includes(id));
             await series.groupings().detach(toRemove);
             await series.groupings().attach(selectedGroupings);
+            req.flash('success_messages', `${figureData.name} has been updated successfully`);
             res.redirect('/products');
         },
         error: async function (form) {
+            req.flash('error_messages', `please check the fields again`)
             res.render('products/update', {
                 form: form.toHTML(bootstrapField)
             })
@@ -184,18 +188,16 @@ router.post('/:figure_id/update', async function (req, res) {
     })
 })
 
-// router.get('/:figure_id/delete', async function(req,res){
-
-// })
-
 router.post('/:figure_id/delete', async function (req, res) {
     let figureID = req.params.figure_id;
     let figure = await Figure.where({
         id: figureID
     }).fetch({
         require: true
-    })
+    });
+    let name = figure.name;
     await figure.destroy();
+    req.flash('success_messages', `product has been deleted successfully`);
     res.redirect('/products')
 })
 
