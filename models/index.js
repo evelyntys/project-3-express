@@ -5,10 +5,10 @@ const Figure = bookshelf.model('Figure', {
     figure_type() {
         return this.belongsTo('FigureType')
     },
-    series(){
+    series() {
         return this.belongsTo('Series')
     },
-    collection(){
+    collection() {
         return this.belongsTo('Collection')
     }
 });
@@ -22,26 +22,36 @@ const FigureType = bookshelf.model('FigureType', {
 
 const Series = bookshelf.model('Series', {
     tableName: 'series',
-    figures(){
+    figures() {
         return this.hasMany('Figure')
+    },
+    groupings(){
+        return this.belongsToMany('Grouping')
     }
 });
 
 const Collection = bookshelf.model('Collection', {
     tableName: 'collections',
-    figures(){
+    figures() {
         return this.hasMany('Figure')
     },
-    manufacturer(){
+    manufacturer() {
         return this.belongsTo('Manufacturer')
     }
 });
 
 const Manufacturer = bookshelf.model('Manufacturer', {
     tableName: 'manufacturers',
-    collections(){
+    collections() {
         return this.hasMany('Collection')
     }
-})
+});
 
-module.exports = { Figure, FigureType, Series, Collection, Manufacturer };
+const Grouping = bookshelf.model('Grouping', {
+    tableName: 'groupings',
+    series() {
+        return this.belongsToMany('Series')
+    }
+});
+
+module.exports = { Figure, FigureType, Series, Collection, Manufacturer, Grouping };

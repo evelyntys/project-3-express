@@ -29,7 +29,12 @@
             <td>{{this.figure_type.figure_type}}</td>
             <td>{{this.collection.collection_name}}</td>
             <td>{{this.manufacturer.manufacturer_name}}</td>
-            <td>{{this.series.series_name}}</td>
+            <td>
+                {{this.series.series_name}}
+                {{#each this.series.groupings}}
+                {{this.group_name}}
+                {{/each}}
+            </td>
             <td>
                 {{#if this.launch_status}}
                 yes
@@ -42,8 +47,8 @@
             <td>{{this.listing_date}}</td>
             <td>
                 <a href="/products/{{this.id}}/update" class="btn btn-primary my-1">update</a>
-                <a href="/products/{{this.id}}/delete" class="btn btn-danger my-1 delete-btn" data-figure-id="{{this.id}}"
-                    data-figure-name="{{this.name}}">delete</a>
+                <a href="/products/{{this.id}}/delete" class="btn btn-danger my-1 delete-btn"
+                    data-figure-id="{{this.id}}" data-figure-name="{{this.name}}">delete</a>
             </td>
         </tr>
         {{/each}}

@@ -6,7 +6,11 @@ const widgets = forms.widgets;
 var bootstrapField = function (name, object) {
     if (!Array.isArray(object.widget.classes)) { object.widget.classes = []; }
 
-    if (object.widget.classes.indexOf('form-control') === -1) {
+    if (object.widget.type == 'multipleCheckbox' || object.widget.type == 'multipleRadio'){
+        object.widget.classes.push('form-check-input');
+    }
+
+    if (object.widget.classes.indexOf('form-control') === -1 && !object.widget.classes.includes('form-check-input')) {
         object.widget.classes.push('form-control');
     }
 
@@ -23,7 +27,7 @@ var bootstrapField = function (name, object) {
     return '<div class="form-group">' + label + widget + error + '</div>';
 };
 
-const createFigureForm = (figureType, series, collection) => {
+const createFigureForm = (figureType, series, collection, groupings) => {
     return forms.create({
         name: fields.string({
             required: true,
@@ -72,6 +76,13 @@ const createFigureForm = (figureType, series, collection) => {
             errorAfterField: true,
             widget: widgets.select(),
             choices: series
+        }),
+        grouping_id: fields.string({
+            label: 'Series grouping',
+            required: true,
+            errorAfterField: true,
+            widget: widgets.multipleCheckbox(),
+            choices: groupings,
         }),
         collection_id: fields.string({
             label: 'Collection',
