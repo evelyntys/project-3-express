@@ -32,7 +32,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  return db.dropColumn('figures', 'series_id');
+  return db.removeColumn('figures', 'series_id');
 };
 
 exports._meta = {
