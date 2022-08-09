@@ -7,21 +7,31 @@ const Figure = bookshelf.model('Figure', {
     },
     series(){
         return this.belongsTo('Series')
+    },
+    collection(){
+        return this.belongsTo('Collection')
     }
-})
+});
 
 const FigureType = bookshelf.model('FigureType', {
     tableName: 'figure_types',
     figures() {
         return this.hasMany('Figure')
     }
-})
+});
 
 const Series = bookshelf.model('Series', {
     tableName: 'series',
-    series(){
+    figures(){
         return this.hasMany('Figure')
     }
-})
+});
 
-module.exports = { Figure, FigureType, Series };
+const Collection = bookshelf.model('Collection', {
+    tableName: 'collections',
+    figures(){
+        return this.hasMany('Figure')
+    }
+});
+
+module.exports = { Figure, FigureType, Series, Collection };
