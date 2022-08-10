@@ -25,8 +25,8 @@ const Series = bookshelf.model('Series', {
     figures() {
         return this.hasMany('Figure')
     },
-    groupings(){
-        return this.belongsToMany('Grouping')
+    mediums(){
+        return this.belongsToMany('Medium')
     }
 });
 
@@ -47,8 +47,8 @@ const Manufacturer = bookshelf.model('Manufacturer', {
     }
 });
 
-const Grouping = bookshelf.model('Grouping', {
-    tableName: 'groupings',
+const Medium = bookshelf.model('Medium', {
+    tableName: 'mediums',
     series() {
         return this.belongsToMany('Series')
     }
@@ -58,4 +58,4 @@ const Admin = bookshelf.model('Admin', {
     tableName: 'admins'
 })
 
-module.exports = { Figure, FigureType, Series, Collection, Manufacturer, Grouping, Admin };
+module.exports = { Figure, FigureType, Series, Collection, Manufacturer, Medium, Admin };

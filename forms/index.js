@@ -32,17 +32,17 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         name: fields.string({
             required: true,
             errorAfterField: true,
-            validators: [validators.minlength(10)]
+            validators: [validators.minlength(5)]
         }),
         cost: fields.number({
             required: true,
             errorAfterField: true,
-            validators: [validators.integer()]
+            validators: [validators.integer(), validators.min(0)]
         }),
         height: fields.number({
             required: true,
             errorAfterField: true,
-            validators: [validators.integer()]
+            validators: [validators.integer(), validators.min(0)]
         }),
         launch_status: fields.boolean({
             required: true,
@@ -77,7 +77,7 @@ const createFigureForm = (figureType, series, collection, groupings) => {
             widget: widgets.select(),
             choices: series
         }),
-        grouping_id: fields.string({
+        medium_id: fields.string({
             label: 'Series grouping',
             required: true,
             errorAfterField: true,
