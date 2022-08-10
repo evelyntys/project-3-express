@@ -74,7 +74,9 @@ router.get('/create', async function (req, res) {
     // console.log(localMedium);
     res.render('products/create', {
         figureForm: figureForm.toHTML(bootstrapField),
-        series: series.toJSON()
+        cloudinaryName: process.env.CLOUDINARY_NAME,
+        cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+        cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
     })
 });
 
@@ -248,12 +250,16 @@ router.get('/:figure_id/update', async function (req, res) {
     figureForm.fields.figure_type_id.value = figure.get('figure_type_id');
     figureForm.fields.series_id.value = figure.get('series_id');
     figureForm.fields.collection_id.value = figure.get('collection_id');
+    figureForm.fields.image_url.value = figure.get('image_url');
     let selectedmediums = await series.related('mediums').pluck('id');
     figureForm.fields.medium_id.value = selectedmediums;
 
     res.render('products/update', {
         form: figureForm.toHTML(bootstrapField),
-        figure: figure.toJSON()
+        figure: figure.toJSON(),
+        cloudinaryName: process.env.CLOUDINARY_NAME,
+        cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+        cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
     })
 })
 

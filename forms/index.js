@@ -90,6 +90,9 @@ const createFigureForm = (figureType, series, collection, groupings) => {
             errorAfterField: true,
             widget: widgets.select(),
             choices: collection
+        }),
+        image_url: fields.string({
+            widget: widgets.hidden()
         })
     })
 }
