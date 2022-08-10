@@ -2,8 +2,9 @@
 {{#block 'content'}}
 <h1>Login</h1>
 <form method="POST">
-{{{form}}}
-<input type="submit" value="login" class="btn btn-primary mt-2"/>
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+    {{{form}}}
+    <input type="submit" value="login" class="btn btn-primary mt-2" />
 </form>
 {{/block}}
 {{/extends}}
