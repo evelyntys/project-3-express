@@ -2,7 +2,7 @@
 {{#block 'content'}}
 <div class="container mt-2">
     <h4>add a new figure</h4>
-    <form method="POST">
+    <form method="POST" action="/products/create">
         <div class="row">
             {{{figureForm}}}
         </div>
@@ -15,32 +15,50 @@
 <script>
     let selectedSeries = document.querySelector('#id_series_id');
     let newSeries = document.createElement('div');
+    let selectedCollection = document.querySelector('#id_collection_id');
+    let newCollection = document.createElement('div');
     newSeries.innerHTML = `
         <label class="form-label">Series name: <label>
         <input type="text" name="new-series" class="form-control"/>
+        `
+    newCollection.innerHTML =
+        `<div> 
+    <label class="form-label">Collection name: <label>
+        <input type="text" name="new-collection" class="form-control"/>
+        </div>
+        <div> 
+    <label class="form-label">Manufacturer name: <label>
+        <input type="text" name="new-manufacturer" class="form-control"/>
+        </div>
         `
     let allFields = document.querySelectorAll('.form-group');
     for (let each of allFields) {
         if (each.innerHTML.includes('id_series_id')) {
             each.appendChild(newSeries)
         }
+        if (each.innerHTML.includes('id_collection_id')) {
+            each.appendChild(newCollection)
+        }
     }
     newSeries.style.display = 'none';
+    newCollection.style.display = 'none';
+
     window.addEventListener('DOMContentLoaded', function () {
         if (selectedSeries.value == 0) {
             newSeries.style.display = 'block';
         }
+        if (selectedCollection.value == 0) {
+            newCollection.style.display = 'block';
+        }
     })
     selectedSeries.addEventListener('change', function () {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/products/create/change-series';
-        document.querySelector('body').appendChild(form);
-        form.innerHTML = `<div><input type="text" name="selectedSeries" value='${selectedSeries.value}'></div>
-        `
-        form.submit();
         if (selectedSeries.value == 0) {
             newSeries.style.display = 'block';
+        }
+    })
+    selectedCollection.addEventListener('change', function () {
+        if (selectedCollection.value == 0) {
+            newCollection.style.display = 'block';
         }
     })
 </script>

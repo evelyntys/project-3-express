@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const moment = require('moment');
 const { createFigureForm, bootstrapField } = require('../forms');
-const { Figure, FigureType, Series, Collection, Manufacturer, Grouping } = require('../models')
+const { Figure, FigureType, Series, Collection, Manufacturer, Medium } = require('../models')
 
 router.get('/', async function (req, res) {
     let figures = await Figure.collection().fetch({
@@ -22,7 +22,7 @@ router.get('/', async function (req, res) {
         let series = await Series.where({
             id: each.series_id
         }).fetch({
-            withRelated: ['groupings']
+            withRelated: ['mediums']
         })
         series = series.toJSON();
         each.series = series;
@@ -39,37 +39,52 @@ router.get('/create', async function (req, res) {
     let allSeries = await Series.fetchAll().map(series => {
         return [series.get('id'), series.get('series_name')]
     });
-    allSeries = [...allSeries, [0, 'add new']]
+    allSeries = [...allSeries, [0, 'add new']];
     let allCollections = await Collection.fetchAll().map(collection => {
         return [collection.get('id'), collection.get('collection_name')]
     });
-    let allGroupings = await Grouping.fetchAll().map(grouping => {
-        return [grouping.get('id'), grouping.get('group_name')]
+    allCollections = [...allCollections, [0, 'add new']];
+    let allMediums = await Medium.fetchAll().map(medium => {
+        return [medium.get('id'), medium.get('media_medium')]
     });
-    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allGroupings);
+    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     let series = await Series.fetchAll({
-        withRelated: ['groupings']
+        withRelated: ['mediums']
     });
+    let seriesID = await series.pluck('id');
+    // console.log(seriesID)
+    let x = 0;
+    let localMedium = [];
     for (let each of series) {
-        let associatedGroupings = await each.related('groupings').pluck('id');
-        figureForm.fields.grouping_id.value = associatedGroupings;
-        // each.toJSON()['groupingID'] = associatedGroupings
-        // console.log(each.toJSON().groupingID)
+        let associatedMediums = await each.related('mediums').pluck('id');
+        // console.log(each.toJSON())
+        if (figureForm.fields.series_id.value == each.toJSON().id) {
+            figureForm.fields.medium_id.value = associatedMediums;
+        }
+        localMedium.push({
+            [seriesID[x]]: associatedMediums
+        });
+        x = x + 1;
+        // each.toJSON()['MediumID'] = associatedMediums
+        // console.log(each.toJSON().MediumID)
     }
+    res.locals.localMedium = localMedium;
+    // console.log(res.locals.localMedium)
     // console.log(series.toJSON())
+    // console.log(localMedium);
     res.render('products/create', {
         figureForm: figureForm.toHTML(bootstrapField),
         series: series.toJSON()
     })
 });
 
-router.post('/create/change-series', async function(req,res){
+router.post('/create/change-series', async function (req, res) {
     console.log(req.body)
     console.log(req.body.selectedSeries)
     let series = await Series.where({
         id: parseInt(req.body.selectedSeries)
     }).fetch({
-        withRelated: ['groupings']
+        withRelated: ['mediums']
     });
     let allFigureTypes = await FigureType.fetchAll().map(figureType => {
         return [figureType.get('id'), figureType.get('figure_type')]
@@ -81,13 +96,26 @@ router.post('/create/change-series', async function(req,res){
     let allCollections = await Collection.fetchAll().map(collection => {
         return [collection.get('id'), collection.get('collection_name')]
     });
-    let allGroupings = await Grouping.fetchAll().map(grouping => {
-        return [grouping.get('id'), grouping.get('group_name')]
+    allCollections = [...allCollections, [0, 'add new']];
+    let allMediums = await Medium.fetchAll().map(Medium => {
+        return [Medium.get('id'), Medium.get('media_medium')]
     });
-    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allGroupings);
-    let selectedGroupings = await series.related('groupings').pluck('id');
-    figureForm.fields.grouping_id.value = selectedGroupings;
-
+    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
+    let selectedmediums = await series.related('mediums').pluck('id');
+    figureForm.fields.series_id.value = parseInt(req.body.selectedSeries)
+    figureForm.fields.medium_id.value = selectedmediums;
+    // figureForm.handle(req, {
+    //     success: async function(form){
+    //         res.render('products/create', {
+    //             figureForm: form.toHTML(bootstrapField)
+    //         })
+    //     },
+    //     error: async function(form){
+    //         res.render('products/create', {
+    //             figureForm: form.toHTML(bootstrapField)
+    //         })
+    //     }
+    // })
 })
 
 router.post('/create', async function (req, res) {
@@ -101,15 +129,15 @@ router.post('/create', async function (req, res) {
     let allCollections = await Collection.fetchAll().map(collection => {
         return [collection.get('id'), collection.get('collection_name')]
     });
-    let allGroupings = await Grouping.fetchAll().map(grouping => {
-        return [grouping.get('id'), grouping.get('group_name')]
+    allCollections = [...allCollections, [0, 'add new']];
+    let allMediums = await Medium.fetchAll().map(Medium => {
+        return [Medium.get('id'), Medium.get('media_medium')]
     });
-    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allGroupings);
+    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     figureForm.handle(req, {
         success: async function (form) {
             const figure = new Figure();
-            let { grouping_id, series_id, ...figureData } = form.data;
-            console.log(req.body['new-series']);
+            let { medium_id, series_id, collection_id, ...figureData } = form.data;
             if (series_id == 0) {
                 const newSeries = new Series();
                 newSeries.set('series_name', req.body['new-series']);
@@ -120,20 +148,56 @@ router.post('/create', async function (req, res) {
                     require: true
                 })
                 series_id = newSeries.toJSON().id
-                console.log(series_id)
+            }
+            if (collection_id == 0) {
+                let manufacturer_id = -1;
+                const checkManufacturer = await Manufacturer.where({
+                    manufacturer_name: req.body['new-manufacturer']
+                }).fetch({
+                    require: false
+                })
+                if (!checkManufacturer) {
+                    const newManufacturer = new Manufacturer();
+                    newManufacturer.set('manufacturer_name', req.body['new-manufacturer']);
+                    await newManufacturer.save();
+                    const addedManufacturer = await Manufacturer.where({
+                        manufacturer_name: req.body['new-manufacturer']
+                    }).fetch({
+                        require: true
+                    });
+                    manufacturer_id = addedManufacturer.toJSON().id;
+                    console.log(manufacturer_id)
+                }
+                else {
+                    manufacturer_id = checkManufacturer.toJSON().id;
+                    console.log(manufacturer_id)
+                }
+                const newCollection = new Collection();
+                newCollection.set('collection_name', req.body['new-collection']);
+                newCollection.set('manufacturer_id', manufacturer_id);
+                await newCollection.save();
+                const addedCollection = await Collection.where({
+                    collection_name: req.body['new-collection']
+                }).fetch({
+                    require: true
+                });
+                console.log(addedCollection)
+                console.log(collection_id);
+                collection_id = addedCollection.toJSON().id;
             }
             figure.set(figureData);
             figure.set('series_id', series_id);
+            figure.set('collection_id', collection_id);
             figure.set('listing_date', moment().format());
             await figure.save();
             const series = await Series.where({
                 id: series_id
             }).fetch({
                 require: true,
-                withRelated: ['groupings']
+                withRelated: ['mediums']
             });
-            if (grouping_id) {
-                await series.groupings().attach(grouping_id.split(','));
+            if (medium_id) {
+                await series.mediums().attach(medium_id.split(','));
             };
             req.flash('success_messages', `new product ${figureData.name} has been added successfully`);
             res.redirect('/products');
@@ -159,7 +223,7 @@ router.get('/:figure_id/update', async function (req, res) {
         id: figure.toJSON().series_id
     }).fetch({
         require: true,
-        withRelated: ['groupings']
+        withRelated: ['mediums']
     });
     figure.series = series.toJSON();
     let allFigureTypes = await FigureType.fetchAll().map(figureType => {
@@ -171,10 +235,10 @@ router.get('/:figure_id/update', async function (req, res) {
     let allCollections = await Collection.fetchAll().map(collection => {
         return [collection.get('id'), collection.get('collection_name')]
     });
-    let allGroupings = await Grouping.fetchAll().map(grouping => {
-        return [grouping.get('id'), grouping.get('group_name')]
+    let allMediums = await Medium.fetchAll().map(Medium => {
+        return [Medium.get('id'), Medium.get('media_medium')]
     });
-    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allGroupings);
+    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     figureForm.fields.name.value = figure.get('name');
     figureForm.fields.cost.value = figure.get('cost');
     figureForm.fields.height.value = figure.get('height');
@@ -184,8 +248,8 @@ router.get('/:figure_id/update', async function (req, res) {
     figureForm.fields.figure_type_id.value = figure.get('figure_type_id');
     figureForm.fields.series_id.value = figure.get('series_id');
     figureForm.fields.collection_id.value = figure.get('collection_id');
-    let selectedGroupings = await series.related('groupings').pluck('id');
-    figureForm.fields.grouping_id.value = selectedGroupings;
+    let selectedmediums = await series.related('mediums').pluck('id');
+    figureForm.fields.medium_id.value = selectedmediums;
 
     res.render('products/update', {
         form: figureForm.toHTML(bootstrapField),
@@ -209,13 +273,13 @@ router.post('/:figure_id/update', async function (req, res) {
     let allCollections = await Collection.fetchAll().map(collection => {
         return [collection.get('id'), collection.get('collection_name')]
     });
-    let allGroupings = await Grouping.fetchAll().map(grouping => {
-        return [grouping.get('id'), grouping.get('group_name')]
+    let allMediums = await Medium.fetchAll().map(Medium => {
+        return [Medium.get('id'), Medium.get('media_medium')]
     });
-    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allGroupings);
+    const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     figureForm.handle(req, {
         success: async function (form) {
-            let { grouping_id, ...figureData } = form.data;
+            let { medium_id, ...figureData } = form.data;
             figure.set(figureData);
             figure.set('listing_date', moment().format());
             await figure.save();
@@ -223,14 +287,14 @@ router.post('/:figure_id/update', async function (req, res) {
                 id: figureData.series_id
             }).fetch({
                 require: true,
-                withRelated: ['groupings']
+                withRelated: ['mediums']
             });
             console.log(series.toJSON());
-            let selectedGroupings = grouping_id.split(',').map(id => parseInt(id));
-            let existingGroupingIds = await series.related('groupings').pluck('id');
-            let toRemove = existingGroupingIds.filter(id => !selectedGroupings.includes(id));
-            await series.groupings().detach(toRemove);
-            await series.groupings().attach(selectedGroupings);
+            let selectedmediums = medium_id.split(',').map(id => parseInt(id));
+            let existingMediumIds = await series.related('mediums').pluck('id');
+            let toRemove = existingMediumIds.filter(id => !selectedmediums.includes(id));
+            await series.mediums().detach(toRemove);
+            await series.mediums().attach(selectedmediums);
             req.flash('success_messages', `${figureData.name} has been updated successfully`);
             res.redirect('/products');
         },

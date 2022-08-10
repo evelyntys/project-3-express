@@ -32,8 +32,8 @@
             <td>{{this.manufacturer.manufacturer_name}}</td>
             <td>
                 {{this.series.series_name}}
-                {{#each this.series.groupings}}
-                {{this.group_name}}
+                {{#each this.series.mediums}}
+                <span class="badge rounded-pill bg-primary">{{this.media_medium}}</span>
                 {{/each}}
             </td>
             <td>
