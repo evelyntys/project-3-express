@@ -32,17 +32,20 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         name: fields.string({
             required: true,
             errorAfterField: true,
-            validators: [validators.minlength(5)]
+            validators: [validators.minlength(5)],
+            validatePastFirstError: true
         }),
         cost: fields.number({
             required: true,
             errorAfterField: true,
-            validators: [validators.integer(), validators.min(0)]
+            validators: [validators.integer(), validators.min(0)],
+            validatePastFirstError: true
         }),
         height: fields.number({
             required: true,
             errorAfterField: true,
-            validators: [validators.integer(), validators.min(0)]
+            validators: [validators.integer(), validators.min(0)],
+            validatePastFirstError: true
         }),
         launch_status: fields.boolean({
             required: true,
@@ -51,17 +54,18 @@ const createFigureForm = (figureType, series, collection, groupings) => {
                 yes: true,
                 no: false
             },
-            widget: widgets.select()
+            widget: widgets.select(),
         }),
         release_date: fields.date({
             required: true,
             errorAfterField: true,
-            validators: [validators.date()]
+            validators: [validators.date()],
+            validatePastFirstError: true
         }),
         quantity: fields.number({
             required: true,
             errorAfterField: true,
-            validators: [validators.integer()]
+            validators: [validators.integer()],
         }),
         figure_type_id: fields.string({
             label: 'Type of figure',
@@ -101,7 +105,7 @@ const createLoginForm = () => {
    return forms.create({
      email: fields.string({
         required: true,
-        errorAfterField: true
+        errorAfterField: true,
     }),
     password: fields.password({
         required: true,
@@ -110,7 +114,7 @@ const createLoginForm = () => {
 })
 };
 
-const createSearchForm = () => {
+const createSearchForm = (figureTypes, series, collections) => {
     return forms.create({
         name: fields.string({
             required: false,
@@ -124,8 +128,28 @@ const createSearchForm = () => {
         max_cost: fields.string({
             required: false,
             errorAfterField: true,
-            validators: [validators.integer(), validators.min(validators.matchField('min_cost'))]
+            validators: [validators.integer()]
         }),
+        figure_type_id: fields.string({
+            required: false,
+            widget: widgets.select(),
+            errorAfterField: true,
+            choices: figureTypes
+        }),
+        series_id: fields.string({
+            required: false,
+            widget: widgets.select(),
+            choices: series
+        }),
+        collection_id: fields.string({
+            required: false,
+            widget: widgets.select(),
+            choices: collections
+        }),
+        last_updated: fields.date({
+            required: false,
+            widget: widgets.date()
+        })
         
     })
 }
