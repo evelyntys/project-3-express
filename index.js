@@ -6,6 +6,9 @@ const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 const { CheckIfAdmin } = require('./middlewares');
 const csrf = require('csurf');
+var helpers = require('handlebars-helpers')({
+    handlebars: hbs.handlebars
+  });
 require('dotenv').config();
 
 let app = express();

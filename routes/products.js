@@ -4,35 +4,8 @@ const moment = require('moment');
 const { createFigureForm, bootstrapField, createSearchForm } = require('../forms');
 const { Figure, FigureType, Series, Collection, Manufacturer, Medium } = require('../models');
 const dataLayer = require('../dal/products');
-function getDate(){
-                    date = new Date();
-                    date = new Date(date.setDate(date.getDate() + 1))
-                
-                    console.log(date)
-                }
+
 router.get('/', async function (req, res) {
-    // let figures = await Figure.collection().fetch({
-    //     withRelated: ['figure_type', 'series', 'collection']
-    // });
-    // figures = figures.toJSON();
-    // for (let each of figures) {
-    //     each.release_date = moment(each.release_date).format('L');
-    //     each.listing_date = moment(each.listing_date).format('L, LTS');
-    //     let manufacturer = await Manufacturer.where({
-    //         id: each.collection.manufacturer_id
-    //     }).fetch({
-    //         require: true,
-    //     })
-    //     manufacturer = manufacturer.toJSON();
-    //     each.manufacturer = manufacturer;
-    //     let series = await Series.where({
-    //         id: each.series_id
-    //     }).fetch({
-    //         withRelated: ['mediums']
-    //     })
-    //     series = series.toJSON();
-    //     each.series = series;
-    // }
     let allFigureTypes = await dataLayer.getAllFigureTypes();
     allFigureTypes.unshift([0, '---select a figure type---']);
     let allSeries = await dataLayer.getAllSeries();
@@ -42,60 +15,53 @@ router.get('/', async function (req, res) {
     let q = Figure.collection();
     let searchForm = createSearchForm(allFigureTypes, allSeries, allCollections);
     searchForm.handle(req, {
-        empty: async function(form){
+        empty: async function (form) {
             let figures = await dataLayer.displayFigures(q);
             res.render('products/index', {
                 figures: figures,
                 form: form.toHTML(bootstrapField)
             });
         },
-        error: async function(form){
+        error: async function (form) {
             let figures = await dataLayer.displayFigures(q);
             res.render('products/index', {
                 figures: figures,
                 form: form.toHTML(bootstrapField)
             });
         },
-        success: async function(form){
-                if (form.data.name){
-                    q.where('name', 'like', '%' + form.data.name + '%')
-                }
-                if (form.data.min_cost){
-                    q.where('cost', '>=', form.data.min_cost)
-                }
-                if (form.data.max_cost){
-                    q.where('cost', '<=', form.data.max_cost)
-                }
+        success: async function (form) {
+            if (form.data.name) {
+                q.where('name', 'like', '%' + form.data.name + '%')
+            }
+            if (form.data.min_cost) {
+                q.where('cost', '>=', form.data.min_cost)
+            }
+            if (form.data.max_cost) {
+                q.where('cost', '<=', form.data.max_cost)
+            }
 
-                if (form.data.figure_type_id && form.data.figure_type_id !=0){
-                    q.where('figure_type_id', form.data.figure_type_id)
-                }
-                if (form.data.series_id && form.data.series_id !=0){
-                    q.where('series_id', form.data.series_id)
-                }
-                if (form.data.collection_id && form.data.collection_id !=0){
-                    q.where('collection_id', form.data.collection_id)
-                };
-                if (form.data.last_updated){
-                    // let date = ( new Date(form.data.last_updated))
-                    // let searchDate =
-                    // console.log(searchDate);
-                    let date = new Date(form.data.last_updated);
-                    // date = new Date(date.setDate(date.getDate() + 1));
-                    console.log(date)
-                    let day = 60 * 60 * 24 * 1000 - 1000;
-                    let endDate = new Date(date.getTime() + day);
-                    console.log(endDate)
-                    // console.log(new Date(date.setDate(date.getDate() + 24*60*60*1000 -1 )))
-                    date = moment(date).format();
-                    endDate = moment(endDate).format();
-                    // date = date.setDate(date.getDate()+1);
-                    // console.log(date)
-                    q.query(function(x){x.whereBetween('listing_date', [date, endDate])});
-                    // q.where('listing_date', '>=', date, 'and', '<=', endDate);
-                    // q.orderBy('listing_date', 'DESC');
-                }
-                let figures = await dataLayer.displayFigures(q);
+            if (form.data.figure_type_id && form.data.figure_type_id != 0) {
+                q.where('figure_type_id', form.data.figure_type_id)
+            }
+            if (form.data.series_id && form.data.series_id != 0) {
+                q.where('series_id', form.data.series_id)
+            }
+            if (form.data.collection_id && form.data.collection_id != 0) {
+                q.where('collection_id', form.data.collection_id)
+            };
+            if (form.data.last_updated) {
+                let date = new Date(form.data.last_updated);
+                let day = 60 * 60 * 24 * 1000 - 1000;
+                let endDate = new Date(date.getTime() + day);
+                console.log(endDate)
+                date = moment(date).format();
+                endDate = moment(endDate).format();
+                q.query(function (dateQuery) { 
+                    dateQuery.whereBetween('listing_date', [date, endDate]); 
+                });
+                q.orderBy('listing_date', 'DESC');
+            }
+            let figures = await dataLayer.displayFigures(q);
             res.render('products/index', {
                 figures: figures,
                 form: form.toHTML(bootstrapField)
@@ -159,7 +125,7 @@ router.post('/create', async function (req, res) {
     figureForm.handle(req, {
         success: async function (form) {
             const figure = new Figure();
-            let { medium_id, series_id, collection_id, ...figureData } = form.data;
+            let { medium_id, series_id, collection_id, cost, ...figureData } = form.data;
             if (series_id == 0) {
                 const newSeries = new Series();
                 newSeries.set('series_name', req.body['new-series']);
@@ -209,6 +175,7 @@ router.post('/create', async function (req, res) {
             figure.set('series_id', series_id);
             figure.set('collection_id', collection_id);
             figure.set('listing_date', moment().format());
+            figure.set('cost', cost * 100);
             await figure.save();
             const series = await Series.where({
                 id: series_id
@@ -267,7 +234,7 @@ router.get('/:figure_id/update', async function (req, res) {
     }
     const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     figureForm.fields.name.value = figure.get('name');
-    figureForm.fields.cost.value = figure.get('cost');
+    figureForm.fields.cost.value = (figure.get('cost') / 100).toFixed(2);
     figureForm.fields.height.value = figure.get('height');
     figureForm.fields.launch_status.value = figure.get('launch_status');
     figureForm.fields.release_date.value = moment(figure.get('release_date')).format('YYYY-MM-DD');
@@ -310,7 +277,6 @@ router.post('/:figure_id/update', async function (req, res) {
     let localMedium = [];
     for (let each of series) {
         let associatedMediums = await each.related('mediums').pluck('id');
-        // console.log(each.toJSON())
         localMedium.push({
             [seriesID[x]]: associatedMediums
         });
@@ -319,7 +285,7 @@ router.post('/:figure_id/update', async function (req, res) {
     const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     figureForm.handle(req, {
         success: async function (form) {
-            let { medium_id, series_id, collection_id, ...figureData } = form.data;
+            let { medium_id, series_id, collection_id, cost, ...figureData } = form.data;
             if (series_id == 0) {
                 const newSeries = new Series();
                 newSeries.set('series_name', req.body['new-series']);
@@ -369,6 +335,7 @@ router.post('/:figure_id/update', async function (req, res) {
             figure.set('series_id', series_id);
             figure.set('collection_id', collection_id);
             figure.set('listing_date', moment().format());
+            figure.set('cost', cost * 100);
             await figure.save();
             const series = await Series.where({
                 id: series_id
@@ -385,7 +352,6 @@ router.post('/:figure_id/update', async function (req, res) {
             res.redirect('/products');
         },
         error: async function (form) {
-            req.flash('error_messages', `please check the fields again`)
             res.render('products/update', {
                 form: form.toHTML(bootstrapField)
             })
