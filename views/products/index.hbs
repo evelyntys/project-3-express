@@ -6,6 +6,7 @@
     <thead>
         <tr>
             <th>ID</th>
+            <th>Image</th>
             <th>Name</th>
             <th>Cost ($)</th>
             <th>Height (mm)</th>
@@ -24,6 +25,11 @@
         {{#each figures}}
         <tr>
             <td>{{this.id}}</td>
+            <th>
+                {{#if this.image_url}}
+                <img src="{{this.image_url}}" style="height: 40px" />
+                {{/if}}
+            </th>
             <td>{{this.name}}</td>
             <td>{{this.cost}}</td>
             <td>{{this.height}}</td>
