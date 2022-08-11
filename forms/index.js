@@ -95,7 +95,7 @@ const createFigureForm = (figureType, series, collection, groupings) => {
             widget: widgets.hidden()
         })
     })
-}
+};
 
 const createLoginForm = () => {
    return forms.create({
@@ -108,6 +108,25 @@ const createLoginForm = () => {
         errorAfterField: true
     })
 })
-}
+};
 
-module.exports = { createFigureForm, bootstrapField, createLoginForm }
+const createSearchForm = () => {
+    return forms.create({
+        name: fields.string({
+            required: false,
+            errorAfterField: true
+        }),
+        min_cost: fields.string({
+            required: false,
+            errorAfterField: true,
+            validators: [validators.integer()]
+        }),
+        max_cost: fields.string({
+            required: false,
+            errorAfterField: true,
+            validators: [validators.integer(), validators.min(validators.matchField('min_cost'))]
+        }),
+        
+    })
+}
+module.exports = { createFigureForm, bootstrapField, createLoginForm, createSearchForm }

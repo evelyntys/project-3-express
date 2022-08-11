@@ -1,35 +1,120 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment');
-const { createFigureForm, bootstrapField } = require('../forms');
+const { createFigureForm, bootstrapField, createSearchForm } = require('../forms');
 const { Figure, FigureType, Series, Collection, Manufacturer, Medium } = require('../models')
 
 router.get('/', async function (req, res) {
-    let figures = await Figure.collection().fetch({
-        withRelated: ['figure_type', 'series', 'collection']
-    });
-    figures = figures.toJSON();
-    for (let each of figures) {
-        each.release_date = moment(each.release_date).format('L');
-        each.listing_date = moment(each.listing_date).format('L, LTS');
-        let manufacturer = await Manufacturer.where({
-            id: each.collection.manufacturer_id
-        }).fetch({
-            require: true,
-        })
-        manufacturer = manufacturer.toJSON();
-        each.manufacturer = manufacturer;
-        let series = await Series.where({
-            id: each.series_id
-        }).fetch({
-            withRelated: ['mediums']
-        })
-        series = series.toJSON();
-        each.series = series;
-    }
-    res.render('products/index', {
-        figures
-    });
+    // let figures = await Figure.collection().fetch({
+    //     withRelated: ['figure_type', 'series', 'collection']
+    // });
+    // figures = figures.toJSON();
+    // for (let each of figures) {
+    //     each.release_date = moment(each.release_date).format('L');
+    //     each.listing_date = moment(each.listing_date).format('L, LTS');
+    //     let manufacturer = await Manufacturer.where({
+    //         id: each.collection.manufacturer_id
+    //     }).fetch({
+    //         require: true,
+    //     })
+    //     manufacturer = manufacturer.toJSON();
+    //     each.manufacturer = manufacturer;
+    //     let series = await Series.where({
+    //         id: each.series_id
+    //     }).fetch({
+    //         withRelated: ['mediums']
+    //     })
+    //     series = series.toJSON();
+    //     each.series = series;
+    // }
+    let q = Figure.collection();
+    let searchForm = createSearchForm();
+    searchForm.handle(req, {
+        empty: async function(form){
+            let figures = await q.fetch({
+                withRelated: ['figure_type', 'series', 'collection']
+            });
+            figures = figures.toJSON();
+            for (let each of figures) {
+                    each.release_date = moment(each.release_date).format('L');
+                    each.listing_date = moment(each.listing_date).format('L, LTS');
+                    let manufacturer = await Manufacturer.where({
+                        id: each.collection.manufacturer_id
+                    }).fetch({
+                        require: true,
+                    })
+                    manufacturer = manufacturer.toJSON();
+                    each.manufacturer = manufacturer;
+                    let series = await Series.where({
+                        id: each.series_id
+                    }).fetch({
+                        withRelated: ['mediums']
+                    })
+                    series = series.toJSON();
+                    each.series = series;
+                }
+            res.render('products/index', {
+                figures: figures,
+                form: form.toHTML(bootstrapField)
+            });
+        },
+        error: async function(form){
+            let figures = await q.fetch({
+                withRelated: ['figure_type', 'series', 'collection']
+            });
+            figures = figures.toJSON();
+            for (let each of figures) {
+                    each.release_date = moment(each.release_date).format('L');
+                    each.listing_date = moment(each.listing_date).format('L, LTS');
+                    let manufacturer = await Manufacturer.where({
+                        id: each.collection.manufacturer_id
+                    }).fetch({
+                        require: true,
+                    })
+                    manufacturer = manufacturer.toJSON();
+                    each.manufacturer = manufacturer;
+                    let series = await Series.where({
+                        id: each.series_id
+                    }).fetch({
+                        withRelated: ['mediums']
+                    })
+                    series = series.toJSON();
+                    each.series = series;
+                }
+            res.render('products/index', {
+                figures: figures,
+                form: form.toHTML(bootstrapField)
+            });
+        },
+        success: async function(form){
+            let figures = await q.fetch({
+                withRelated: ['figure_type', 'series', 'collection']
+            });
+            figures = figures.toJSON();
+            for (let each of figures) {
+                    each.release_date = moment(each.release_date).format('L');
+                    each.listing_date = moment(each.listing_date).format('L, LTS');
+                    let manufacturer = await Manufacturer.where({
+                        id: each.collection.manufacturer_id
+                    }).fetch({
+                        require: true,
+                    })
+                    manufacturer = manufacturer.toJSON();
+                    each.manufacturer = manufacturer;
+                    let series = await Series.where({
+                        id: each.series_id
+                    }).fetch({
+                        withRelated: ['mediums']
+                    })
+                    series = series.toJSON();
+                    each.series = series;
+                }
+            res.render('products/index', {
+                figures: figures,
+                form: form.toHTML(bootstrapField)
+            });
+        }
+    })
 })
 
 router.get('/create', async function (req, res) {
@@ -280,16 +365,6 @@ router.post('/:figure_id/update', async function (req, res) {
     figureForm.handle(req, {
         success: async function (form) {
             let { medium_id, series_id, collection_id, ...figureData } = form.data;
-            // figure.set(figureData);
-            // figure.set('listing_date', moment().format());
-            // await figure.save();
-            // const series = await Series.where({
-            //     id: figureData.series_id
-            // }).fetch({
-            //     require: true,
-            //     withRelated: ['mediums']
-            // });
-            // console.log(series.toJSON());
             if (series_id == 0) {
                 const newSeries = new Series();
                 newSeries.set('series_name', req.body['new-series']);
@@ -370,7 +445,6 @@ router.post('/:figure_id/delete', async function (req, res) {
     }).fetch({
         require: true
     });
-    let name = figure.name;
     await figure.destroy();
     req.flash('success_messages', `product has been deleted successfully`);
     res.redirect('/products')

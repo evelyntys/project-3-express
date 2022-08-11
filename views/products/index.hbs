@@ -1,6 +1,10 @@
 {{#extends 'base'}}
 {{#block 'content'}}
 <h4>product listings:</h4>
+<form method="GET">
+    {{{form}}}
+    <input type="submit" class="my-2 btn btn-primary" value="search"/>
+</form>
 <a href="/products/create" class="btn btn-primary my-2">create new listing</a>
 <table class="table table-bordered border-dark">
     <thead>
