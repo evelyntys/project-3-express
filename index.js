@@ -54,9 +54,11 @@ app.use(function(req,res,next){
 const landingRoutes = require('./routes/landing');
 const productRoutes = require('./routes/products');
 const cloudinaryRoutes = require('./routes/cloudinary');
+const cartRoutes = require('./routes/cart')
 app.use('/', landingRoutes);
 app.use('/products', CheckIfAdmin, productRoutes);
 app.use('/cloudinary', cloudinaryRoutes);
+app.use('/cart', cartRoutes);
 
 app.listen(3000, function(){
     console.log('server started')

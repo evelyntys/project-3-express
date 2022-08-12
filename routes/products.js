@@ -130,13 +130,7 @@ router.post('/create', async function (req, res) {
                 const newSeries = new Series();
                 newSeries.set('series_name', req.body['new-series']);
                 await newSeries.save();
-                console.log(newSeries.toJSON.id);
-                const addedSeries = await Series.where({
-                    series_name: req.body['new-series']
-                }).fetch({
-                    require: true
-                })
-                series_id = addedSeries.toJSON().id
+                series_id = newSeries.get('id')
                 console.log(series_id)
             }
             if (collection_id == 0) {
@@ -150,12 +144,7 @@ router.post('/create', async function (req, res) {
                     const newManufacturer = new Manufacturer();
                     newManufacturer.set('manufacturer_name', req.body['new-manufacturer']);
                     await newManufacturer.save();
-                    const addedManufacturer = await Manufacturer.where({
-                        manufacturer_name: req.body['new-manufacturer']
-                    }).fetch({
-                        require: true
-                    });
-                    manufacturer_id = addedManufacturer.toJSON().id;
+                    manufacturer_id = newManufacturer.get('id');
                 }
                 else {
                     manufacturer_id = checkManufacturer.toJSON().id;
@@ -164,12 +153,7 @@ router.post('/create', async function (req, res) {
                 newCollection.set('collection_name', req.body['new-collection']);
                 newCollection.set('manufacturer_id', manufacturer_id);
                 await newCollection.save();
-                const addedCollection = await Collection.where({
-                    collection_name: req.body['new-collection']
-                }).fetch({
-                    require: true
-                });
-                collection_id = addedCollection.toJSON().id;
+                collection_id = newCollection.get('id');
             }
             figure.set(figureData);
             figure.set('series_id', series_id);
@@ -290,14 +274,7 @@ router.post('/:figure_id/update', async function (req, res) {
                 const newSeries = new Series();
                 newSeries.set('series_name', req.body['new-series']);
                 await newSeries.save();
-                console.log(newSeries.toJSON.id);
-                const addedSeries = await Series.where({
-                    series_name: req.body['new-series']
-                }).fetch({
-                    require: true
-                })
-                series_id = addedSeries.toJSON().id
-                console.log(series_id)
+                series_id = newSeries.get('id');
             }
             if (collection_id == 0) {
                 let manufacturer_id = -1;
@@ -310,12 +287,7 @@ router.post('/:figure_id/update', async function (req, res) {
                     const newManufacturer = new Manufacturer();
                     newManufacturer.set('manufacturer_name', req.body['new-manufacturer']);
                     await newManufacturer.save();
-                    const addedManufacturer = await Manufacturer.where({
-                        manufacturer_name: req.body['new-manufacturer']
-                    }).fetch({
-                        require: true
-                    });
-                    manufacturer_id = addedManufacturer.toJSON().id;
+                    manufacturer_id = newManufacturer.get('id');
                 }
                 else {
                     manufacturer_id = checkManufacturer.toJSON().id;
@@ -324,12 +296,7 @@ router.post('/:figure_id/update', async function (req, res) {
                 newCollection.set('collection_name', req.body['new-collection']);
                 newCollection.set('manufacturer_id', manufacturer_id);
                 await newCollection.save();
-                const addedCollection = await Collection.where({
-                    collection_name: req.body['new-collection']
-                }).fetch({
-                    require: true
-                });
-                collection_id = addedCollection.toJSON().id;
+                collection_id = newCollection.get('id');
             }
             figure.set(figureData);
             figure.set('series_id', series_id);
@@ -367,7 +334,7 @@ router.post('/:figure_id/delete', async function (req, res) {
         require: true
     });
     await figure.destroy();
-    req.flash('success_messages', `product has been deleted successfully`);
+    req.flash('success_messages', `product ${figure.name} has been deleted successfully`);
     res.redirect('/products')
 })
 

@@ -38,7 +38,7 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         cost: fields.number({
             required: true,
             errorAfterField: true,
-            validators: [validators.integer(), validators.min(0)],
+            validators: [validators.min(0)],
             validatePastFirstError: true
         }),
         height: fields.number({
@@ -59,6 +59,7 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         release_date: fields.date({
             required: true,
             errorAfterField: true,
+        widget: widgets.date(),
             validators: [validators.date()],
             validatePastFirstError: true
         }),

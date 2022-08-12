@@ -38,6 +38,12 @@ router.post('/', async function (req, res) {
                     email: admin.get('email'),
                     first_name: admin.get('first_name')
                 }
+                req.session.customer = {
+                    id: 1,
+                    username: 'test',
+                    email: 'admin@email.com',
+                    first_name: 'test'
+                }
                 req.flash('success_messages', 'welcome back, ' + admin.get('first_name'));
                 res.redirect('/products');
             }

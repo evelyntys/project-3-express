@@ -54,8 +54,23 @@ const Medium = bookshelf.model('Medium', {
     }
 });
 
+
 const Admin = bookshelf.model('Admin', {
     tableName: 'admins'
 })
 
-module.exports = { Figure, FigureType, Series, Collection, Manufacturer, Medium, Admin };
+const Customer = bookshelf.model('Customer', {
+    tableName: 'customers'
+})
+
+const CartItem = bookshelf.model('CartItem', {
+    tableName: 'cart_items',
+    figure(){
+        return this.belongsTo('Figure')
+    },
+    customer(){
+        return this.belongsTo('customer')
+    }
+})
+
+module.exports = { Figure, FigureType, Series, Collection, Manufacturer, Medium, Admin, Customer, CartItem };

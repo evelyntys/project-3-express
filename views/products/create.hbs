@@ -108,7 +108,10 @@
         cloudName: "{{cloudinaryName}}",
         apiKey: "{{cloudinaryApiKey}}",
         uploadPreset: "{{cloudinaryPreset}}",
-        uploadSignature: generateSignature
+        uploadSignature: generateSignature,
+        cropping: true,
+        showUploadMoreButton: true,
+        thumbnailTransformation: [{ width: 100, height: 100, crop: 'fill' }]
     }, (error, result) => {
         if (!error && result && result.event === 'success') {
             console.log('completed, image info => ', result.info);
