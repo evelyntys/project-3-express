@@ -9,6 +9,7 @@ const csrf = require('csurf');
 var helpers = require('handlebars-helpers')({
     handlebars: hbs.handlebars
   });
+const csrfInstance = csrf();
 require('dotenv').config();
 
 let app = express();
@@ -31,7 +32,25 @@ app.use(session ({
     saveUninitialized: true
 }))
 
-app.use(csrf());
+app.use(function(req,res,next){
+    if (req.url === '/checkout/process_payment'){
+        return next();
+    }
+    csrfInstance(req,res,next);
+})
+
+app.use(flash());
+
+app.use(function(req,res,next){
+    res.locals.admin = req.session.admin;
+    if (req.csrfToken){
+    res.locals.csrfToken = req.csrfToken();
+    }
+    res.locals.success_messages = req.flash('success_messages');
+    res.locals.error_messages = req.flash('error_messages');
+    next();
+})
+
 app.use(function (err, req, res, next) {
     if (err && err.code == "EBADCSRFTOKEN") {
         req.flash('error_messages', 'The form has expired. Please try again');
@@ -41,24 +60,18 @@ app.use(function (err, req, res, next) {
     }
 });
 
-app.use(flash());
-
-app.use(function(req,res,next){
-    res.locals.admin = req.session.admin;
-    res.locals.csrfToken = req.csrfToken();
-    res.locals.success_messages = req.flash('success_messages');
-    res.locals.error_messages = req.flash('error_messages');
-    next();
-})
-
 const landingRoutes = require('./routes/landing');
 const productRoutes = require('./routes/products');
 const cloudinaryRoutes = require('./routes/cloudinary');
-const cartRoutes = require('./routes/cart')
+const cartRoutes = require('./routes/cart');
+const checkoutRoutes = require('./routes/checkout');
+const orderRoutes = require('./routes/orders')
 app.use('/', landingRoutes);
 app.use('/products', CheckIfAdmin, productRoutes);
 app.use('/cloudinary', cloudinaryRoutes);
 app.use('/cart', cartRoutes);
+app.use('/checkout', checkoutRoutes);
+app.use('/orders', orderRoutes);
 
 app.listen(3000, function(){
     console.log('server started')

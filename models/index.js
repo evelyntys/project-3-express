@@ -25,7 +25,7 @@ const Series = bookshelf.model('Series', {
     figures() {
         return this.hasMany('Figure')
     },
-    mediums(){
+    mediums() {
         return this.belongsToMany('Medium')
     }
 });
@@ -57,20 +57,54 @@ const Medium = bookshelf.model('Medium', {
 
 const Admin = bookshelf.model('Admin', {
     tableName: 'admins'
-})
+});
 
 const Customer = bookshelf.model('Customer', {
-    tableName: 'customers'
-})
+    tableName: 'customers',
+    orders() {
+        return this.hasMany('Order')
+    }
+});
 
 const CartItem = bookshelf.model('CartItem', {
     tableName: 'cart_items',
-    figure(){
+    figure() {
         return this.belongsTo('Figure')
     },
-    customer(){
-        return this.belongsTo('customer')
+    customer() {
+        return this.belongsTo('Customer')
+    }
+});
+
+const OrderStatus = bookshelf.model('OrderStatus', {
+    tableName: 'order_statuses',
+    orders() {
+        return this.hasMany('Order')
+    }
+});
+
+const Order = bookshelf.model('Order', {
+    tableName: 'orders',
+    ordered_items() {
+        return this.hasMany('OrderedItem')
+    },
+    customer() {
+        return this.belongsTo('Customer')
     }
 })
 
-module.exports = { Figure, FigureType, Series, Collection, Manufacturer, Medium, Admin, Customer, CartItem };
+const OrderedItem = bookshelf.model('OrderedItem', {
+    tableName: 'ordered_items',
+    order() {
+        return this.belongsTo('Order')
+    },
+    figure() {
+        return this.belongsTo('Figure')
+    }
+});
+module.exports =
+{
+    Figure, FigureType, Series, Collection,
+    Manufacturer, Medium, Admin, Customer, CartItem,
+    OrderStatus, Order, OrderedItem
+};
