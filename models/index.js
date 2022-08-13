@@ -85,7 +85,10 @@ const OrderStatus = bookshelf.model('OrderStatus', {
 
 const Order = bookshelf.model('Order', {
     tableName: 'orders',
-    ordered_items() {
+    order_status() {
+        return this.belongsTo('OrderStatus')
+    },
+    ordered_items(){
         return this.hasMany('OrderedItem')
     },
     customer() {

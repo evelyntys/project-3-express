@@ -6,11 +6,24 @@ const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 const { CheckIfAdmin } = require('./middlewares');
 const csrf = require('csurf');
+const moment = require('moment');
 var helpers = require('handlebars-helpers')({
     handlebars: hbs.handlebars
   });
 const csrfInstance = csrf();
 require('dotenv').config();
+
+hbs.registerHelper('costWithDecimal', function(value){
+    return ((value/100).toFixed(2))
+});
+
+hbs.registerHelper('displayDate', function(date){
+    return moment(date).format('L')
+});
+
+hbs.registerHelper('displayDateTime', function(date){
+    return moment(date).format('L, LTS')
+});
 
 let app = express();
 

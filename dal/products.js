@@ -19,8 +19,8 @@ async function displayFigures(query){
     });
     figures = figures.toJSON();
     for (let each of figures) {
-            each.release_date = moment(each.release_date).format('L');
-            each.listing_date = moment(each.listing_date).format('L, LTS');
+            // each.release_date = moment(each.release_date).format('L');
+            // each.listing_date = moment(each.listing_date).format('L, LTS');
             let manufacturer = await Manufacturer.where({
                 id: each.collection.manufacturer_id
             }).fetch({
