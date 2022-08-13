@@ -34,6 +34,7 @@ router.get('/', async function (req, res) {
         line_items: lineItems,
         success_url: process.env.STRIPE_SUCCESS_URL + '?sessionId={CHECKOUT_SESSION_ID}',
         cancel_url: process.env.STRIPE_CANCEL_URL,
+        customer_email: req.session.customer.email,
         metadata: {
             orders: metaData,
             customer_id: req.session.customer.id
