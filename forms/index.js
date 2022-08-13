@@ -153,5 +153,16 @@ const createSearchForm = (figureTypes, series, collections) => {
         })
         
     })
-}
-module.exports = { createFigureForm, bootstrapField, createLoginForm, createSearchForm }
+};
+
+const createOrderStatusForm = (status) => {
+return forms.create({
+    order_status_id: fields.string({
+        required: true,
+        widget: widgets.select(),
+        choices: status
+    })
+})
+};
+
+module.exports = { createFigureForm, bootstrapField, createLoginForm, createSearchForm, createOrderStatusForm }

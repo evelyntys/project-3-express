@@ -1,0 +1,43 @@
+{{#extends 'base'}}
+{{#block 'content'}}
+<div class="container">
+    <table class="table table-bordered border-dark">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Total cost</th>
+            <th>Order date</th>
+            <th>Payment reference</th>
+            <th>Order status</th>
+            <th>Last updated</th>
+            <th>Update order</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each orders}}
+        <tr>
+            <td>{{this.id}}</td>
+            <td>{{this.customer.first_name}} {{this.customer.last_name}}</td>
+            <td>{{this.customer.email}}</td>
+            <td>{{costWithDecimal this.total_cost}}</td>
+            <td>{{displayDate this.ordered_date}}</td>
+            <td>{{this.payment_reference}}
+                {{#each this.orderedItems}}
+                {{this.figure.name}}
+                {{/each}}
+            </td>
+            <td>{{this.order_status.order_status}}</td>
+            <td>{{displayDateTime this.updated_date}}</td>
+            <td>
+                <a href="/orders/{{this.id}}/update" class="btn btn-primary btn-sm">update</a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<div>
+</div>
+{{/block}}
+{{/extends}}
