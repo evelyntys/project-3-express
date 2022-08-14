@@ -57,8 +57,8 @@ router.get('/', async function (req, res) {
                 console.log(endDate)
                 date = moment(date).format();
                 endDate = moment(endDate).format();
-                q.query(function (dateQuery) { 
-                    dateQuery.whereBetween('listing_date', [date, endDate]); 
+                q.query(function (dateQuery) {
+                    dateQuery.whereBetween('listing_date', [date, endDate]);
                 });
                 q.orderBy('listing_date', 'DESC');
             }
@@ -72,26 +72,9 @@ router.get('/', async function (req, res) {
 })
 
 router.get('/create', async function (req, res) {
-    let allFigureTypes = await dataLayer.getAllFigureTypes();
-    let allSeries = await dataLayer.getAllSeries();
-    allSeries = [...allSeries, [0, 'add new']];
-    let allCollections = await dataLayer.getAllCollections();
-    allCollections = [...allCollections, [0, 'add new']];
-    let allMediums = await dataLayer.getAllMediums();
+    let [allFigureTypes, allSeries, allCollections, allMediums] = await dataLayer.getValuesForForm();
     const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
-    let series = await Series.fetchAll({
-        withRelated: ['mediums']
-    });
-    let seriesID = await series.pluck('id');
-    let x = 0;
-    let localMedium = [];
-    for (let each of series) {
-        let associatedMediums = await each.related('mediums').pluck('id');
-        localMedium.push({
-            [seriesID[x]]: associatedMediums
-        });
-        x = x + 1;
-    }
+    let localMedium = await dataLayer.getRelatedMediumsForCheckbox();
     res.render('products/create', {
         figureForm: figureForm.toHTML(bootstrapField),
         series_mediums: JSON.stringify(localMedium),
@@ -102,59 +85,18 @@ router.get('/create', async function (req, res) {
 });
 
 router.post('/create', async function (req, res) {
-    let allFigureTypes = await dataLayer.getAllFigureTypes();
-    let allSeries = await dataLayer.getAllSeries();
-    allSeries = [...allSeries, [0, 'add new']];
-    let allCollections = await dataLayer.getAllCollections();
-    allCollections = [...allCollections, [0, 'add new']];
-    let allMediums = await dataLayer.getAllMediums();
-    let series = await Series.fetchAll({
-        withRelated: ['mediums']
-    });
-    let seriesID = await series.pluck('id');
-    let x = 0;
-    let localMedium = [];
-    for (let each of series) {
-        let associatedMediums = await each.related('mediums').pluck('id');
-        // console.log(each.toJSON())
-        localMedium.push({
-            [seriesID[x]]: associatedMediums
-        });
-        x = x + 1;
-    }
+    let [allFigureTypes, allSeries, allCollections, allMediums] = await dataLayer.getValuesForForm();
+    let localMedium = await dataLayer.getRelatedMediumsForCheckbox();
     const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     figureForm.handle(req, {
         success: async function (form) {
             const figure = new Figure();
             let { medium_id, series_id, collection_id, cost, ...figureData } = form.data;
             if (series_id == 0) {
-                const newSeries = new Series();
-                newSeries.set('series_name', req.body['new-series']);
-                await newSeries.save();
-                series_id = newSeries.get('id')
-                console.log(series_id)
+                series_id = await dataLayer.addNewSeries(req.body['new-series']);
             }
             if (collection_id == 0) {
-                let manufacturer_id = -1;
-                const checkManufacturer = await Manufacturer.where({
-                    manufacturer_name: req.body['new-manufacturer']
-                }).fetch({
-                    require: false
-                })
-                if (!checkManufacturer) {
-                    const newManufacturer = new Manufacturer();
-                    newManufacturer.set('manufacturer_name', req.body['new-manufacturer']);
-                    await newManufacturer.save();
-                    manufacturer_id = newManufacturer.get('id');
-                }
-                else {
-                    manufacturer_id = checkManufacturer.toJSON().id;
-                }
-                const newCollection = new Collection();
-                newCollection.set('collection_name', req.body['new-collection']);
-                newCollection.set('manufacturer_id', manufacturer_id);
-                await newCollection.save();
-                collection_id = newCollection.get('id');
+                collection_id = await dataLayer.addNewCollection(req.body['new-manufacturer'], req.body['new-collection']);
             }
             figure.set(figureData);
             figure.set('series_id', series_id);
@@ -162,12 +104,7 @@ router.post('/create', async function (req, res) {
             figure.set('listing_date', moment().format());
             figure.set('cost', cost * 100);
             await figure.save();
-            const series = await Series.where({
-                id: series_id
-            }).fetch({
-                require: true,
-                withRelated: ['mediums']
-            });
+            const series = await dataLayer.getSeriesById(series_id);
             if (medium_id) {
                 await series.mediums().attach(medium_id.split(','));
             };
@@ -180,43 +117,25 @@ router.post('/create', async function (req, res) {
                 figureForm: form.toHTML(bootstrapField),
                 series_mediums: JSON.stringify(localMedium)
             })
+        },
+        empty: function (form) {
+            res.render('/products/create', {
+                figureForm: form.toHTML(bootstrapField),
+                series_mediums: JSON.stringify(localMedium)
+            }
+            )
         }
     })
 })
 
 router.get('/:figure_id/update', async function (req, res) {
     const figureID = req.params.figure_id;
-    let figure = await Figure.where({
-        id: figureID
-    }).fetch({
-        require: true
-    });
-    let associatedSeries = await Series.where({
-        id: figure.toJSON().series_id
-    }).fetch({
-        require: true,
-        withRelated: ['mediums']
-    });
+    let figure = await dataLayer.getFigureById(figureID);
+    let seriesId = figure.toJSON().series_id;
+    let associatedSeries = await dataLayer.getSeriesById(seriesId);
     figure.series = associatedSeries.toJSON();
-    let allFigureTypes = await dataLayer.getAllFigureTypes();
-    let allSeries = await dataLayer.getAllSeries();
-    allSeries = [...allSeries, [0, 'add new']];
-    let allCollections = await dataLayer.getAllCollections();
-    allCollections = [...allCollections, [0, 'add new']];
-    let allMediums = await dataLayer.getAllMediums();
-    let series = await Series.fetchAll({
-        withRelated: ['mediums']
-    });
-    let seriesID = await series.pluck('id');
-    let x = 0;
-    let localMedium = [];
-    for (let each of series) {
-        let associatedMediums = await each.related('mediums').pluck('id');
-        localMedium.push({
-            [seriesID[x]]: associatedMediums
-        });
-        x = x + 1;
-    }
+    let [allFigureTypes, allSeries, allCollections, allMediums] = await dataLayer.getValuesForForm();
+    let localMedium = await dataLayer.getRelatedMediumsForCheckbox();
     const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     figureForm.fields.name.value = figure.get('name');
     figureForm.fields.cost.value = (figure.get('cost') / 100).toFixed(2);
@@ -243,61 +162,18 @@ router.get('/:figure_id/update', async function (req, res) {
 
 router.post('/:figure_id/update', async function (req, res) {
     let figureID = req.params.figure_id;
-    let figure = await Figure.where({
-        id: figureID
-    }).fetch({
-        require: true
-    });
-    let allFigureTypes = await dataLayer.getAllFigureTypes();
-    let allSeries = await dataLayer.getAllSeries();
-    allSeries = [...allSeries, [0, 'add new']];
-    let allCollections = await dataLayer.getAllCollections();
-    allCollections = [...allCollections, [0, 'add new']];
-    let allMediums = await dataLayer.getAllMediums();
-    let series = await Series.fetchAll({
-        withRelated: ['mediums']
-    });
-    let seriesID = await series.pluck('id');
-    let x = 0;
-    let localMedium = [];
-    for (let each of series) {
-        let associatedMediums = await each.related('mediums').pluck('id');
-        localMedium.push({
-            [seriesID[x]]: associatedMediums
-        });
-        x = x + 1;
-    }
+    let figure = await dataLayer.getFigureById(figureID);
+    let [allFigureTypes, allSeries, allCollections, allMediums] = await dataLayer.getValuesForForm();
+    let localMedium = await dataLayer.getRelatedMediumsForCheckbox();
     const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     figureForm.handle(req, {
         success: async function (form) {
             let { medium_id, series_id, collection_id, cost, ...figureData } = form.data;
             if (series_id == 0) {
-                const newSeries = new Series();
-                newSeries.set('series_name', req.body['new-series']);
-                await newSeries.save();
-                series_id = newSeries.get('id');
+                series_id = await dataLayer.addNewSeries(req.body['new-series']);
             }
             if (collection_id == 0) {
-                let manufacturer_id = -1;
-                const checkManufacturer = await Manufacturer.where({
-                    manufacturer_name: req.body['new-manufacturer']
-                }).fetch({
-                    require: false
-                })
-                if (!checkManufacturer) {
-                    const newManufacturer = new Manufacturer();
-                    newManufacturer.set('manufacturer_name', req.body['new-manufacturer']);
-                    await newManufacturer.save();
-                    manufacturer_id = newManufacturer.get('id');
-                }
-                else {
-                    manufacturer_id = checkManufacturer.toJSON().id;
-                }
-                const newCollection = new Collection();
-                newCollection.set('collection_name', req.body['new-collection']);
-                newCollection.set('manufacturer_id', manufacturer_id);
-                await newCollection.save();
-                collection_id = newCollection.get('id');
+                collection_id = await dataLayer.addNewCollection(req.body['new-manufacturer'], req.body['new-collection']);
             }
             figure.set(figureData);
             figure.set('series_id', series_id);
@@ -305,12 +181,7 @@ router.post('/:figure_id/update', async function (req, res) {
             figure.set('listing_date', moment().format());
             figure.set('cost', cost * 100);
             await figure.save();
-            const series = await Series.where({
-                id: series_id
-            }).fetch({
-                require: true,
-                withRelated: ['mediums']
-            });
+            const series = await dataLayer.getSeriesById(series_id);
             let selectedMediums = medium_id.split(',').map(id => parseInt(id));
             let existingMediumIds = await series.related('mediums').pluck('id');
             let toRemove = existingMediumIds.filter(id => !selectedMediums.includes(id));
@@ -321,19 +192,23 @@ router.post('/:figure_id/update', async function (req, res) {
         },
         error: async function (form) {
             res.render('products/update', {
-                form: form.toHTML(bootstrapField)
+                form: form.toHTML(bootstrapField),
+                series_mediums: JSON.stringify(localMedium)
             })
+        },
+        empty: function (form) {
+            res.render('/products/update', {
+                figureForm: form.toHTML(bootstrapField),
+                series_mediums: JSON.stringify(localMedium)
+            }
+            )
         }
     })
 })
 
 router.post('/:figure_id/delete', async function (req, res) {
     let figureID = req.params.figure_id;
-    let figure = await Figure.where({
-        id: figureID
-    }).fetch({
-        require: true
-    });
+    let figure = await dataLayer.getFigureById(figureID);
     await figure.destroy();
     req.flash('success_messages', `product ${figure.name} has been deleted successfully`);
     res.redirect('/products')
