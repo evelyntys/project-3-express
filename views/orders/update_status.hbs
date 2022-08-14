@@ -3,6 +3,7 @@
 <div class="container">
     <form method="POST">
         {{{form}}}
+        <input type="hidden" value="{{csrfToken}}" name="_csrf" />
         <input type="submit" class="btn btn-primary" value="update status"/>
     </form>
 </div>
