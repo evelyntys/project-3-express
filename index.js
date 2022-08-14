@@ -84,7 +84,8 @@ const checkoutRoutes = require('./routes/checkout');
 const orderRoutes = require('./routes/orders');
 const api = {
     products: require('./routes/api/products'),
-    cart: require('./routes/api/cart')
+    cart: require('./routes/api/cart'),
+    customers: require('./routes/api/customers')
 }
 app.use('/', landingRoutes);
 app.use('/products', CheckIfAdmin, productRoutes);
@@ -94,6 +95,7 @@ app.use('/checkout', checkoutRoutes);
 app.use('/orders', orderRoutes);
 app.use('/api/products', express.json(), api.products);
 app.use('/api/cart', express.json(), api.cart);
+app.use('/api/users', express.json(), api.customers);
 
 app.listen(3000, function(){
     console.log('server started')

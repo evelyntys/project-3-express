@@ -6,7 +6,7 @@ const widgets = forms.widgets;
 var bootstrapField = function (name, object) {
     if (!Array.isArray(object.widget.classes)) { object.widget.classes = []; }
 
-    if (object.widget.type == 'multipleCheckbox' || object.widget.type == 'multipleRadio'){
+    if (object.widget.type == 'multipleCheckbox' || object.widget.type == 'multipleRadio') {
         object.widget.classes.push('form-check-input');
     }
 
@@ -32,20 +32,22 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         name: fields.string({
             required: true,
             errorAfterField: true,
-            validators: [validators.minlength(5)],
-            validatePastFirstError: true
+            validators: [validators.minlength(5)]
+        }),
+        description: fields.string({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.textarea()
         }),
         cost: fields.number({
             required: true,
             errorAfterField: true,
-            validators: [validators.min(0)],
-            validatePastFirstError: true
+            validators: [validators.min(0)]
         }),
         height: fields.number({
             required: true,
             errorAfterField: true,
-            validators: [validators.integer(), validators.min(0)],
-            validatePastFirstError: true
+            validators: [validators.integer(), validators.min(0)]
         }),
         launch_status: fields.boolean({
             required: true,
@@ -59,9 +61,8 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         release_date: fields.date({
             required: true,
             errorAfterField: true,
-        widget: widgets.date(),
-            validators: [validators.date()],
-            validatePastFirstError: true
+            widget: widgets.date(),
+            validators: [validators.date()]
         }),
         quantity: fields.number({
             required: true,
@@ -99,20 +100,20 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         image_url: fields.string({
             widget: widgets.hidden()
         })
-    })
+    }, { validatePastFirstError: true })
 };
 
 const createLoginForm = () => {
-   return forms.create({
-     email: fields.string({
-        required: true,
-        errorAfterField: true,
-    }),
-    password: fields.password({
-        required: true,
-        errorAfterField: true
-    })
-})
+    return forms.create({
+        email: fields.string({
+            required: true,
+            errorAfterField: true,
+        }),
+        password: fields.password({
+            required: true,
+            errorAfterField: true
+        })
+    }, { validatePastFirstError: true })
 };
 
 const createSearchForm = (figureTypes, series, collections) => {
@@ -151,18 +152,73 @@ const createSearchForm = (figureTypes, series, collections) => {
             required: false,
             widget: widgets.date()
         })
-        
-    })
+
+    }, { validatePastFirstError: true })
 };
 
 const createOrderStatusForm = (status) => {
-return forms.create({
-    order_status_id: fields.string({
-        required: true,
-        widget: widgets.select(),
-        choices: status
-    })
-})
+    return forms.create({
+        order_status_id: fields.string({
+            required: true,
+            widget: widgets.select(),
+            choices: status
+        })
+    }, { validatePastFirstError: true })
 };
 
-module.exports = { createFigureForm, bootstrapField, createLoginForm, createSearchForm, createOrderStatusForm }
+const createNewUserForm = () => {
+    return forms.create({
+        username: fields.string({
+            required: true,
+            errorAfterField: true,
+            validators: [validators.minlength(5)]
+        }),
+        email: fields.email({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.email(),
+            validators: [validators.email()]
+        }),
+        password: fields.password({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.password()
+        }),
+        confirm_password: fields.password({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.password(),
+            validators: [validators.matchField('password')]
+        }),
+        first_name: fields.string({
+            required: true,
+            errorAfterField: true,
+            validators: [validators.minlength(3)]
+        }),
+        last_name: fields.string({
+            required: true,
+            errorAfterField: true,
+            validators: [validators.minlength(3)]
+        }),
+        contact_number: fields.string({
+            required: true,
+            errorAfterField: true,
+            validators: [validators.minlength(8)]
+        }),
+        street: fields.string({
+            required: true,
+            errorAfterField: true,
+        }),
+        unit: fields.string({
+            required:true,
+            errorAfterField: true
+        }),
+        postal: fields.string({
+            required: true,
+            errorAfterField: true,
+            validators: [validators.digits()]
+        })
+    }, { validatePastFirstError: true })
+}
+
+module.exports = { createFigureForm, bootstrapField, createLoginForm, createSearchForm, createOrderStatusForm, createNewUserForm }
