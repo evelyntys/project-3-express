@@ -1,6 +1,7 @@
 const express = require('express');
-const { Order, OrderedItem, Customer } = require('../models');
-const moment = require('moment');
+const { Order, OrderedItem, Customer, Figure } = require('../models');
+const moment = require('moment-timezone');
+moment.tz.setDefault('Asia/Taipei');
 const router = express.Router();
 const CartServices = require('../services/cart_services');
 const Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY,
@@ -40,16 +41,36 @@ router.get('/', async function (req, res) {
             customer_id: req.session.customer.id
         }
     };
-    let stripeSession = await Stripe.checkout.sessions.create(payment);
-    res.redirect(303, stripeSession.url);
-    // const stripe = Stripe(proccess.env.STRIPE_PUBLISHABLE_KEY);
-    // stripe.redirectToCheckout({
-    //     sessionId: stripeSession.id
-    // })
-    // res.render('checkout/checkout', {
-    //     sessionId: stripeSession.id,
-    //     publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
-    // })
+    let quantityCheck = 0;
+    for (let each of meta) {
+        let figure = await Figure.where({
+            id: each.figure_id
+        }).fetch({
+            required: true
+        });
+        if (figure.get('quantity') < each.quantity) {
+            quantityCheck += 1;
+        }
+        //     else{
+        //     const stripe = Stripe(proccess.env.STRIPE_PUBLISHABLE_KEY);
+        //     stripe.redirectToCheckout({
+        //         sessionId: stripeSession.id
+        //     })
+        //     res.render('checkout/checkout', {
+        //         sessionId: stripeSession.id,
+        //         publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+        //     })
+        // }
+    }
+    if (quantityCheck > 0) {
+        req.flash('error_messages', 'theres not enough stock honey..xx')
+        res.redirect('/cart')
+    }
+    else {
+        let stripeSession = await Stripe.checkout.sessions.create(payment);
+        // res.status(303);
+        res.redirect(303, stripeSession.url);
+    }
 });
 
 router.get('/cancel', function (req, res) {
@@ -61,9 +82,7 @@ router.get('/success', function (req, res) {
     res.redirect('/cart');
 });
 
-router.post('/process_payment', express.raw({
-    type: 'application/json'
-}), async function (req, res) {
+router.post('/process_payment', express.raw({ type: 'application/json' }), async function (req, res) {
     let payload = req.body;
     let endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
     let sigHeader = req.headers['stripe-signature'];
@@ -79,7 +98,7 @@ router.post('/process_payment', express.raw({
             });
             let address = customer.toJSON().street + ", " + customer.toJSON().unit + ", " + customer.toJSON().postal;
             let order = new Order();
-            order.set('ordered_date', moment().format())
+            order.set('ordered_date', moment().format());
             order.set('customer_id', stripeEvent.metadata.customer_id);
             order.set('address', address)
             order.set('total_cost', stripeEvent.amount_total);
@@ -88,14 +107,23 @@ router.post('/process_payment', express.raw({
             let orderID = order.get('id');
             const metadata = JSON.parse(event.data.object.metadata.orders);
             for (let each of metadata) {
-                console.log
                 let orderedItem = new OrderedItem();
+                let figure = await Figure.where({
+                    id: each.figure_id
+                }).fetch({
+                    required: true
+                });
                 orderedItem.set('order_id', orderID);
                 orderedItem.set('figure_id', each.figure_id);
                 orderedItem.set('quantity', each.quantity);
                 await orderedItem.save();
+                figure.set('quantity', (figure.get('quantity') - each.quantity))
+                await figure.save();
                 console.log('meta => ', metadata);
             }
+            res.send({
+                'success': true
+            });
         }
     } catch (e) {
         res.send({
