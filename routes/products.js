@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const moment = require('moment');
+const moment = require('moment-timezone');
+moment.tz.setDefault('Asia/Taipei');
 const { createFigureForm, bootstrapField, createSearchForm } = require('../forms');
 const { Figure, FigureType, Series, Collection, Manufacturer, Medium } = require('../models');
 const dataLayer = require('../dal/products');
