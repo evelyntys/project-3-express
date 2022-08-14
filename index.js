@@ -1,6 +1,9 @@
 const express = require('express');
 const hbs = require('hbs');
 const wax = require('wax-on');
+
+const cors = require('cors');
+
 const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
@@ -46,7 +49,7 @@ app.use(session ({
 }))
 
 app.use(function(req,res,next){
-    if (req.url === '/checkout/process_payment'){
+    if (req.url === '/checkout/process_payment' || req.url.slice(0,5) == '/api/'){
         return next();
     }
     csrfInstance(req,res,next);
@@ -78,13 +81,19 @@ const productRoutes = require('./routes/products');
 const cloudinaryRoutes = require('./routes/cloudinary');
 const cartRoutes = require('./routes/cart');
 const checkoutRoutes = require('./routes/checkout');
-const orderRoutes = require('./routes/orders')
+const orderRoutes = require('./routes/orders');
+const api = {
+    products: require('./routes/api/products'),
+    cart: require('./routes/api/cart')
+}
 app.use('/', landingRoutes);
 app.use('/products', CheckIfAdmin, productRoutes);
 app.use('/cloudinary', cloudinaryRoutes);
 app.use('/cart', cartRoutes);
 app.use('/checkout', checkoutRoutes);
 app.use('/orders', orderRoutes);
+app.use('/api/products', express.json(), api.products);
+app.use('/api/cart', express.json(), api.cart);
 
 app.listen(3000, function(){
     console.log('server started')

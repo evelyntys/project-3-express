@@ -7,7 +7,7 @@ const getCart = async (customerId) => {
         require: false,
         withRelated: ['figure', 'figure.series', 'figure.collection']
     })
-    
+
 }
 
 const getCartItemByUserAndFigure = async (customerId, figureId) => {
@@ -15,7 +15,8 @@ const getCartItemByUserAndFigure = async (customerId, figureId) => {
         customer_id: customerId,
         figure_id: figureId
     }).fetch({
-        require: false
+        require: false,
+        withRelated: ['figure', 'figure.series', 'figure.collection']
     })
 }
 
@@ -31,7 +32,7 @@ const createCartItem = async (customerId, figureId, quantity) => {
 
 const removeFromCart = async (customerId, figureId) => {
     let cartItem = await getCartItemByUserAndFigure(customerId, figureId);
-    if (cartItem){
+    if (cartItem) {
         await cartItem.destroy();
         return true
     }
@@ -40,12 +41,14 @@ const removeFromCart = async (customerId, figureId) => {
 
 const updateQuantity = async (customerId, figureId, newQuantity) => {
     let cartItem = await getCartItemByUserAndFigure(customerId, figureId);
-    if (cartItem){
-        cartItem.set('quantity', newQuantity);
-        cartItem.save();
-        return true
+    if (cartItem) {
+        if (newQuantity <= cartItem.figure.quantity) {
+            cartItem.set('quantity', newQuantity);
+            cartItem.save();
+            return true
+        }
     }
     return false
 }
 
-module.exports = { getCart, getCartItemByUserAndFigure, createCartItem,removeFromCart, updateQuantity }
+module.exports = { getCart, getCartItemByUserAndFigure, createCartItem, removeFromCart, updateQuantity }

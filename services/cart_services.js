@@ -1,4 +1,5 @@
 const cartDataLayer = require('../dal/cart');
+const productDataLayer = require('../dal/products');
 
 async function addToCart(customerId, figureId, quantity) {
     let cartItem = await cartDataLayer.getCartItemByUserAndFigure(customerId, figureId);
@@ -22,4 +23,12 @@ async function getCart(customerId) {
     return await cartDataLayer.getCart(customerId);
 }
 
-module.exports = { addToCart, removeFromCart, setQuantity, getCart }
+async function getFigureById(figureId) {
+    return await productDataLayer.getFigureById(figureId)
+}
+
+async function getCartItemByUserAndFigure(customerId, figureId) {
+    return await cartDataLayer.getCartItemByUserAndFigure(customerId, figureId)
+}
+
+module.exports = { addToCart, removeFromCart, setQuantity, getCart, getFigureById, getCartItemByUserAndFigure }
