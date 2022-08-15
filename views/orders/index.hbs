@@ -1,6 +1,12 @@
 {{#extends 'base'}}
 {{#block 'content'}}
 <div class="container">
+     <form method="GET">
+        <div class="row">
+            {{{form}}}
+        </div>
+        <input type="submit" class="my-2 btn btn-primary text-end" value="search" />
+    </form>
     <h4>orders</h4>
     <table class="table table-hover table-striped">
     <thead>
@@ -13,6 +19,7 @@
             <th>Payment reference</th>
             <th>Order status</th>
             <th>Last updated</th>
+            <th>Order summary</th>
             <th>Update order</th>
         </tr>
     </thead>
@@ -27,9 +34,14 @@
             <td>{{this.payment_reference}}</td>
             <td>{{this.order_status.order_status}}</td>
             <td>{{displayDateTime this.updated_date}}</td>
-            <td> {{#each this.orderedItems}}
-                <b>{{this.figure.name}} x {{this.quantity}}</b>
+            <td>
+                <ol>
+                {{#each this.orderedItems}}
+                <li class="ol-list">
+                {{this.figure.name}} x {{this.quantity}}
+                </li>
                 {{/each}}
+                </ol> 
                 </td>
             <td>
                 <a href="/orders/{{this.id}}/update" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>

@@ -8,6 +8,7 @@ var bootstrapField = function (name, object) {
 
     if (object.widget.type == 'multipleCheckbox' || object.widget.type == 'multipleRadio') {
         object.widget.classes.push('form-check-input');
+        object.widget.classes.push('format-checkbox');
     }
 
     if (object.widget.classes.indexOf('form-control') === -1 && !object.widget.classes.includes('form-check-input')) {
@@ -91,10 +92,12 @@ const createFigureForm = (figureType, series, collection, groupings) => {
             choices: series
         }),
         medium_id: fields.string({
-            label: 'Media medium',
+            label: 'Media mediums for series',
             required: true,
             errorAfterField: true,
-            widget: widgets.multipleCheckbox(),
+            widget: widgets.multipleCheckbox({
+                labelClasses: ['format-checkbox', 'form-check-label']
+            }),
             choices: groupings,
         }),
         collection_id: fields.string({
@@ -166,7 +169,10 @@ const createOrderStatusForm = (status) => {
         order_status_id: fields.string({
             required: true,
             widget: widgets.select(),
-            choices: status
+            choices: status,
+            cssClasses: {
+                label: ['d-none']
+            }
         })
     }, { validatePastFirstError: true })
 };
@@ -242,7 +248,31 @@ const changeAdminPassword = () => {
     }, { validatePastFirstError: true })
 };
 
+const createSearchOrdersForm = (orderStatus) => {
+    return forms.create({
+        order_id: fields.number({
+            required: false
+        }),
+        email: fields.string({
+            required: false
+        }),
+        order_status_id: fields.string({
+            required: false,
+            widget: widgets.select(),
+            choices: orderStatus
+        }),
+        order_date: fields.date({
+            required: false,
+            widget: widgets.date()
+        }),
+        payment_reference: fields.string({
+            required: false
+        })
+    })
+}
+
 module.exports = {
     createFigureForm, bootstrapField, createLoginForm, createSearchForm,
-    createOrderStatusForm, createNewUserForm, changeAdminPassword
+    createOrderStatusForm, createNewUserForm, changeAdminPassword,
+    createSearchOrdersForm
 }
