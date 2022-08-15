@@ -49,14 +49,21 @@ const createFigureForm = (figureType, series, collection, groupings) => {
             errorAfterField: true,
             validators: [validators.integer(), validators.min(0)]
         }),
-        launch_status: fields.boolean({
+        launch_status: fields.string({
             required: true,
             errorAfterField: true,
-            choices: {
-                yes: true,
-                no: false
-            },
+            choices: [
+                [0, 'no'], [1, 'yes']
+            ],
             widget: widgets.select(),
+        }),
+        blind_box: fields.string({
+            required: true,
+            errorAfterField: true,
+            choices: [
+                [0, 'no'], [1, 'yes']
+            ],
+            widget: widgets.select()
         }),
         release_date: fields.date({
             required: true,
@@ -120,7 +127,6 @@ const createSearchForm = (figureTypes, series, collections) => {
     return forms.create({
         name: fields.string({
             required: false,
-            errorAfterField: true
         }),
         min_cost: fields.string({
             required: false,
@@ -135,7 +141,6 @@ const createSearchForm = (figureTypes, series, collections) => {
         figure_type_id: fields.string({
             required: false,
             widget: widgets.select(),
-            errorAfterField: true,
             choices: figureTypes
         }),
         series_id: fields.string({
@@ -210,7 +215,7 @@ const createNewUserForm = () => {
             errorAfterField: true,
         }),
         unit: fields.string({
-            required:true,
+            required: true,
             errorAfterField: true
         }),
         postal: fields.string({
@@ -219,6 +224,25 @@ const createNewUserForm = () => {
             validators: [validators.digits()]
         })
     }, { validatePastFirstError: true })
-}
+};
 
-module.exports = { createFigureForm, bootstrapField, createLoginForm, createSearchForm, createOrderStatusForm, createNewUserForm }
+const changeAdminPassword = () => {
+    return forms.create({
+        password: fields.password({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.password()
+        }),
+        confirm_password: fields.password({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.password(),
+            validators: [validators.matchField('password')]
+        }),
+    }, { validatePastFirstError: true })
+};
+
+module.exports = {
+    createFigureForm, bootstrapField, createLoginForm, createSearchForm,
+    createOrderStatusForm, createNewUserForm, changeAdminPassword
+}

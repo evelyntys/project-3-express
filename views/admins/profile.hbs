@@ -1,0 +1,21 @@
+{{#extends 'base'}}
+{{#block 'css'}}
+<link rel="stylesheet" href="/css/profile.css" />
+{{/block}}
+{{#block 'content'}}
+<div class="container fix-size">
+    <div class="text-center">
+        <i class="bi bi-person-circle profile-icon"></i>
+    </div>
+    <div class="text-center">{{admin.first_name}} {{admin.last_name}}</div>
+    <div class="text-center">{{admin.email}} </div>
+    <h4 class="text-center">update password</h4>
+    <div class="container profile-content">
+        <form method="POST">
+            {{{form}}}
+            <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+            <div class="text-center"><input type="submit" class="btn btn-primary my-1 text-center" value="change password" /></div>
+        </form>
+    </div>
+    {{/block}}
+    {{/extends}}
