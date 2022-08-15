@@ -1,11 +1,69 @@
 {{#extends 'base'}}
 {{#block 'content'}}
 <div class="container">
-    <form method="POST">
-        {{{form}}}
-        <input type="hidden" value="{{csrfToken}}" name="_csrf" />
-        <input type="submit" class="btn btn-primary" value="update status"/>
-    </form>
+    <h4>order details</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer name</th>
+                <th>Customer email</th>
+                <th>Total cost</th>
+                <th>Order date</th>
+                <th>Payment reference</th>
+                <th>Order status</th>
+                <th>Last updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{order.id}}</td>
+                <td>{{order.customer.first_name}} {{order.customer.last_name}}</td>
+                <td>{{order.customer.email}}</td>
+                <td>{{costWithDecimal order.total_cost}}</td>
+                <td>{{displayDate Order.ordered_date}}</td>
+                <td>{{order.payment_reference}}</td>
+                <td>
+                    <form method="POST">
+                        {{{form}}}
+                        <input type="hidden" value="{{csrfToken}}" name="_csrf" />
+                        <input type="submit" class="btn btn-primary" value="update status" />
+                    </form>
+                </td>
+                <td>{{displayDateTime order.updated_date}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+<h4>ordered items: </h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Cost</th>
+                <th>Collection</th>
+                <th>Manufacturer</th>
+                <th>Quantity purchased</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each order.orderedItems}}
+            <tr>
+                <td>{{this.figure.id}}</td>
+                <td>
+                    <img src="{{this.figure.image_url}}" style="height: 80px"/>
+                </td>
+                <td>{{this.figure.name}}</td>
+                <td>{{costWithDecimal this.figure.cost}}</td>
+                <td>{{this.collection}}</td>
+                <td>{{this.manufacturer}}</td>
+                <td>{{this.quantity}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </div>
 {{/block}}
 {{/extends}}
