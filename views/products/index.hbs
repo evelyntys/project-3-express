@@ -1,18 +1,21 @@
 {{#extends 'base'}}
 {{#block 'content'}}
 <div class="container">
-    <div class="search-box my-3 p-3">
-        <h4>Search by:</h4>
-        <form method="GET">
-            <div class="row">
-                {{{form}}}
-            </div>
-            <div class="d-flex justify-content-end">
-                <a href="/products" class="m-2 btn reset"><i class="bi bi-arrow-counterclockwise"></i></a>
-                {{!-- <input type="submit" class="m-2 btn search" value="search" /> --}}
-                <button class="m-2 btn search"><i class="bi bi-search"></i></button>
-            </div>
-        </form>
+     <div>
+        <button class="btn hide-search search w-100 my-1">HIDE SEARCH</button>
+        <div class="search-box my-1 p-3">
+            <h4>Search for: </h4>
+            <form method="GET">
+                <div class="row">
+                    {{{form}}}
+                </div>
+                <div class="d-flex justify-content-end">
+                    <a href="/products" class="m-2 btn reset"><i class="bi bi-arrow-counterclockwise"></i></a>
+                    {{!-- <input type="submit" class="m-2 btn search" value="search" /> --}}
+                    <button class="m-2 btn search"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+        </div>
     </div>
     <div class="row">
         <div class="col-6 justify-content-start">
@@ -124,6 +127,18 @@
         parentRow.appendChild(wrapper);
 
     }
+</script>
+<script>
+    let hideBtn = document.querySelector('.hide-search');
+    hideBtn.addEventListener('click', function () {
+        if (hideBtn.innerText == 'HIDE SEARCH') {
+            document.querySelector('.search-box').style.display = 'none';
+            hideBtn.innerText = 'SHOW SEARCH';
+        } else {
+            document.querySelector('.search-box').style.display = 'block';
+            hideBtn.innerText = 'HIDE SEARCH';
+        }
+    })
 </script>
 {{/block}}
 {{/extends}}
