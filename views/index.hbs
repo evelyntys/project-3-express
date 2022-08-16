@@ -5,27 +5,26 @@
 {{#block 'content'}}
 <div class="wrapper">
     <div class="login-box text-center">
-        <img src="/logo.png" />
+        <img src="/logo.png" class="my-2" style="height: 80px" />
         <h1>Login</h1>
         <form method="POST">
             <div class="row justify-content-center">
                 <input type="hidden" name="_csrf" value="{{csrfToken}}" />
                 {{{form}}}
             </div>
-            <input type="submit" value="login" class="btn main-btns mt-2" />
+            <input type="submit" value="login" class="btn search mt-2" />
         </form>
     </div>
     <div class="login-img">
-        <img class="login-img" src="/login2.jpg" />
+        <img class="login-img" src="/login.jpg" />
     </div>
-
 </div>
 {{/block}}
 
 {{#block 'js'}}
 <script>
     let allFormDiv = document.querySelectorAll('.form-group');
-    for (let each of allFormDiv){
+    for (let each of allFormDiv) {
         each.classList.add('col-8')
     }
 </script>
