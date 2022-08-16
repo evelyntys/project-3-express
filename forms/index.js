@@ -48,7 +48,8 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         height: fields.number({
             required: true,
             errorAfterField: true,
-            validators: [validators.integer(), validators.min(0)]
+            validators: [validators.integer(), validators.min(0)],
+            label: ['Height(mm)']
         }),
         launch_status: fields.string({
             required: true,
@@ -162,7 +163,7 @@ const createSearchForm = (figureTypes, series, collections, manufacturers) => {
             choices: collections,
             label: ['Collection']
         }),
-        last_updated: fields.date({
+        release_date: fields.date({
             required: false,
             widget: widgets.date()
         }),
