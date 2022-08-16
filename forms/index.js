@@ -186,6 +186,13 @@ const createSearchForm = (figureTypes, series, collections, manufacturers) => {
             ],
             widget: widgets.select()
         }),
+        stock_status: fields.string({
+            required: false,
+            choices: [
+                [-1, '---select stock status---'],[0, 'sold out'], [1, 'in stock']
+            ],
+            widget: widgets.select()
+        })
 
     }, { validatePastFirstError: true })
 };

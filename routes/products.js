@@ -75,6 +75,15 @@ router.get('/', async function (req, res) {
             if (form.data.launch_status != -1){
                 q.where('launch_status', form.data.launch_status)
             };
+
+            if (form.data.stock_status == 1){
+                q.where('quantity', '>=', form.data.stock_status);
+            };
+
+            if (form.data.stock_status == 0){
+                q.where('quantity', form.data.stock_status)
+            }
+
             let figures = await dataLayer.displayFigures(q);
             if (form.data.manufacturer_id && form.data.manufacturer_id != 0) {
                 figures = figures.filter(each => {
