@@ -284,7 +284,7 @@ const changeAdminPassword = () => {
 const createSearchOrdersForm = (orderStatus) => {
     return forms.create({
         order_id: fields.number({
-            required: false
+            required: false,
         }),
         email: fields.string({
             required: false
@@ -292,9 +292,10 @@ const createSearchOrdersForm = (orderStatus) => {
         order_status_id: fields.string({
             required: false,
             widget: widgets.select(),
-            choices: orderStatus
+            choices: orderStatus,
+            label: ['Order status']
         }),
-        order_date: fields.date({
+        ordered_date: fields.date({
             required: false,
             widget: widgets.date()
         }),

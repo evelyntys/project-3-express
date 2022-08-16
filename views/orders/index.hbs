@@ -1,58 +1,86 @@
 {{#extends 'base'}}
 {{#block 'content'}}
 <div class="container">
-     <form method="GET">
-        <div class="row">
-            {{{form}}}
-        </div>
-        <input type="submit" class="my-2 btn btn-primary text-end" value="search" />
-    </form>
+    <div class="search-box my-3 p-3">
+        <form method="GET">
+            <div class="row">
+                {{{form}}}
+            </div>
+            <div class="d-flex justify-content-end">
+                <a href="/orders" class="m-2 btn reset"><i class="bi bi-arrow-counterclockwise"></i></a>
+                {{!-- <input type="submit" class="m-2 btn search" value="search" /> --}}
+                <button class="m-2 btn search"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
     <h4>orders</h4>
     <div class="container" style="overflow:auto">
-    <table class="table table-hover table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Customer name</th>
-            <th>Customer email</th>
-            <th>Total cost</th>
-            <th>Order date</th>
-            <th>Payment reference</th>
-            <th>Order status</th>
-            <th>Last updated</th>
-            <th>Order summary</th>
-            <th>Update order</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each orders}}
-        <tr>
-            <td>{{this.id}}</td>
-            <td>{{this.customer.first_name}} {{this.customer.last_name}}</td>
-            <td>{{this.customer.email}}</td>
-            <td>{{costWithDecimal this.total_cost}}</td>
-            <td>{{displayDate this.ordered_date}}</td>
-            <td>{{this.payment_reference}}</td>
-            <td>{{this.order_status.order_status}}</td>
-            <td>{{displayDateTime this.updated_date}}</td>
-            <td>
-                <ol>
-                {{#each this.orderedItems}}
-                <li class="ol-list">
-                {{this.figure.name}} x {{this.quantity}}
-                </li>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Total cost</th>
+                    <th>Order date</th>
+                    <th>Payment reference</th>
+                    <th>Order status</th>
+                    <th>Last updated</th>
+                    <th>Order summary</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders}}
+                <tr>
+                    <td>{{this.id}}</td>
+                    <td>{{this.customer.first_name}} {{this.customer.last_name}}</td>
+                    <td>{{this.customer.email}}</td>
+                    <td>${{costWithDecimal this.total_cost}}</td>
+                    <td>{{displayDate this.ordered_date}}</td>
+                    <td>{{this.payment_reference}}</td>
+                    <td>{{this.order_status.order_status}}</td>
+                    <td>{{displayDateTime this.updated_date}}</td>
+                    <td>
+                        <ol>
+                            {{#each this.orderedItems}}
+                            <li class="ol-list">
+                                {{this.figure.name}} x {{this.quantity}}
+                            </li>
+                            {{/each}}
+                        </ol>
+                    </td>
+                    <td>
+                        <a href="/orders/{{this.id}}/update" class="btn edit-btn btn-sm"><i
+                                class="bi bi-pencil-square"></i></a>
+                    </td>
+                </tr>
                 {{/each}}
-                </ol> 
-                </td>
-            <td>
-                <a href="/orders/{{this.id}}/update" class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></a>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
-</div>
-<div>
-</div>
-{{/block}}
-{{/extends}}
+            </tbody>
+        </table>
+    </div>
+    <div>
+    </div>
+    {{/block}}
+
+    {{#block 'js'}}
+    <script>
+        let parentRow = document.querySelector('.row')
+        let allFormDiv = document.querySelectorAll('.form-group');
+        for (let each of allFormDiv) {
+            let wrapper = document.createElement('div');
+            if (each.innerHTML.includes('id_min_cost')
+                || each.innerHTML.includes('id_max_cost')
+                || each.innerHTML.includes('id_launch_status')
+                || each.innerHTML.includes('id_blind_box')) {
+                wrapper.classList.add('col-3');
+            } else {
+                wrapper.classList.add('col-6');
+            }
+            wrapper.appendChild(each);
+            parentRow.appendChild(wrapper);
+
+        }
+    </script>
+    {{/block}}
+    {{/extends}}

@@ -8,7 +8,7 @@
                 {{{form}}}
             </div>
             <div class="d-flex justify-content-end">
-                <button class="m-2 btn reset"><i class="bi bi-arrow-counterclockwise"></i></button>
+                <a href="/products" class="m-2 btn reset"><i class="bi bi-arrow-counterclockwise"></i></a>
                 {{!-- <input type="submit" class="m-2 btn search" value="search" /> --}}
                 <button class="m-2 btn search"><i class="bi bi-search"></i></button>
             </div>
@@ -124,22 +124,6 @@
         parentRow.appendChild(wrapper);
 
     }
-</script>
-<script>
-    let resetSearch = document.querySelector('.reset');
-    resetSearch.addEventListener('click', function(){
-        document.querySelector('#id_name').value = "";
-        document.querySelector('#id_min_cost').value = "";
-        document.querySelector('#id_max_cost').value = "";
-        document.querySelector('#id_figure_type_id').value = 0;
-        document.querySelector('#id_collection_id').value = 0;
-        document.querySelector('#id_series_id').value = 0;
-        document.querySelector('#id_last_updated').value = 'dd/mm/yyyy';
-        document.querySelector('#id_manufacturer_id').value = 0;
-        document.querySelector('#id_launch_status').value = -1;
-        document.querySelector('#id_blind_box').value = -1;
-        document.querySelector('#id_stock_status').value = -1;
-    })
 </script>
 {{/block}}
 {{/extends}}
