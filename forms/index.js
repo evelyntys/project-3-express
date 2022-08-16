@@ -92,11 +92,14 @@ const createFigureForm = (figureType, series, collection, groupings) => {
             choices: series
         }),
         medium_id: fields.string({
-            label: 'Media mediums for series',
+            label: 'Media mediums for series: ',
             required: true,
             errorAfterField: true,
+            cssClasses: {
+                label: ['form-label', 'form-check-inline']
+            },
             widget: widgets.multipleCheckbox({
-                labelClasses: ['format-checkbox', 'form-check-label']
+                labelClasses: ['format-checkbox', 'form-check-label'],
             }),
             choices: groupings,
         }),

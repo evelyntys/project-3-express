@@ -6,20 +6,29 @@
         <input type="hidden" name="_csrf" value="{{csrfToken}}" />
         <div class="row">
             {{{figureForm}}}
-        </div>
-        <div>
-            <a href="#" class="btn btn-primary" id="upload_widget">upload</a>
+      
+        <div class="image-div my-1">
+        <div class="d-flex justify-content-center">
             <img src="" style="display: none" id="uploaded_image" />
         </div>
+        <div class="d-flex justify-content-end">
+        <a href="#" class="btn btn-primary text-end my-1" id="upload_widget">upload</a>
+        </div>
+        </div>
+    </div>
         <input type="submit" value="Create new product" class="btn btn-primary mt-2" />
     </form>
+    </div>
 </div>
 {{/block}}
 
 {{#block 'js'}}
 <script>
+    let allFields = document.querySelectorAll('.form-group');
+    let parentForm = document.querySelector('.row');
+    let imageDiv = document.querySelector('.image-div');
+    parentForm.insertBefore(imageDiv, allFields[1]);
     let series_mediums = {{{ series_mediums }}}
-    console.log(series_mediums);
     let selectedSeries = document.querySelector('#id_series_id');
     let allMediumCheckboxes = document.getElementsByName('medium_id');
     let newSeries = document.createElement('div');
@@ -39,7 +48,6 @@
         <input type="text" name="new-manufacturer" class="form-control"/>
         </div>
         `
-    let allFields = document.querySelectorAll('.form-group');
     for (let each of allFields) {
         if (each.innerHTML.includes('id_series_id')) {
             each.appendChild(newSeries)
@@ -47,7 +55,23 @@
         if (each.innerHTML.includes('id_collection_id')) {
             each.appendChild(newCollection)
         }
-    }
+        if (each.innerHTML.includes('id_medium_id')) {
+            let allCheckboxes = document.querySelectorAll('.format-checkbox');
+            console.log(allCheckboxes.length);
+            console.log(allCheckboxes);
+            for (let i = 0; i < allCheckboxes.length - 1; i = i + 2) {
+                console.log(i)
+                let parentWrap = document.createElement('div');
+                parentWrap.classList.add('form-check');
+                parentWrap.classList.add('form-check-inline');
+                console.log(allCheckboxes[i])
+                parentWrap.appendChild(allCheckboxes[i]);
+                parentWrap.appendChild(allCheckboxes[i + 1]);
+                each.appendChild(parentWrap);
+            };
+        }
+    };
+
     newSeries.style.display = 'none';
     newCollection.style.display = 'none';
 
@@ -81,7 +105,7 @@
                 }
             }
         }
-            })
+    })
     selectedCollection.addEventListener('change', function () {
         if (selectedCollection.value == 0) {
             newCollection.style.display = 'block';
@@ -115,7 +139,7 @@
     }, (error, result) => {
         if (!error && result && result.event === 'success') {
             console.log('completed, image info => ', result.info);
-            document.querySelector('#upload_widget').style.display = 'none';
+            
             document.querySelector('#id_image_url').value = result.info.url;
             document.querySelector('#uploaded_image').src = result.info.url;
             document.querySelector('#uploaded_image').style.display = 'inline';
