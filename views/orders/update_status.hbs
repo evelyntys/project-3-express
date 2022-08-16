@@ -7,11 +7,8 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Customer name</th>
-                <th>Customer email</th>
-                <th>Total cost</th>
-                <th>Order date</th>
-                <th>Payment reference</th>
+                <th>Customer</th>
+                <th>Order summary</th>
                 <th>Order status</th>
                 <th>Last updated</th>
             </tr>
@@ -19,11 +16,13 @@
         <tbody>
             <tr>
                 <td>{{order.id}}</td>
-                <td>{{order.customer.first_name}} {{order.customer.last_name}}</td>
-                <td>{{order.customer.email}}</td>
-                <td>{{costWithDecimal order.total_cost}}</td>
-                <td>{{displayDate Order.ordered_date}}</td>
-                <td>{{order.payment_reference}}</td>
+                <td>{{order.customer.first_name}} {{order.customer.last_name}}<br />
+                        {{order.customer.email}} <br />
+                        {{order.address}}</td>
+                <td><b>{{order.payment_reference}}</b> <br />
+                        Ordered on {{displayDate order.ordered_date}} <br />
+                        Total: ${{costWithDecimal order.total_cost}} <br />
+                    </td>
                 <td>
                     <form method="POST">
                         {{{form}}}
@@ -54,7 +53,11 @@
             <tr>
                 <td>{{this.figure.id}}</td>
                 <td>
-                    <img src="{{this.figure.image_url}}" style="height: 80px"/>
+                    {{#if this.figure.image_url}}
+                    <img src="{{this.figure.image_url}}" class="display-image"/>
+                    {{else}}
+                    <img src="/placeholder.png" class="display-image"/>
+                    {{/if}}
                 </td>
                 <td>{{this.figure.name}}</td>
                 <td>{{costWithDecimal this.figure.cost}}</td>

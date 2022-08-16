@@ -24,13 +24,9 @@
                 <tr>
                     <th>ID</th>
                     <th>Customer</th>
-                    <th>Email</th>
-                    <th>Total cost</th>
-                    <th>Order date</th>
-                    <th>Payment reference</th>
+                    <th>Order summary</th>
                     <th>Order status</th>
                     <th>Last updated</th>
-                    <th>Order summary</th>
                     <th></th>
                 </tr>
             </thead>
@@ -38,14 +34,12 @@
                 {{#each orders}}
                 <tr>
                     <td>{{this.id}}</td>
-                    <td>{{this.customer.first_name}} {{this.customer.last_name}}</td>
-                    <td>{{this.customer.email}}</td>
-                    <td>${{costWithDecimal this.total_cost}}</td>
-                    <td>{{displayDate this.ordered_date}}</td>
-                    <td>{{this.payment_reference}}</td>
-                    <td>{{this.order_status.order_status}}</td>
-                    <td>{{displayDateTime this.updated_date}}</td>
-                    <td>
+                    <td>{{this.customer.first_name}} {{this.customer.last_name}}<br />
+                        {{this.customer.email}} <br />
+                        {{this.address}}</td>
+                    <td><b>{{this.payment_reference}}</b> <br />
+                        Ordered on {{displayDate this.ordered_date}} <br />
+                        Total: ${{costWithDecimal this.total_cost}} <br />
                         <ol>
                             {{#each this.orderedItems}}
                             <li class="ol-list">
@@ -54,6 +48,8 @@
                             {{/each}}
                         </ol>
                     </td>
+                    <td>{{this.order_status.order_status}}</td>
+                    <td>{{displayDateTime this.updated_date}}</td>
                     <td>
                         <a href="/orders/{{this.id}}/update" class="btn edit-btn btn-sm"><i
                                 class="bi bi-pencil-square"></i></a>
