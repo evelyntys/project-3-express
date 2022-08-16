@@ -21,11 +21,11 @@ hbs.registerHelper('costWithDecimal', function (value) {
 });
 
 hbs.registerHelper('displayDate', function (date) {
-    return moment(date).format('L')
+    return moment(date).format('DD/MM/YYYY')
 });
 
 hbs.registerHelper('displayDateTime', function (date) {
-    return moment(date).format('L, LTS')
+    return moment(date).format('DD/MM/YYYY, LTS')
 });
 
 let app = express();
