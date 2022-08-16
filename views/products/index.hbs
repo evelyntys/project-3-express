@@ -1,7 +1,7 @@
 {{#extends 'base'}}
 {{#block 'content'}}
 <div class="container">
-     <div>
+    <div>
         <button class="btn hide-search search w-100 my-1">HIDE SEARCH</button>
         <div class="search-box my-1 p-3">
             <h4>Search for: </h4>
@@ -27,59 +27,64 @@
     </div>
     {{#if figures}}
     <div class="container" style="overflow:auto">
-        <table class="table table-hover table-striped">
+        <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Image</th>
-                    <th style="width:15%">Name</th>
-                    <th>Cost</th>
-                    {{!-- <th>Height (mm)</th> --}}
-                    {{!-- <th>Figure Type</th> --}}
-                    <th>Collection/Manufacturer</th>
-                    {{!-- <th>Manufacturer</th> --}}
-                    <th>Series</th>
-                    <th>Launched?</th>
-                    <th>Release date</th>
-                    <th>Quantity</th>
-                    {{!-- <th>Last updated
-                    <th> --}}
-                    <th></th>
+                    <th style="width: 5%">ID</th>
+                    <th style="width: 35%">Figure</th>
+                    <th style="width: 35%">Description</th>
+                    <th style="width: 5%">Cost</th>
+                    <th style="width: 10%">Release date</th>
+                    <th style="width: 5%">Quantity</th>
+                    <th style="width: 5%"></th>
                 </tr>
             </thead>
             <tbody>
                 {{#each figures}}
-                <tr>
+                <tr height='50px'>
                     <td>{{this.id}}</td>
                     <td>
-                        {{#if this.image_url}}
-                        <img src="{{this.image_url}}" style="height: 40px" />
-                        {{else}}
-                        <img src="/logo.png" style="height: 40px" />
-                        {{/if}}
-                    </td>
-                    <td>{{this.name}}</td>
-                    <td>${{costWithDecimal this.cost}}</td>
-                    {{!-- <td>{{this.height}}</td> --}}
-                    {{!-- <td>{{this.figure_type.figure_type}}</td> --}}
-                    <td>{{this.collection.collection_name}} /<br/>
-                        {{this.manufacturer.manufacturer_name}}</td>
-                    {{!-- <td>{{this.manufacturer.manufacturer_name}}</td> --}}
-                    <td>
-                        {{this.series.series_name}}
+                        <div class="">
+                            {{#if this.image_url}}
+                            <img src="{{this.image_url}}" class="display-image" />
+                            {{else}}
+                            <img src="/placeholder.png" class="display-image" />
+                            {{/if}}
+                        </div>
+                        <h6>{{this.name}}</h6>
+                        <span class="badge bg-dark">
+                        {{uppercase this.figure_type.figure_type}} {{uppercase 'FIGURE'}}
+                        </span>
+                        <div class="italicize">
+                            {{this.height}}mm </br />
+                            Collection: {{this.collection.collection_name}}<br />
+                            Manufactured by {{this.manufacturer.manufacturer_name}} <br />
+                            From the {{this.series.series_name}} franchise
+                        </div>
                         <div>
-                        {{#each this.series.mediums}}
-                        <span class="badge med-badge">{{this.media_medium}}</span>
-                        {{/each}}
+                            {{#each this.series.mediums}}
+                            <span class="badge med-badge">{{this.media_medium}}</span>
+                            {{/each}}
+                        </div>
+                        {{#if this.launch_status}}
+                        <span class="badge bg-dark">LAUNCHED</span>
+                        {{else}}
+                        <span class="badge bg-dark">PRE-ORDER</span>
+                        {{/if}}
+                        {{#if this.blind_box}}
+                        <span class="badge bg-dark">BLIND-BOX</span>
+                        {{/if}} <br />
+                        <div class="italicize">
+                            Listed on {{displayDate this.listing_date}} <br />
+                            Last updated on {{this.updated_date}}
                         </div>
                     </td>
                     <td>
-                        {{#if this.launch_status}}
-                        yes
-                        {{else}}
-                        no
-                        {{/if}}
+                        <div class="product-description" style="height: 100%; overflow-y: scroll">
+                            {{this.description}}
+                        </div>
                     </td>
+                    <td>${{costWithDecimal this.cost}}</td>
                     <td>{{displayDate this.release_date}}</td>
                     <td> {{#if this.quantity}}
                         {{this.quantity}}
@@ -115,10 +120,10 @@
     let allFormDiv = document.querySelectorAll('.form-group');
     for (let each of allFormDiv) {
         let wrapper = document.createElement('div');
-        if (each.innerHTML.includes('id_min_cost') 
-        || each.innerHTML.includes('id_max_cost')
-        || each.innerHTML.includes('id_launch_status')
-        || each.innerHTML.includes('id_blind_box')) {
+        if (each.innerHTML.includes('id_min_cost')
+            || each.innerHTML.includes('id_max_cost')
+            || each.innerHTML.includes('id_launch_status')
+            || each.innerHTML.includes('id_blind_box')) {
             wrapper.classList.add('col-3');
         } else {
             wrapper.classList.add('col-6');
