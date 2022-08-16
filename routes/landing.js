@@ -55,12 +55,6 @@ router.post('/', async function (req, res) {
             })
         }
     })
-})
-
-router.get('/logout', function(req,res){
-    req.session.admin = null;
-    req.flash('success_messages', 'successful logout');
-    res.redirect('/')
-})
+});
 
 module.exports = router;
