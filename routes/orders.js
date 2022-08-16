@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment-timezone');
+moment.tz.setDefault('Asia/Taipei');
 const ordersDataLayer = require('../dal/orders');
 const { getFigureById, getCollectionByName } = require('../dal/products');
-moment.tz.setDefault('Asia/Taipei');
 const { createOrderStatusForm, bootstrapField, createSearchOrdersForm } = require('../forms');
 const { Order, OrderStatus, OrderedItem } = require('../models');
 
@@ -32,17 +32,21 @@ router.get('/', async function (req, res) {
             if (form.data.order_status_id && form.data.order_status_id != 0){
                 q.where('order_status_id', '=', form.data.order_status_id)
             };
-            if (form.data.order_date){
-                let date = new Date(form.data.order_date);
+            if (form.data.ordered_date){
+                let date = new Date(form.data.ordered_date);
+                date.setHours(date.getHours() - 8);
                 let day = 60 * 60 * 24 * 1000 - 1000;
                 let endDate = new Date(date.getTime() + day);
+                console.log(date)
                 console.log(endDate)
                 date = moment(date).format();
                 endDate = moment(endDate).format();
+                console.log(date)
+                console.log(endDate)
                 q.query(function (dateQuery) {
                     dateQuery.whereBetween('ordered_date', [date, endDate]);
                 });
-                q.orderBy('ordered_date', 'DESC')
+                // q.orderBy('ordered_date', 'DESC')
             };
 
             if (form.data.payment_reference){
@@ -61,11 +65,6 @@ router.get('/', async function (req, res) {
             });
         }
     });
-
-    // res.render('orders/index', {
-    //     orders: orders,
-    //     form: searchForm.toHTML(bootstrapField)
-    // })
 });
 
 router.get('/:order_id/update', async function (req, res) {

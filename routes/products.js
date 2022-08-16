@@ -6,6 +6,7 @@ const { createFigureForm, bootstrapField, createSearchForm } = require('../forms
 const { Figure, FigureType, Series, Collection, Manufacturer, Medium } = require('../models');
 const dataLayer = require('../dal/products');
 const { getCartByFigureId } = require('../dal/cart');
+const { getOrderItemsByFigureId } = require('../dal/orders');
 
 router.get('/', async function (req, res) {
     let allFigureTypes = await dataLayer.getAllFigureTypes();
@@ -69,18 +70,18 @@ router.get('/', async function (req, res) {
                 });
                 q.orderBy('listing_date', 'DESC');
             };
-            if (form.data.blind_box != -1){
+            if (form.data.blind_box != -1) {
                 q.where('blind_box', form.data.blind_box)
             };
-            if (form.data.launch_status != -1){
+            if (form.data.launch_status != -1) {
                 q.where('launch_status', form.data.launch_status)
             };
 
-            if (form.data.stock_status == 1){
+            if (form.data.stock_status == 1) {
                 q.where('quantity', '>=', form.data.stock_status);
             };
 
-            if (form.data.stock_status == 0){
+            if (form.data.stock_status == 0) {
                 q.where('quantity', form.data.stock_status)
             }
 
@@ -247,11 +248,13 @@ router.post('/:figure_id/delete', async function (req, res) {
     let figureID = req.params.figure_id;
     let figure = await dataLayer.getFigureById(figureID);
     let checkCart = await getCartByFigureId(figureID);
-    if (checkCart.toJSON.length == 0) {
+    let checkOrderItems = await getOrderItemsByFigureId(figureID);
+    if (!checkCart && !checkOrderItems) {
         await figure.destroy();
         req.flash('success_messages', `product has been succesfully delete`);
     } else {
-        req.flash('error_messages', 'product cannot be deleted as it is in a customer`s cart')
+        req.flash('error_messages',
+            `product cannot be deleted as it is in a customer's cart/order`)
     }
     res.redirect('/products');
 });

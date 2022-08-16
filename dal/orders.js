@@ -39,4 +39,13 @@ async function getOrderByCustomerId(customerId){
     });
 };
 
-module.exports = { getAllOrders, getOrderedItems, getOrderById, getAllOrderStatuses, getOrderByCustomerId }
+async function getOrderItemsByFigureId(figureId){
+    return await OrderedItem.where({
+        figure_id: figureId
+    }).fetchAll({
+        require: false
+    })
+}
+
+module.exports = { getAllOrders, getOrderedItems, getOrderById, getAllOrderStatuses
+    ,getOrderByCustomerId, getOrderItemsByFigureId }

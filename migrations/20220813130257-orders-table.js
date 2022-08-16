@@ -14,6 +14,9 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
+const moment = require('moment-timezone');
+moment.tz.setDefault('Asia/Taipei');
+
 exports.up = function(db) {
   return db.createTable('orders', {
     id: {
@@ -49,7 +52,7 @@ exports.up = function(db) {
         table: 'order_statuses',
         mapping: 'id',
         rules: {
-          onDelete: 'cascade',
+          onDelete: 'restrict',
           onUpdate: 'restrict'
         }
       }
@@ -63,7 +66,7 @@ exports.up = function(db) {
         table: 'customers',
         mapping: 'id',
         rules: {
-          onDelete: 'cascade',
+          onDelete: 'restrict',
           onUpdate: 'restrict'
         }
       }
@@ -72,6 +75,11 @@ exports.up = function(db) {
       type: 'string',
       length: 500,
       notNull: true
+    },
+    updated_date: {
+      type: 'datetime',
+      notNull: true,
+      defaultValue: moment().format()
     }
   });
 };
