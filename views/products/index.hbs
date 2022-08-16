@@ -1,109 +1,114 @@
 {{#extends 'base'}}
 {{#block 'content'}}
-<h4>product listings:</h4>
-<form method="GET">
-    {{{form}}}
-    <input type="submit" class="my-2 btn btn-primary" value="search"/>
-</form>
-<a href="/products/create" class="btn btn-primary my-2">create new listing</a>
-{{#if figures}}
-<table class="table table-bordered border-dark">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Cost ($)</th>
-            <th>Height (mm)</th>
-            <th>Figure Type</th>
-            <th>Collection</th>
-            <th>Manufacturer</th>
-            <th>Series</th>
-            <th>Lauched in market?</th>
-            <th>Release date</th>
-            <th>Quantity</th>
-            <th>Listing date (last updated)</th>
-            <th>Controls</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each figures}}
-        <tr>
-            <td>{{this.id}}</td>
-            <th>
-                {{#if this.image_url}}
-                <img src="{{this.image_url}}" style="height: 40px" />
-                {{else}}
-                <img src="/logo.png" style="height: 40px" />
-                {{/if}}
-            </th>
-            <td>{{this.name}}</td>
-            <td>{{costWithDecimal this.cost}}</td>
-            <td>{{this.height}}</td>
-            <td>{{this.figure_type.figure_type}}</td>
-            <td>{{this.collection.collection_name}}</td>
-            <td>{{this.manufacturer.manufacturer_name}}</td>
-            <td>
-                {{this.series.series_name}}
-                {{#each this.series.mediums}}
-                <span class="badge rounded-pill bg-primary">{{this.media_medium}}</span>
-                {{/each}}
-            </td>
-            <td>
-                {{#if this.launch_status}}
-                yes
-                {{else}}
-                no
-                {{/if}}
-            </td>
-            <td>{{displayDate this.release_date}}</td>
-            <td>{{this.quantity}}</td>
-            <td>{{displayDateTime this.listing_date}}</td>
-            <td>
-                <a href="/products/{{this.id}}/update" class="btn btn-primary my-1">update</a>
-                <a href="/products/{{this.id}}/delete" class="btn btn-danger my-1 delete-btn"
-                    data-figure-id="{{this.id}}" data-figure-name="{{this.name}}">delete</a>
-            </td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
-{{else}}
-<div>
-no results found...
+<div class="container">
+    <form method="GET">
+        <div class="row">
+            {{{form}}}
+        </div>
+        <div class="d-flex justify-content-end">
+        <input type="submit" class="my-2 btn btn-primary" value="search" />
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-6 justify-content-start">
+            <h4>products</h4>
+        </div>
+        <div class="col-6 d-flex justify-content-end">
+            <a href="/products/create" class="btn btn-primary">add new product</a>
+        </div>
+    </div>
+    {{#if figures}}
+    <div class="container" style="overflow:auto">
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Cost ($)</th>
+                {{!-- <th>Height (mm)</th> --}}
+                <th>Figure Type</th>
+                <th>Collection</th>
+                <th>Manufacturer</th>
+                <th>Series</th>
+                <th>Lauched in market?</th>
+                <th>Release date</th>
+                <th>Quantity</th>
+                <th>Last updated<th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each figures}}
+            <tr>
+                <td>{{this.id}}</td>
+                <th>
+                    {{#if this.image_url}}
+                    <img src="{{this.image_url}}" style="height: 40px" />
+                    {{else}}
+                    <img src="/logo.png" style="height: 40px" />
+                    {{/if}}
+                </th>
+                <td>{{this.name}}</td>
+                <td>{{costWithDecimal this.cost}}</td>
+                {{!-- <td>{{this.height}}</td> --}}
+                <td>{{this.figure_type.figure_type}}</td>
+                <td>{{this.collection.collection_name}}</td>
+                <td>{{this.manufacturer.manufacturer_name}}</td>
+                <td>
+                    {{this.series.series_name}}
+                    {{#each this.series.mediums}}
+                    <span class="badge rounded-pill bg-primary">{{this.media_medium}}</span>
+                    {{/each}}
+                </td>
+                <td>
+                    {{#if this.launch_status}}
+                    yes
+                    {{else}}
+                    no
+                    {{/if}}
+                </td>
+                <td>{{displayDate this.release_date}}</td>
+                <td> {{#if this.quantity}}
+                    {{this.quantity}}
+                    {{else}}
+                    sold out
+                    {{/if}}
+                </td>
+                <td>{{displayDateTime this.listing_date}}</td>
+                <td>
+                    <a href="/products/{{this.id}}/update" class="btn btn-primary btn-sm my-1"><i
+                            class="bi bi-pencil-square"></i></a>
+                    <a href="/products/{{this.id}}/delete" class="btn btn-danger btn-sm my-1 delete-btn"><i
+                            class="bi bi-trash3"></i></a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    {{else}}
+    <div>
+        no results found...
+    </div>
+    </div>
+    {{/if}}
 </div>
-{{/if}}
 {{/block}}
 
 {{#block 'js'}}
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    let deleteBtns = document.querySelectorAll('.delete-btn');
-    for (let each of deleteBtns) {
-        each.addEventListener('click', async function (e) {
-            e.preventDefault();
-            const result = await Swal.fire({
-                title: `Delete listing for ${e.target.dataset.figureName}?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Confirm delete'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = `/products/${e.target.dataset.figureId}/delete`;
-                    document.querySelector('body').appendChild(form);
-                    form.submit();
-                    Swal.fire(
-                        'Deleted!',
-                        'Listing successfully deleted',
-                        'success'
-                    )
-                }
-            })
-        })
+    let parentRow = document.querySelector('.row')
+    let allFormDiv = document.querySelectorAll('.form-group');
+    for (let each of allFormDiv) {
+        let wrapper = document.createElement('div');
+        if (each.innerHTML.includes('id_min_cost') || each.innerHTML.includes('id_max_cost')) {
+            wrapper.classList.add('col-3');
+        } else {
+            wrapper.classList.add('col-6');
+        }
+        wrapper.appendChild(each);
+        parentRow.appendChild(wrapper);
+
     }
 </script>
 {{/block}}

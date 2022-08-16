@@ -2,6 +2,7 @@
 {{#block 'content'}}
 <div class="container">
     <h4>order details</h4>
+    <div class="container" style="overflow:auto">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -27,7 +28,7 @@
                     <form method="POST">
                         {{{form}}}
                         <input type="hidden" value="{{csrfToken}}" name="_csrf" />
-                        <input type="submit" class="btn btn-primary" value="update status" />
+                        <input type="submit" class="btn btn-primary my-1" value="update" />
                     </form>
                 </td>
                 <td>{{displayDateTime order.updated_date}}</td>
@@ -64,6 +65,7 @@
             {{/each}}
         </tbody>
     </table>
+    </div>
 </div>
 {{/block}}
 {{/extends}}
