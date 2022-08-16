@@ -5,6 +5,7 @@ moment.tz.setDefault('Asia/Taipei');
 const { createFigureForm, bootstrapField, createSearchForm } = require('../forms');
 const { Figure, FigureType, Series, Collection, Manufacturer, Medium } = require('../models');
 const dataLayer = require('../dal/products');
+const { getCartByFigureId } = require('../dal/cart');
 
 router.get('/', async function (req, res) {
     let allFigureTypes = await dataLayer.getAllFigureTypes();
@@ -13,8 +14,10 @@ router.get('/', async function (req, res) {
     allSeries.unshift([0, '---select a series---']);
     let allCollections = await dataLayer.getAllCollections();
     allCollections.unshift([0, '---select a collection---']);
+    let allManufacturers = await dataLayer.getAllManufacturers();
+    allManufacturers.unshift([0, '---select a manufacturer---']);
     let q = Figure.collection();
-    let searchForm = createSearchForm(allFigureTypes, allSeries, allCollections);
+    let searchForm = createSearchForm(allFigureTypes, allSeries, allCollections, allManufacturers);
     searchForm.handle(req, {
         empty: async function (form) {
             let figures = await dataLayer.displayFigures(q);
@@ -52,17 +55,32 @@ router.get('/', async function (req, res) {
             };
             if (form.data.last_updated) {
                 let date = new Date(form.data.last_updated);
+                date.setHours(date.getHours() - 8);
                 let day = 60 * 60 * 24 * 1000 - 1000;
                 let endDate = new Date(date.getTime() + day);
+                console.log(date)
                 console.log(endDate)
                 date = moment(date).format();
                 endDate = moment(endDate).format();
+                console.log(date)
+                console.log(endDate)
                 q.query(function (dateQuery) {
                     dateQuery.whereBetween('listing_date', [date, endDate]);
                 });
                 q.orderBy('listing_date', 'DESC');
-            }
+            };
+            if (form.data.blind_box != -1){
+                q.where('blind_box', form.data.blind_box)
+            };
+            if (form.data.launch_status != -1){
+                q.where('launch_status', form.data.launch_status)
+            };
             let figures = await dataLayer.displayFigures(q);
+            if (form.data.manufacturer_id && form.data.manufacturer_id != 0) {
+                figures = figures.filter(each => {
+                    return each.manufacturer.id == form.data.manufacturer_id
+                })
+            };
             res.render('products/index', {
                 figures: figures,
                 form: form.toHTML(bootstrapField)
@@ -138,9 +156,11 @@ router.get('/:figure_id/update', async function (req, res) {
     let localMedium = await dataLayer.getRelatedMediumsForCheckbox();
     const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     figureForm.fields.name.value = figure.get('name');
+    figureForm.fields.description.value = figure.get('description');
     figureForm.fields.cost.value = (figure.get('cost') / 100).toFixed(2);
     figureForm.fields.height.value = figure.get('height');
     figureForm.fields.launch_status.value = figure.get('launch_status');
+    figureForm.fields.blind_box.value = figure.get('blind_box');
     figureForm.fields.release_date.value = moment(figure.get('release_date')).format('YYYY-MM-DD');
     figureForm.fields.quantity.value = figure.get('quantity');
     figureForm.fields.figure_type_id.value = figure.get('figure_type_id');
@@ -204,14 +224,28 @@ router.post('/:figure_id/update', async function (req, res) {
             )
         }
     })
-})
+});
+
+router.get('/:figure_id/delete', async function (req, res) {
+    let figureID = req.params.figure_id;
+    let figure = await dataLayer.getFigureById(figureID);
+    res.render('products/delete', {
+        figure: figure.toJSON()
+    })
+});
 
 router.post('/:figure_id/delete', async function (req, res) {
     let figureID = req.params.figure_id;
     let figure = await dataLayer.getFigureById(figureID);
-    await figure.destroy();
-    req.flash('success_messages', `product ${figure.name} has been deleted successfully`);
-    res.redirect('/products')
-})
+    let checkCart = await getCartByFigureId(figureID);
+    if (checkCart.toJSON.length == 0) {
+        await figure.destroy();
+        req.flash('success_messages', `product has been succesfully delete`);
+    } else {
+        req.flash('error_messages', 'product cannot be deleted as it is in a customer`s cart')
+    }
+    res.redirect('/products');
+});
+
 
 module.exports = router;

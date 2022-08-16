@@ -129,7 +129,7 @@ const createLoginForm = () => {
     }, { validatePastFirstError: true })
 };
 
-const createSearchForm = (figureTypes, series, collections) => {
+const createSearchForm = (figureTypes, series, collections, manufacturers) => {
     return forms.create({
         name: fields.string({
             required: false,
@@ -147,22 +147,45 @@ const createSearchForm = (figureTypes, series, collections) => {
         figure_type_id: fields.string({
             required: false,
             widget: widgets.select(),
-            choices: figureTypes
+            choices: figureTypes,
+            label: ['Figure type']
         }),
         series_id: fields.string({
             required: false,
             widget: widgets.select(),
-            choices: series
+            choices: series,
+            label: ['Series']
         }),
         collection_id: fields.string({
             required: false,
             widget: widgets.select(),
-            choices: collections
+            choices: collections,
+            label: ['Collection']
         }),
         last_updated: fields.date({
             required: false,
             widget: widgets.date()
-        })
+        }),
+        manufacturer_id: fields.string({
+            required: false,
+            widget: widgets.select(),
+            choices: manufacturers,
+            label: ['Manufacturer']
+        }),
+        launch_status: fields.string({
+            required: false,
+            choices: [
+                [-1, '---select launch status---'],[0, 'no'], [1, 'yes']
+            ],
+            widget: widgets.select(),
+        }),
+        blind_box: fields.string({
+            required: false,
+            choices: [
+                [-1, '---select blindbox---'],[0, 'no'], [1, 'yes']
+            ],
+            widget: widgets.select()
+        }),
 
     }, { validatePastFirstError: true })
 };

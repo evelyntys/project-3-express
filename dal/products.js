@@ -25,6 +25,11 @@ async function getAllMediums() {
     });
 };
 
+async function getAllManufacturers(){
+    return await Manufacturer.fetchAll().map(manufacturer => {
+        return [manufacturer.get('id'), manufacturer.get('manufacturer_name')]
+    })
+}
 
 async function displayFigures(query) {
     let figures = await query.fetch({
@@ -60,7 +65,8 @@ async function getFigureById(figureId) {
     return await Figure.where({
         id: figureId
     }).fetch({
-        require: true
+        require: true,
+        withRelated: ['figure_type', 'series', 'collection']
     });
 }
 
@@ -85,6 +91,15 @@ async function addNewManufacturer(manufacturerName) {
     await newManufacturer.save();
     return newManufacturer.get('id');
 };
+
+async function getCollectionByName(collectionName){
+    return await Collection.where({
+        collection_name: collectionName
+    }).fetch({
+        require: true,
+        withRelated: ['manufacturer']
+    });
+}
 
 async function addNewCollection(manufacturerName, collectionName) {
     let manufacturer_id = -1;
@@ -144,5 +159,5 @@ module.exports = {
     getAllFigureTypes, getAllSeries, displayFigures, getAllCollections, getAllMediums,
     getAllSeriesFull, getFigureById, addNewSeries, getManufacturerByName,
     addNewManufacturer, addNewCollection, getSeriesById, getRelatedMediumsForCheckbox,
-    getValuesForForm
+    getValuesForForm, getCollectionByName, getAllManufacturers
 }

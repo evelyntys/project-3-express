@@ -1,95 +1,106 @@
 {{#extends 'base'}}
 {{#block 'content'}}
 <div class="container">
-    <form method="GET">
-        <div class="row">
-            {{{form}}}
-        </div>
-        <div class="d-flex justify-content-end">
-        <input type="submit" class="my-2 btn btn-primary" value="search" />
-        </div>
-    </form>
+    <div class="search-box my-3 p-3">
+        <h4>Search by:</h4>
+        <form method="GET">
+            <div class="row">
+                {{{form}}}
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="m-2 btn reset"><i class="bi bi-arrow-counterclockwise"></i></button>
+                {{!-- <input type="submit" class="m-2 btn search" value="search" /> --}}
+                <button class="m-2 btn search"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
     <div class="row">
         <div class="col-6 justify-content-start">
             <h4>products</h4>
         </div>
         <div class="col-6 d-flex justify-content-end">
-            <a href="/products/create" class="btn btn-primary">add new product</a>
+            <a href="/products/create" class="btn search">add new product</a>
         </div>
     </div>
     {{#if figures}}
     <div class="container" style="overflow:auto">
-    <table class="table table-hover table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Cost ($)</th>
-                {{!-- <th>Height (mm)</th> --}}
-                <th>Figure Type</th>
-                <th>Collection</th>
-                <th>Manufacturer</th>
-                <th>Series</th>
-                <th>Lauched in market?</th>
-                <th>Release date</th>
-                <th>Quantity</th>
-                <th>Last updated<th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each figures}}
-            <tr>
-                <td>{{this.id}}</td>
-                <th>
-                    {{#if this.image_url}}
-                    <img src="{{this.image_url}}" style="height: 40px" />
-                    {{else}}
-                    <img src="/logo.png" style="height: 40px" />
-                    {{/if}}
-                </th>
-                <td>{{this.name}}</td>
-                <td>{{costWithDecimal this.cost}}</td>
-                {{!-- <td>{{this.height}}</td> --}}
-                <td>{{this.figure_type.figure_type}}</td>
-                <td>{{this.collection.collection_name}}</td>
-                <td>{{this.manufacturer.manufacturer_name}}</td>
-                <td>
-                    {{this.series.series_name}}
-                    {{#each this.series.mediums}}
-                    <span class="badge rounded-pill bg-primary">{{this.media_medium}}</span>
-                    {{/each}}
-                </td>
-                <td>
-                    {{#if this.launch_status}}
-                    yes
-                    {{else}}
-                    no
-                    {{/if}}
-                </td>
-                <td>{{displayDate this.release_date}}</td>
-                <td> {{#if this.quantity}}
-                    {{this.quantity}}
-                    {{else}}
-                    sold out
-                    {{/if}}
-                </td>
-                <td>{{displayDateTime this.listing_date}}</td>
-                <td>
-                    <a href="/products/{{this.id}}/update" class="btn btn-primary btn-sm my-1"><i
-                            class="bi bi-pencil-square"></i></a>
-                    <a href="/products/{{this.id}}/delete" class="btn btn-danger btn-sm my-1 delete-btn"><i
-                            class="bi bi-trash3"></i></a>
-                </td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
-    {{else}}
-    <div>
-        no results found...
-    </div>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th style="width:15%">Name</th>
+                    <th>Cost</th>
+                    {{!-- <th>Height (mm)</th> --}}
+                    {{!-- <th>Figure Type</th> --}}
+                    <th>Collection/Manufacturer</th>
+                    {{!-- <th>Manufacturer</th> --}}
+                    <th>Series</th>
+                    <th>Launched?</th>
+                    <th>Release date</th>
+                    <th>Quantity</th>
+                    {{!-- <th>Last updated
+                    <th> --}}
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each figures}}
+                <tr>
+                    <td>{{this.id}}</td>
+                    <td>
+                        {{#if this.image_url}}
+                        <img src="{{this.image_url}}" style="height: 40px" />
+                        {{else}}
+                        <img src="/logo.png" style="height: 40px" />
+                        {{/if}}
+                    </td>
+                    <td>{{this.name}}</td>
+                    <td>${{costWithDecimal this.cost}}</td>
+                    {{!-- <td>{{this.height}}</td> --}}
+                    {{!-- <td>{{this.figure_type.figure_type}}</td> --}}
+                    <td>{{this.collection.collection_name}} /<br/>
+                        {{this.manufacturer.manufacturer_name}}</td>
+                    {{!-- <td>{{this.manufacturer.manufacturer_name}}</td> --}}
+                    <td>
+                        {{this.series.series_name}}
+                        <div>
+                        {{#each this.series.mediums}}
+                        <span class="badge med-badge">{{this.media_medium}}</span>
+                        {{/each}}
+                        </div>
+                    </td>
+                    <td>
+                        {{#if this.launch_status}}
+                        yes
+                        {{else}}
+                        no
+                        {{/if}}
+                    </td>
+                    <td>{{displayDate this.release_date}}</td>
+                    <td> {{#if this.quantity}}
+                        {{this.quantity}}
+                        {{else}}
+                        sold out
+                        {{/if}}
+                    </td>
+                    {{!-- <td>{{displayDateTime this.listing_date}}</td> --}}
+                    <td>
+                        <div class="d-flex">
+                            <a href="/products/{{this.id}}/update" class="btn edit-btn btn-sm my-1 mx-1"><i
+                                    class="bi bi-pencil-square"></i></a>
+                            <a href="/products/{{this.id}}/delete" class="btn btn-sm my-1 mx-1 delete-btn"><i
+                                    class="bi bi-trash3"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{else}}
+        <div>
+            no results found...
+        </div>
     </div>
     {{/if}}
 </div>
@@ -101,7 +112,10 @@
     let allFormDiv = document.querySelectorAll('.form-group');
     for (let each of allFormDiv) {
         let wrapper = document.createElement('div');
-        if (each.innerHTML.includes('id_min_cost') || each.innerHTML.includes('id_max_cost')) {
+        if (each.innerHTML.includes('id_min_cost') 
+        || each.innerHTML.includes('id_max_cost')
+        || each.innerHTML.includes('id_launch_status')
+        || each.innerHTML.includes('id_blind_box')) {
             wrapper.classList.add('col-3');
         } else {
             wrapper.classList.add('col-6');
@@ -110,6 +124,21 @@
         parentRow.appendChild(wrapper);
 
     }
+</script>
+<script>
+    let resetSearch = document.querySelector('.reset');
+    resetSearch.addEventListener('click', function(){
+        document.querySelector('#id_name').value = "";
+        document.querySelector('#id_min_cost').value = "";
+        document.querySelector('#id_max_cost').value = "";
+        document.querySelector('#id_figure_type_id').value = 0;
+        document.querySelector('#id_collection_id').value = 0;
+        document.querySelector('#id_series_id').value = 0;
+        document.querySelector('#id_last_updated').value = 'dd/mm/yyyy';
+        document.querySelector('#id_manufacturer_id').value = 0;
+        document.querySelector('#id_launch_status').value = -1;
+        document.querySelector('#id_blind_box').value = -1;
+    })
 </script>
 {{/block}}
 {{/extends}}

@@ -28,7 +28,6 @@ hbs.registerHelper('displayDateTime', function (date) {
     return moment(date).format('L, LTS')
 });
 
-
 let app = express();
 
 app.set('view engine', 'hbs');
@@ -96,8 +95,8 @@ app.use('/products', CheckIfAdmin, productRoutes);
 app.use('/cloudinary', cloudinaryRoutes);
 app.use('/cart', cartRoutes);
 app.use('/checkout', checkoutRoutes);
-app.use('/orders', orderRoutes);
-app.use('/admins', adminRoutes);
+app.use('/orders', CheckIfAdmin, orderRoutes);
+app.use('/admins', CheckIfAdmin, adminRoutes);
 app.use('/api/products', express.json(), api.products);
 app.use('/api/cart', express.json(), api.cart);
 app.use('/api/users', express.json(), api.customers);
