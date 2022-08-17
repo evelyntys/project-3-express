@@ -1,0 +1,45 @@
+{{#extends 'base'}}
+{{#block 'content'}}
+{{#if collection}}
+<div class="container">
+    <form method="POST">
+        <div class="alert alert-danger">
+            <h4>Delete {{collection.collection_name}}</h4>
+            <div class="row">
+                <div class="col-12">
+                    Are you sure that you want to delete the listing for {{collection.collection_name}}?
+                </div>
+                <div class="col-12">
+                    <a href="/details/collection" class="btn btn-success">cancel</a>
+                    <input type="submit" class="btn btn-danger" value="yes, delete" />
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+                </div>
+            </div>
+        </div>
+</div>
+</form>
+</div>
+{{/if}}
+
+{{#if manufacturer}}
+<div class="container">
+    <form method="POST">
+        <div class="alert alert-danger">
+            <h4>Delete {{manufacturer.manufacturer_name}}</h4>
+            <div class="row">
+                <div class="col-12">
+                    Are you sure that you want to delete the listing for {{manufacturer.manufacturer_name}}?
+                </div>
+                <div class="col-12">
+                    <a href="/details/manufacturer" class="btn btn-success">cancel</a>
+                    <input type="submit" class="btn btn-danger" value="yes, delete" />
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+                </div>
+            </div>
+        </div>
+</div>
+</form>
+</div>
+{{/if}}
+{{/block}}
+{{/extends}}

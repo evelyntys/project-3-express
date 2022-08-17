@@ -1,0 +1,60 @@
+{{#extends 'base'}}
+{{#block 'content'}}
+{{#if createColl}}
+<div class="container mt-2">
+    <h1>Add new collection</h1>
+<form method="POST">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+    {{{createColl}}}
+    <input type="submit" value="Update product" class="btn btn-primary my-1"/>
+</form>
+</div>
+</div>
+{{/if}}
+
+{{#if updateColl}}
+<div class="container mt-2">
+    <h1>Updating {{collection.collection_name}}</h1>
+<form method="POST">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
+    {{{updateColl}}}
+    <input type="submit" value="Update product" class="btn btn-primary my-1"/>
+</form>
+</div>
+</div>
+{{/if}}
+{{/block}}
+
+{{#block 'js'}}
+<script>
+    let selectedManufacturer = document.querySelector('#id_manufacturer_id');
+    let newManufacturer = document.createElement('div');
+    newManufacturer.innerHTML =
+        `
+        <div> 
+    <label class="form-label">Manufacturer name: <label>
+        <input type="text" name="new-manufacturer" class="form-control"/>
+        </div>
+        `
+        let allFields = document.querySelectorAll('.form-group');
+    for (let each of allFields) {
+        if (each.innerHTML.includes('id_manufacturer_id')) {
+            each.appendChild(newManufacturer)
+        }
+    };
+
+    newManufacturer.style.display = 'none';
+
+    window.addEventListener('DOMContentLoaded', function () {
+        if (selectedManufacturer.value == 0) {
+            newManufacturer.style.display = 'block';
+        }
+    })
+    selectedManufacturer.addEventListener('change', function () {
+        if (selectedManufacturer.value == 0) {
+            newManufacturer.style.display = 'block';
+        }
+    })
+</script>
+{{/block}}
+{{/extends}}

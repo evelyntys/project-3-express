@@ -82,7 +82,8 @@ const cloudinaryRoutes = require('./routes/cloudinary');
 const cartRoutes = require('./routes/cart');
 const checkoutRoutes = require('./routes/checkout');
 const orderRoutes = require('./routes/orders');
-const adminRoutes = require('./routes/admins')
+const adminRoutes = require('./routes/admins');
+const detailRoutes = require('./routes/product-details');
 const api = {
     products: require('./routes/api/products'),
     cart: require('./routes/api/cart'),
@@ -97,6 +98,7 @@ app.use('/cart', cartRoutes);
 app.use('/checkout', checkoutRoutes);
 app.use('/orders', CheckIfAdmin, orderRoutes);
 app.use('/admins', CheckIfAdmin, adminRoutes);
+app.use('/details', CheckIfAdmin, detailRoutes);
 app.use('/api/products', express.json(), api.products);
 app.use('/api/cart', express.json(), api.cart);
 app.use('/api/users', express.json(), api.customers);

@@ -1,0 +1,25 @@
+{{#extends 'base'}}
+{{#block 'content'}}
+{{#if createManu}}
+<div class="container">
+    <h1>Add new manufacturer</h1>
+    <form method="POST">
+        {{{createManu}}}
+        <input type="hidden" value="{{csrfToken}}" name="_csrf"/>
+        <input type="submit" class="btn btn-dark my-2" value="Add new manufacturer"/>
+    </form>
+</div>
+{{/if}}
+
+{{#if updateManu}}
+<div class="container">
+    <h1>Updating {{manufacturer.manufacturer_name}}</h1>
+    <form method="POST">
+        {{{updateManu}}}
+        <input type="hidden" value="{{csrfToken}}" name="_csrf"/>
+        <input type="submit" class="btn btn-dark my-2" value="Update manufacturer"/>
+    </form>
+</div>
+{{/if}}
+{{/block}}
+{{/extends}}

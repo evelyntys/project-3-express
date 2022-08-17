@@ -176,21 +176,21 @@ const createSearchForm = (figureTypes, series, collections, manufacturers) => {
         launch_status: fields.string({
             required: false,
             choices: [
-                [-1, '---select launch status---'],[0, 'no'], [1, 'yes']
+                [-1, '---select launch status---'], [0, 'no'], [1, 'yes']
             ],
             widget: widgets.select(),
         }),
         blind_box: fields.string({
             required: false,
             choices: [
-                [-1, '---select blindbox---'],[0, 'no'], [1, 'yes']
+                [-1, '---select blindbox---'], [0, 'no'], [1, 'yes']
             ],
             widget: widgets.select()
         }),
         stock_status: fields.string({
             required: false,
             choices: [
-                [-1, '---select stock status---'],[0, 'sold out'], [1, 'in stock']
+                [-1, '---select stock status---'], [0, 'sold out'], [1, 'in stock']
             ],
             widget: widgets.select()
         })
@@ -261,7 +261,7 @@ const createNewUserForm = () => {
         postal: fields.string({
             required: true,
             errorAfterField: true,
-            validators: [validators.digits()]
+            validators: [validators.digits(), validators.minlength(6), validators.maxlength(6)]
         })
     }, { validatePastFirstError: true })
 };
@@ -304,10 +304,37 @@ const createSearchOrdersForm = (orderStatus) => {
             required: false
         })
     })
+};
+
+const updateCollectionForm = (manufacturers) => {
+    return forms.create({
+        collection_name: fields.string({
+            required: true,
+            errorAfterField: true,
+            validators: [validators.minlength(3)]
+        }),
+        manufacturer_id: fields.string({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.select(),
+            choices: manufacturers
+        })
+    }, { validatePastFirstError: true })
+};
+
+const updateManufacturerForm = () => {
+    return forms.create({
+        manufacturer_name: fields.string({
+            required: true,
+            errorAfterField: true,
+            validators: [validators.minlength(3)]
+        })
+    }, { validatePastFirstError: true })
 }
 
 module.exports = {
     createFigureForm, bootstrapField, createLoginForm, createSearchForm,
     createOrderStatusForm, createNewUserForm, changeAdminPassword,
-    createSearchOrdersForm
+    createSearchOrdersForm, updateCollectionForm,
+    updateManufacturerForm
 }
