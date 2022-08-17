@@ -8,6 +8,7 @@
         <h1>{{this.figure.name}}</h1>
         <img src="{{this.figure.image_url}}" style="height: 50px"/>
         <h4>${{divide this.figure.cost 100}}</h4>
+        <h6>{{this.figure.quantity}}</h6>
         <form method="POST" action="/cart/{{this.figure.id}}/quantity/update">
         <input type="hidden" value="{{../csrfToken}}" name="_csrf"/>
         <input type="text" name="newQuantity" value="{{this.quantity}}" style="width: 20px"/>

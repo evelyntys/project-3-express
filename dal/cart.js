@@ -1,6 +1,6 @@
 const { CartItem } = require('../models');
 
-const getCart = async (customerId) => {
+async function getCart (customerId) {
     return await CartItem.collection().where({
         customer_id: customerId
     }).fetch({
@@ -10,7 +10,7 @@ const getCart = async (customerId) => {
 
 }
 
-const getCartItemByUserAndFigure = async (customerId, figureId) => {
+async function getCartItemByUserAndFigure (customerId, figureId) {
     return await CartItem.where({
         customer_id: customerId,
         figure_id: figureId
@@ -20,7 +20,7 @@ const getCartItemByUserAndFigure = async (customerId, figureId) => {
     })
 }
 
-const createCartItem = async (customerId, figureId, quantity) => {
+async function createCartItem (customerId, figureId, quantity) {
     let cartItem = new CartItem({
         customer_id: customerId,
         figure_id: figureId,
@@ -30,7 +30,7 @@ const createCartItem = async (customerId, figureId, quantity) => {
     return cartItem
 }
 
-const removeFromCart = async (customerId, figureId) => {
+async function removeFromCart (customerId, figureId) {
     let cartItem = await getCartItemByUserAndFigure(customerId, figureId);
     if (cartItem) {
         await cartItem.destroy();
@@ -39,16 +39,24 @@ const removeFromCart = async (customerId, figureId) => {
     return false
 }
 
-const updateQuantity = async (customerId, figureId, newQuantity) => {
+async function updateQuantity (customerId, figureId, newQuantity) {
     let cartItem = await getCartItemByUserAndFigure(customerId, figureId);
     if (cartItem) {
-        if (newQuantity <= cartItem.figure.quantity) {
             cartItem.set('quantity', newQuantity);
-            cartItem.save();
+            await cartItem.save();
             return true
-        }
     }
     return false
+};
+
+async function getCartByFigureId(figureId){
+    return cart = await CartItem.where({
+        figure_id: figureId
+    }).fetch({
+        require: false
+    });
+
 }
 
-module.exports = { getCart, getCartItemByUserAndFigure, createCartItem, removeFromCart, updateQuantity }
+module.exports = { getCart, getCartItemByUserAndFigure, createCartItem, removeFromCart, updateQuantity,
+getCartByFigureId }

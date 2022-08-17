@@ -7,6 +7,7 @@ const CartServices = require('../services/cart_services');
 const Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY,
     { apiVersion: '2020-08-27' });
 
+
 router.get('/', async function (req, res) {
     let items = await CartServices.getCart(req.session.customer.id);
     let lineItems = [];
@@ -36,6 +37,48 @@ router.get('/', async function (req, res) {
         success_url: process.env.STRIPE_SUCCESS_URL + '?sessionId={CHECKOUT_SESSION_ID}',
         cancel_url: process.env.STRIPE_CANCEL_URL,
         customer_email: req.session.customer.email,
+        shipping_options: [
+            {
+              shipping_rate_data: {
+                type: 'fixed_amount',
+                fixed_amount: {
+                  amount: 500,
+                  currency: 'sgd',
+                },
+                display_name: 'Standard',
+                delivery_estimate: {
+                  minimum: {
+                    unit: 'business_day',
+                    value: 5,
+                  },
+                  maximum: {
+                    unit: 'business_day',
+                    value: 7,
+                  },
+                }
+              }
+            },
+            {
+              shipping_rate_data: {
+                type: 'fixed_amount',
+                fixed_amount: {
+                  amount: 1500,
+                  currency: 'sgd',
+                },
+                display_name: 'Express',
+                delivery_estimate: {
+                  minimum: {
+                    unit: 'business_day',
+                    value: 1,
+                  },
+                  maximum: {
+                    unit: 'business_day',
+                    value: 1,
+                  },
+                }
+              }
+            },
+          ],
         metadata: {
             orders: metaData,
             customer_id: req.session.customer.id
@@ -90,6 +133,7 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
     try {
         event = Stripe.webhooks.constructEvent(payload, sigHeader, endpointSecret);
         let stripeEvent = event.data.object;
+        console.log(stripeEvent);
         if (event.type == 'checkout.session.completed') {
             let customer = await Customer.where({
                 id: stripeEvent.metadata.customer_id
@@ -97,10 +141,12 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
                 required: true
             });
             let address = customer.toJSON().street + ", " + customer.toJSON().unit + ", " + customer.toJSON().postal;
+            let shipping = 'Standard shipping(5-7 business days) - $5'
             let order = new Order();
             order.set('ordered_date', moment().format());
+            order.set('updated_date', moment().format());
             order.set('customer_id', stripeEvent.metadata.customer_id);
-            order.set('address', address)
+            order.set('address', address);
             order.set('total_cost', stripeEvent.amount_total);
             order.set('payment_reference', stripeEvent.payment_intent);
             await order.save();
@@ -121,10 +167,17 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
                 await figure.save();
                 console.log('meta => ', metadata);
             }
+            let cart = await CartServices.getCart(stripeEvent.metadata.customer_id);
+            for (let each of cart) {
+                await each.destroy();
+            }
+
             res.send({
                 'success': true
             });
-        }
+        } else(
+            console.log('unsuccessful', event.data.object)
+        )
     } catch (e) {
         res.send({
             error: e.message

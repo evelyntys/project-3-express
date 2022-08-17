@@ -54,8 +54,8 @@ router.get('/', async function (req, res) {
             if (form.data.collection_id && form.data.collection_id != 0) {
                 q.where('collection_id', form.data.collection_id)
             };
-            if (form.data.last_updated) {
-                let date = new Date(form.data.last_updated);
+            if (form.data.release_date) {
+                let date = new Date(form.data.release_date);
                 date.setHours(date.getHours() - 8);
                 let day = 60 * 60 * 24 * 1000 - 1000;
                 let endDate = new Date(date.getTime() + day);
@@ -66,9 +66,9 @@ router.get('/', async function (req, res) {
                 console.log(date)
                 console.log(endDate)
                 q.query(function (dateQuery) {
-                    dateQuery.whereBetween('listing_date', [date, endDate]);
+                    dateQuery.whereBetween('release_date', [date, endDate]);
                 });
-                q.orderBy('listing_date', 'DESC');
+                // q.orderBy('listing_date', 'DESC');
             };
             if (form.data.blind_box != -1) {
                 q.where('blind_box', form.data.blind_box)

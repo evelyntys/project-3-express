@@ -84,7 +84,6 @@ router.get('/:order_id/update', async function (req, res) {
         each.collection = collection;
         each.manufacturer = manufacturer.manufacturer.manufacturer_name;
     };
-    console.log(order.orderedItems)
     res.render('orders/update_status', {
         order: order,
         form: form.toHTML(bootstrapField)
