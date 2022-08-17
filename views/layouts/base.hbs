@@ -58,10 +58,9 @@
     </div>
   </nav>
   {{/if}}
-  <div class="container">
     {{#if success_messages}}
     {{#each success_messages}}
-    <div class="alert alert-success">
+    <div class="alert alert-success mb-0">
       {{this}}
     </div>
     {{/each}}
@@ -69,12 +68,11 @@
 
     {{#if error_messages}}
     {{#each error_messages}}
-    <div class="alert alert-danger">
+    <div class="alert alert-danger mb-0">
       {{this}}
     </div>
     {{/each}}
     {{/if}}
-  </div>
   {{#block 'content'}}
     {{/block}}
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
