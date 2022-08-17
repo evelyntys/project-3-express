@@ -11,30 +11,44 @@ router.get('/', async function (req, res) {
 
 router.get('/:figure_id/add', async function (req, res) {
     let customerId = req.query.customer_id;
-    let figureId = req.params.figure_id;
-    let quantity = req.query.quantity;
-    let error = {}
-    let figure = await cartServices.getFigureById(figureId);
-    if (figure.get('quantity') > quantity) {
-        let checkIfItemExist = await cartServices.getCartItemByUserAndFigure(customerId, figureId);
-        if (checkIfItemExist) {
-            await cartServices.setQuantity(customerId, figureId, quantity);
-        } else {
-            await cartServices.addToCart(customerId, figureId, 1)
-        }
+    let figureId = parseInt(req.params.figure_id);
+    let quantity = parseInt(req.query.quantity);
+    let errorMsg = [];
+    let checkIfItemExist = await cartServices.getCartItemByUserAndFigure(customerId, figureId);
+    let addToCart = false;
+    if (checkIfItemExist) {
+        addToCart = await cartServices.setQuantity(customerId, figureId, quantity);
     } else {
-        error.errorMessage = 'not enough stock quantity for this product';
+        addToCart = await cartServices.addToCart(customerId, figureId, 1);
     }
+    if (!addToCart) {
+        errorMsg.push({errorMessage: 'not enough stock quantity for this product'})
+    }
+    // let figure = await cartServices.getFigureById(figureId);
+    // if (figure.get('quantity') >= quantity) {
+    //     let checkIfItemExist = await cartServices.getCartItemByUserAndFigure(customerId, figureId);
+    //     console.log(checkIfItemExist);
+    //     if (checkIfItemExist) {
+    //         console.log('here')
+    //         await cartServices.setQuantity(customerId, figureId, quantity);
+    //     } else {
+    //         console.log('no')
+    //         await cartServices.addToCart(customerId, figureId, 1);
+    //     }
+    // } else {
+    //     errorMsg.push({errorMessage: 'not enough stock quantity for this product'})
+    //     console.log(errorMsg.errorMessage);
+    // }
     let cart = await cartServices.getCart(customerId);
-    if (error.length == 0) {
+    if (errorMsg.length == 0) {
         res.status(200);
         res.json({
-            cart: cart
+            cart
         })
     } else {
         res.status(400);
         res.json({
-            error,
+            errorMsg,
             cart
         })
     }
@@ -59,7 +73,7 @@ router.post('/:figure_id/quantity/update', async function (req, res) {
     let message = "";
     figure = figure.toJSON();
     if (req.body.newQuantity <= figure.quantity) {
-        await cartServices.setQuantity(req.session.customer.id, req.params.figure_id, req.body.newQuantity);
+        await cartServices.setQuantity(req.query.customer_id, req.params.figure_id, req.body.newQuantity);
         message = 'quantity successfully updated';
         res.status(200);
     } else {
