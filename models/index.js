@@ -105,9 +105,14 @@ const OrderedItem = bookshelf.model('OrderedItem', {
         return this.belongsTo('Figure')
     }
 });
+
+const BlacklistedToken = bookshelf.model('BlacklistedToken', {
+    tableName: 'blacklisted_tokens'
+})
+
 module.exports =
 {
     Figure, FigureType, Series, Collection,
     Manufacturer, Medium, Admin, Customer, CartItem,
-    OrderStatus, Order, OrderedItem
+    OrderStatus, Order, OrderedItem, BlacklistedToken
 };
