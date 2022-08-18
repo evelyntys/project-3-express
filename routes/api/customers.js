@@ -7,6 +7,7 @@ const { Customer, BlacklistedToken } = require('../../models');
 const { createNewUserForm } = require('../../forms');
 const jwt = require('jsonwebtoken');
 const { checkIfJWT } = require('../../middlewares');
+const customerDataLayer = require('../../dal/customers');
 
 const getHashedPassword = (password) => {
     const sha256 = crypto.createHash('sha256');
@@ -222,6 +223,24 @@ router.post('/logout', async function (req, res) {
 
         })
     }
+});
+
+router.get('/:customerId/details', checkIfJWT, async function(req,res){
+    let customerId = parseInt(req.params.customerId);
+    if (customerId === req.customer.id){
+        let customerToRetrieve = await customerDataLayer.getCustomerById(customerId);
+        customerToRetrieve = customerToRetrieve.toJSON();
+        delete customerToRetrieve.password;
+    res.status(200);
+    res.send({
+        customer: customerToRetrieve
+    })
+} else {
+    res.status(400);
+    res.send({
+        error: "you are trying to access someone else's data :("
+    })
+}
 })
 
 module.exports = router;

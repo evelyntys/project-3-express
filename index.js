@@ -7,7 +7,7 @@ const cors = require('cors');
 const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
-const { CheckIfAdmin } = require('./middlewares');
+const { CheckIfAdmin, checkIfJWT } = require('./middlewares');
 const csrf = require('csurf');
 const moment = require('moment');
 var helpers = require('handlebars-helpers')({
@@ -100,10 +100,10 @@ app.use('/orders', CheckIfAdmin, orderRoutes);
 app.use('/admins', CheckIfAdmin, adminRoutes);
 app.use('/details', CheckIfAdmin, detailRoutes);
 app.use('/api/products', express.json(), api.products);
-app.use('/api/cart', express.json(), api.cart);
+app.use('/api/cart', express.json(), checkIfJWT, api.cart);
 app.use('/api/users', express.json(), api.customers);
-app.use('/api/checkout', express.json(), api.checkout);
-app.use('/api/orders', express.json(), api.orders);
+app.use('/api/checkout', express.json(), checkIfJWT, api.checkout);
+app.use('/api/orders', express.json(), checkIfJWT, api.orders);
 
 app.listen(3000, function () {
     console.log('server started')

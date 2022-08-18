@@ -15,13 +15,17 @@ const checkIfJWT = (req, res, next) => {
         const token = authHeader.split(' ')[1];
         jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
             if (err) {
-                return res.status(403);
+                res.status(403);
+                res.send('please try again');
             }
-            req.session.user = user;
-            next();
+            else {
+                req.customer = user;
+                next();
+            }
         })
     } else {
         res.status(404);
+        res.send('please login again');
     }
 }
 

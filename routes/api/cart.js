@@ -4,13 +4,13 @@ const { Figure } = require('../../models');
 const router = express.Router();
 
 router.get('/', async function (req, res) {
-    let customerId = req.query.customer_id;
+    let customerId = req.customer.id;
     let cart = await cartServices.getCart(customerId);
     res.send(cart);
 });
 
 router.get('/:figure_id/add', async function (req, res) {
-    let customerId = req.query.customer_id;
+    let customerId = req.customer.id;
     let figureId = parseInt(req.params.figure_id);
     let quantity = parseInt(req.query.quantity);
     let errorMsg = [];
@@ -55,7 +55,7 @@ router.get('/:figure_id/add', async function (req, res) {
 });
 
 router.get('/:figure_id/remove', async function (req, res) {
-    let customerId = req.query.customer_id;
+    let customerId = req.customer.id;
     let figureId = req.params.figure_id;
     await cartServices.removeFromCart(customerId, figureId);
     let cart = await cartServices.getCart(customerId);
@@ -67,13 +67,14 @@ router.get('/:figure_id/remove', async function (req, res) {
 });
 
 router.post('/:figure_id/quantity/update', async function (req, res) {
-    let customerId = req.query.customer_id;
+    let customerId = req.customer.id;
     let figureId = req.params.figure_id;
+    let newQuantity = req.body.newQuantity;
     let figure = await cartServices.getFigureById(figureId);
     let message = "";
     figure = figure.toJSON();
-    if (req.body.newQuantity <= figure.quantity) {
-        await cartServices.setQuantity(req.query.customer_id, req.params.figure_id, req.body.newQuantity);
+    if (newQuantity <= figure.quantity) {
+        await cartServices.setQuantity(customerId, figureId, newQuantity);
         message = 'quantity successfully updated';
         res.status(200);
     } else {

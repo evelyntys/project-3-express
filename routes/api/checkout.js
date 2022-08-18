@@ -8,8 +8,8 @@ const Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY,
     { apiVersion: '2020-08-27' });
 
 router.get('/', async function (req, res) {
-    let customerId = req.query.customer_id;
-    let customerEmail = req.query.customerEmail;
+    let customerId = req.customer.id;
+    let customerEmail = req.customer.email;
     let items = await CartServices.getCart(customerId);
     let lineItems = [];
     let meta = [];
@@ -38,6 +38,48 @@ router.get('/', async function (req, res) {
         success_url: process.env.STRIPE_SUCCESS_URL + '?sessionId={CHECKOUT_SESSION_ID}',
         cancel_url: process.env.STRIPE_CANCEL_URL,
         customer_email: customerEmail,
+        shipping_options: [
+            {
+              shipping_rate_data: {
+                type: 'fixed_amount',
+                fixed_amount: {
+                  amount: 500,
+                  currency: 'sgd',
+                },
+                display_name: 'Standard',
+                delivery_estimate: {
+                  minimum: {
+                    unit: 'business_day',
+                    value: 5,
+                  },
+                  maximum: {
+                    unit: 'business_day',
+                    value: 7,
+                  },
+                }
+              }
+            },
+            {
+              shipping_rate_data: {
+                type: 'fixed_amount',
+                fixed_amount: {
+                  amount: 1500,
+                  currency: 'sgd',
+                },
+                display_name: 'Express',
+                delivery_estimate: {
+                  minimum: {
+                    unit: 'business_day',
+                    value: 1,
+                  },
+                  maximum: {
+                    unit: 'business_day',
+                    value: 1,
+                  },
+                }
+              }
+            },
+          ],
         metadata: {
             orders: metaData,
             customer_id: customerId
