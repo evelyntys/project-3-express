@@ -41,7 +41,7 @@
             </thead>
             <tbody>
                 {{#each figures}}
-                <tr height='50px'>
+                <tr height='50px' {{#if this.quantity}} {{else}} class="sold-out" {{/if}}>
                     <td>{{this.id}}</td>
                     <td>
                         <div class="">
@@ -89,7 +89,7 @@
                     <td> {{#if this.quantity}}
                         {{this.quantity}}
                         {{else}}
-                        sold out
+                        <span class="badge bg-danger">SOLD OUT</span>
                         {{/if}}
                     </td>
                     {{!-- <td>{{displayDateTime this.listing_date}}</td> --}}

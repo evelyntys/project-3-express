@@ -144,5 +144,9 @@
     object-fit: cover;
 }
 
+.sold-out{
+    background-color: rgba(250, 171, 171, 0.349);
+}
+
 /* .profile-content{
 } */
