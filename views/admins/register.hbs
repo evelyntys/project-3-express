@@ -1,0 +1,17 @@
+{{#extends 'base'}}
+{{#block 'content'}}
+<div class="container">
+    {{#if errorMsg}}
+    <div class="alert alert-danger">
+        {{errorMsg}}
+    </div>
+    {{/if}}
+    <h1>Create a new admin</h1>
+    <form method="POST">
+{{{form}}}
+<input type="hidden" name="_csrf" value="{{csrfToken}}">
+<input type="submit" class="btn btn-dark my-2" value="Create new admin"/>
+</form>
+</div>
+{{/block}}
+{{/extends}}

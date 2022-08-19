@@ -330,11 +330,49 @@ const updateManufacturerForm = () => {
             validators: [validators.minlength(3)]
         })
     }, { validatePastFirstError: true })
-}
+};
+
+const CreateNewAdminForm = () => {
+    return forms.create({
+        first_name: fields.string({
+            required: true,
+            errorAfterField: true,
+            validators: [validators.minlength(3)]
+        }),
+        last_name: fields.string({
+            required: true,
+            errorAfterField: true,
+            validators: [validators.minlength(3)]
+        }),
+        username: fields.string({
+            required: true,
+            errorAfterField: true,
+            validators: [validators.minlength(5)]
+        }),
+        email: fields.email({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.email(),
+            validators: [validators.email()]
+        }),
+        password: fields.password({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.password()
+        }),
+        confirm_password: fields.password({
+            required: true,
+            errorAfterField: true,
+            widget: widgets.password(),
+            validators: [validators.matchField('password')]
+        })
+    }, { validatePastFirstError: true })
+
+};
 
 module.exports = {
     createFigureForm, bootstrapField, createLoginForm, createSearchForm,
     createOrderStatusForm, createNewUserForm, changeAdminPassword,
     createSearchOrdersForm, updateCollectionForm,
-    updateManufacturerForm
+    updateManufacturerForm, CreateNewAdminForm
 }
