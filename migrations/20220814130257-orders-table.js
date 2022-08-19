@@ -42,8 +42,22 @@ exports.up = function(db) {
       type:'string',
       varchar: '500'
     },
+    shipping_type_id: {
+      type: 'smallint',
+      unsigned: true,
+      notNull: true,
+      foreignKey: {
+        name: 'orders_shipping_types_fk',
+        table: 'shipping_types',
+        mapping: 'id',
+        rules: {
+          onDelete: 'restrict',
+          onUpdate: 'restrict'
+        }
+      }
+    },
     order_status_id: {
-      type: 'int',
+      type: 'smallint',
       unsigned: true,
       notNull: true,
       defaultValue: 1,

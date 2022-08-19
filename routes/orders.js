@@ -16,6 +16,7 @@ router.get('/', async function (req, res) {
         empty: async function (form) {
             let orders = await ordersDataLayer.getAllOrders(q);
             orders = orders.toJSON();
+            console.log(orders);
             for (let eachOrder of orders) {
                 let orderedItems = await ordersDataLayer.getOrderedItems(eachOrder.id);
                 eachOrder.orderedItems = orderedItems.toJSON()
@@ -59,6 +60,7 @@ router.get('/', async function (req, res) {
                 let orderedItems = await ordersDataLayer.getOrderedItems(eachOrder.id);
                 eachOrder.orderedItems = orderedItems.toJSON()
             };
+            console.log(orders);
             res.render('orders/index', {
                 orders: orders,
                 form: form.toHTML(bootstrapField)

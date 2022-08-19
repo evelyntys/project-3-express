@@ -1,5 +1,5 @@
 const express = require('express');
-const { Order, OrderedItem, Customer, Figure } = require('../models');
+const { Order, OrderedItem, Customer, Figure, ShippingType } = require('../models');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Taipei');
 const router = express.Router();
@@ -9,6 +9,13 @@ const Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY,
 
 
 router.get('/', async function (req, res) {
+    let customerId = 1;
+    let customerEmail = req.query.customer_email;
+    let block_street = req.query.block_street;
+    let unit = req.query.unit;
+    let postal = req.query.postal;
+    console.log(unit);
+    console.log(postal)
     let items = await CartServices.getCart(req.session.customer.id);
     let lineItems = [];
     let meta = [];
@@ -25,7 +32,7 @@ router.get('/', async function (req, res) {
         lineItems.push(lineItem);
         meta.push({
             figure_id: eachItem.get('figure_id'),
-            quantity: eachItem.get('quantity')
+            quantity: eachItem.get('quantity'),
         })
     }
     console.log(lineItems);
@@ -81,7 +88,10 @@ router.get('/', async function (req, res) {
           ],
         metadata: {
             orders: metaData,
-            customer_id: req.session.customer.id
+            customer_id: req.session.customer.id,
+            block_street: block_street,
+            unit: unit,
+            postal: postal
         }
     };
     let quantityCheck = 0;
@@ -141,12 +151,21 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
                 required: true
             });
             let address = customer.toJSON().street + ", " + customer.toJSON().unit + ", " + customer.toJSON().postal;
-            let shipping = 'Standard shipping(5-7 business days) - $5'
             let order = new Order();
+            let shippingAmount = stripeEvent.total_details.amount_shipping;
+            let shipping = await ShippingType.where({
+                amount: shippingAmount
+            }).fetch({
+                require: true
+            });
+            console.log(event.data.object)
             order.set('ordered_date', moment().format());
             order.set('updated_date', moment().format());
+            order.set('shipping_type_id', shipping.get('id'));
             order.set('customer_id', stripeEvent.metadata.customer_id);
-            order.set('address', address);
+            order.set('block_street', customer.get('block_street'));
+            order.set('unit', customer.get('unit'));
+            order.set('postal', customer.get('postal'));
             order.set('total_cost', stripeEvent.amount_total);
             order.set('payment_reference', stripeEvent.payment_intent);
             await order.save();

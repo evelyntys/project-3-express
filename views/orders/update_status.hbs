@@ -1,7 +1,7 @@
 {{#extends 'base'}}
 {{#block 'content'}}
 <div class="container">
-    <h4>order details</h4>
+    <h2>Order details for order #{{order.id}}</h2>
     <div class="container" style="overflow:auto">
     <table class="table">
         <thead>
@@ -18,9 +18,11 @@
                 <td>{{order.id}}</td>
                 <td>{{order.customer.first_name}} {{order.customer.last_name}}<br />
                         {{order.customer.email}} <br />
-                        {{order.address}}</td>
+                        {{order.block_street}}, {{order.unit}}, {{order.postal}}</td>
                 <td><b>{{order.payment_reference}}</b> <br />
                         Ordered on {{displayDate order.ordered_date}} <br />
+                        <span class="italicize">{{order.shipping_type.shipping_type}} delivery (${{divide order.shipping_type.amount 100}}),
+                        delivers in {{order.shipping_type.min_day}} - {{order.shipping_type.max_day}} days</span></br>
                         Total: ${{costWithDecimal order.total_cost}} <br />
                     </td>
                 <td>

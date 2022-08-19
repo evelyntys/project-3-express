@@ -17,7 +17,7 @@ exports.setup = function (options, seedLink) {
 exports.up = function (db) {
   return db.createTable('shipping_types', {
     id: {
-      type: 'int',
+      type: 'smallint',
       unsigned: true,
       primaryKey: true,
       autoIncrement: true

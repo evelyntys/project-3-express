@@ -8,7 +8,7 @@ async function getAllOrderStatuses(){
 
 async function getAllOrders(query) {
     return await query.fetch({
-        withRelated: ['order_status', 'ordered_items', 'customer']
+        withRelated: ['order_status', 'ordered_items', 'customer', 'shipping_type']
     });
 };
 
@@ -26,7 +26,7 @@ async function getOrderById(orderId){
         id: orderId
     }).fetch({
         require: false,
-        withRelated: ['order_status', 'ordered_items', 'customer']
+        withRelated: ['order_status', 'ordered_items', 'customer', 'shipping_type']
     });
 };
 
@@ -35,7 +35,7 @@ async function getOrderByCustomerId(customerId){
         customer_id: customerId
     }).fetchAll({
         require: false,
-        withRelated: ['order_status', 'ordered_items']
+        withRelated: ['order_status', 'ordered_items', 'shipping_type']
     });
 };
 

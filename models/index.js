@@ -93,6 +93,9 @@ const Order = bookshelf.model('Order', {
     },
     customer() {
         return this.belongsTo('Customer')
+    },
+    shipping_type(){
+        return this.belongsTo('ShippingType')
     }
 })
 
@@ -106,13 +109,20 @@ const OrderedItem = bookshelf.model('OrderedItem', {
     }
 });
 
+const ShippingType = bookshelf.model('ShippingType', {
+    tableName: 'shipping_types',
+    orders(){
+        return this.hasMany('Order')
+    }
+})
+
 const BlacklistedToken = bookshelf.model('BlacklistedToken', {
-    tableName: 'blacklisted_tokens'
+    tableName: 'blacklisted_tokens',
 })
 
 module.exports =
 {
     Figure, FigureType, Series, Collection,
     Manufacturer, Medium, Admin, Customer, CartItem,
-    OrderStatus, Order, OrderedItem, BlacklistedToken
+    OrderStatus, Order, OrderedItem, ShippingType, BlacklistedToken
 };

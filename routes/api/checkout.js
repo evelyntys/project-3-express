@@ -1,5 +1,5 @@
 const express = require('express');
-const { Order, OrderedItem, Customer, Figure } = require('../../models');
+const { Order, OrderedItem, Customer, Figure, ShippingType } = require('../../models');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Taipei');
 const router = express.Router();
@@ -8,9 +8,12 @@ const Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY,
     { apiVersion: '2020-08-27' });
 
 router.get('/', async function (req, res) {
-    let customerId = req.customer.id;
-    let customerEmail = req.customer.email;
+    let customerId = 1;
+    let customerEmail = req.query.customer_email;
     let items = await CartServices.getCart(customerId);
+    let block_street = req.query.block_street;
+    let unit = req.query.unit;
+    let postal = req.query.postal;
     let lineItems = [];
     let meta = [];
     for (let eachItem of items) {
@@ -26,7 +29,10 @@ router.get('/', async function (req, res) {
         lineItems.push(lineItem);
         meta.push({
             figure_id: eachItem.get('figure_id'),
-            quantity: eachItem.get('quantity')
+            quantity: eachItem.get('quantity'),
+            block_street: block_street,
+            unit: unit,
+            postal: postal
         })
     }
     console.log(lineItems);
@@ -63,7 +69,7 @@ router.get('/', async function (req, res) {
               shipping_rate_data: {
                 type: 'fixed_amount',
                 fixed_amount: {
-                  amount: 1500,
+                  amount: 1000,
                   currency: 'sgd',
                 },
                 display_name: 'Express',
@@ -74,7 +80,7 @@ router.get('/', async function (req, res) {
                   },
                   maximum: {
                     unit: 'business_day',
-                    value: 1,
+                    value: 2,
                   },
                 }
               }
@@ -138,10 +144,19 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
             });
             let address = customer.toJSON().street + ", " + customer.toJSON().unit + ", " + customer.toJSON().postal;
             let order = new Order();
+            let shippingAmount = stripeEvent.total_details.amount_shipping;
+            let shipping = await ShippingType.where({
+                amount: shippingAmount
+            }).fetch({
+                require: true
+            })
             order.set('ordered_date', moment().format());
             order.set('updated_date', moment().format());
+            order.set('shipping_type_id', shipping.get('id'));
             order.set('customer_id', stripeEvent.metadata.customer_id);
-            order.set('address', address)
+            order.set('block_street', stripeEvent.metadata.block_street);
+            order.set('unit', stripeEvent.metadata.unit);
+            order.set('postal', stripeEvent.metadata.postal);
             order.set('total_cost', stripeEvent.amount_total);
             order.set('payment_reference', stripeEvent.payment_intent);
             await order.save();

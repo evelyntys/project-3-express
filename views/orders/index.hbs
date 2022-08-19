@@ -36,10 +36,12 @@
                     <td>{{this.id}}</td>
                     <td>{{this.customer.first_name}} {{this.customer.last_name}}<br />
                         {{this.customer.email}} <br />
-                        {{this.address}}</td>
+                        {{this.block_street}}, {{this.unit}}, {{this.postal}}</td>
                     <td><b>{{this.payment_reference}}</b> <br />
                         Ordered on {{displayDate this.ordered_date}} <br />
-                        Total: ${{costWithDecimal this.total_cost}} <br />
+                        <span class="italicize">{{this.shipping_type.shipping_type}} delivery (${{divide this.shipping_type.amount 100}}),
+                        delivers in {{this.shipping_type.min_day}} - {{this.shipping_type.max_day}} days</span><br/>
+                        Total: ${{costWithDecimal this.total_cost}}<br />
                         <ol>
                             {{#each this.orderedItems}}
                             <li class="ol-list">
