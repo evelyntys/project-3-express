@@ -34,7 +34,7 @@ exports.up = function(db) {
     },
     password: {
       type: 'string',
-      length: 255,
+      length: 100,
       notNull: true
     },
     first_name: {
@@ -49,29 +49,7 @@ exports.up = function(db) {
     },
     contact_number: {
       type: 'string',
-      length: 15,
-      notNull: true
-    },
-    block_street: {
-      type: 'string',
-      length: 255,
-      notNull: true
-    },
-    unit: {
-      type: 'string',
-      length: 10
-    },
-    postal: {
-      type: 'string',
       length: 10,
-      notNull: true
-    },
-    created_date: {
-      type: 'datetime',
-      notNull: true
-    },
-    updated_date: {
-      type: 'datetime',
       notNull: true
     }
     

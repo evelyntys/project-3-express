@@ -15,25 +15,24 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.addColumn('figures', 'figure_type_id', {
-    type: 'smallint',
-    unsigned: true,
-    notNull: true,
-    foreignKey: {
-      name: 'figure_figure_type_fk',
-      table: 'figure_types',
-      rules: {
-        onDelete: 'restrict',
-        onCascade: 'restrict'
-      },
-      mapping: 'id'
+  return db.addColumn('figures', 'collection_id', {
+      type: 'int',
+      unsigned: true,
+      notNull: true,
+      foreignKey: {
+        name: 'figure_collection_fk',
+        table: 'collections',
+        rules: {
+          onDelete: 'cascade',
+          onUpdate: 'restrict'
+        },
+        mapping: 'id'
     }
-    
   })
 };
 
 exports.down = function(db) {
-  return db.dropColumn('figure_type_id')
+  return db.removeColumn('figures', 'collection_id')
 };
 
 exports._meta = {

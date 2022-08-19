@@ -21,14 +21,11 @@ const getHashedPassword = (password) => {
   return hash;
 }
 
-const moment = require('moment-timezone');
-moment.tz.setDefault('Asia/Taipei');
-
 exports.up = function(db) {
   let customers = [];
   customers.push(db.insert('customers', 
-  ['username', 'email', 'password', 'first_name', 'last_name', 'contact_number', 'block_street', 'unit', 'postal', 'created_date', 'updated_date'], 
-  ['customer', 'customer@email.com', getHashedPassword('customer123'), 'first', 'customer', '12345678', 'blk 123 street 9', '#03-24', '412412', moment().format(), moment().format()]))
+  ['username', 'email', 'password', 'first_name', 'last_name', 'contact_number'], 
+  ['test', 'admin@email.com', getHashedPassword('admin123'), 'test', 'tester', '12345678']))
   for (let each of customers){
     return each
   }

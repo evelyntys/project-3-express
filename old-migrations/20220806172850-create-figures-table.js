@@ -15,38 +15,50 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable('collections', {
+  return db.createTable('figures', {
     id: {
       type: 'int',
-      unsigned: true,
+      primaryKey: true,
       autoIncrement: true,
-      primaryKey: true
+      unsigned: true
     },
-    collection_name: {
+    name: {
       type: 'string',
-      length: '255',
+      length: 255,
       notNull: true
     },
-    manufacturer_id: {
+    cost: {
       type: 'int',
       unsigned: true,
-      notNull: true,
-      foreignKey: {
-        name: 'collection_manufacturer_fk',
-        table: 'manufacturers',
-        rules: {
-          onDelete: 'restrict',
-          onCascade: 'restrict'
-        },
-        mapping: 'id',
-      }
-      
+      notNull: true
+    },
+    height: {
+      type: 'int',
+      unsigned: true,
+      notNull: true
+    },
+    launch_status: {
+      type: 'bool',
+      notNull: true
+    },
+    release_date: {
+      type: 'date',
+      notNull: true
+    },
+    quantity: {
+      type: 'int',
+      unsigned: true,
+      notNull: true
+    },
+    listing_date: {
+      type: 'datetime',
+      notNull: true
     }
   })
 };
 
 exports.down = function(db) {
-  return db.dropTable('collections');
+  return db.dropTable('figures');
 };
 
 exports._meta = {

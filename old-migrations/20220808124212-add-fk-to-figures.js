@@ -23,7 +23,7 @@ exports.up = function(db) {
       name: 'figure_figure_type_fk',
       table: 'figure_types',
       rules: {
-        onDelete: 'restrict',
+        onDelete: 'cascade',
         onCascade: 'restrict'
       },
       mapping: 'id'

@@ -15,25 +15,20 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.addColumn('figures', 'figure_type_id', {
-    type: 'smallint',
-    unsigned: true,
-    notNull: true,
-    foreignKey: {
-      name: 'figure_figure_type_fk',
-      table: 'figure_types',
-      rules: {
-        onDelete: 'restrict',
-        onCascade: 'restrict'
-      },
-      mapping: 'id'
-    }
-    
-  })
+  let types = [];
+  types.push(db.insert('shipping_types', 
+  ['shipping_type', 'amount', 'min_day', 'max_day'], 
+  ['standard', 500, 5, 7]));
+  types.push(db.insert('shipping_types', 
+  ['shipping_type', 'amount', 'min_day', 'max_day'], 
+  ['express', 1000, 1, 2]));
+  for (let each of types){
+    return each
+  }
 };
 
 exports.down = function(db) {
-  return db.dropColumn('figure_type_id')
+  return null;
 };
 
 exports._meta = {

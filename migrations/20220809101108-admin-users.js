@@ -34,7 +34,7 @@ exports.up = function(db) {
     },
     password: {
       type: 'string',
-      length: '100',
+      length: '255',
       notNull: true
     },
     first_name: {
@@ -45,6 +45,14 @@ exports.up = function(db) {
     last_name: {
       type: 'string',
       length: '50',
+      notNull: true
+    },
+    created_date: {
+      type: 'datetime',
+      notNull: true
+    },
+    updated_date: {
+      type: 'datetime',
       notNull: true
     }
   });

@@ -15,25 +15,23 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.addColumn('figures', 'figure_type_id', {
-    type: 'smallint',
-    unsigned: true,
-    notNull: true,
-    foreignKey: {
-      name: 'figure_figure_type_fk',
-      table: 'figure_types',
-      rules: {
-        onDelete: 'restrict',
-        onCascade: 'restrict'
-      },
-      mapping: 'id'
+  return db.createTable('manufacturers', {
+    id: {
+      type: 'int',
+      primaryKey: true,
+      autoIncrement: true,
+      unsigned: true
+    },
+    manufacturer_name: {
+      type: 'string',
+      length: '255',
+      notNull: true
     }
-    
   })
 };
 
 exports.down = function(db) {
-  return db.dropColumn('figure_type_id')
+  return db.dropTable('manufacturers');
 };
 
 exports._meta = {

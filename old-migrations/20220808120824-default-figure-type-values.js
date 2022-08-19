@@ -26,6 +26,7 @@ exports.up = function (db) {
   for (let each of insertValues){
     return each
   }
+  return
 };
 
 exports.down = function (db) {
