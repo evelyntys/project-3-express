@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const adminDataLayer = require('../dal/admins');
 const { changeAdminPassword, bootstrapField, CreateNewAdminForm } = require('../forms');
+const moment = require('moment-timezone');
+moment.tz.setDefault('Asia/Taipei');
 const crypto = require('crypto');
 const { Admin } = require('../models');
 const getHashedPassword = (password) => {
@@ -45,6 +47,8 @@ router.post('/register', async function (req, res) {
                 let newAdmin = new Admin();
                 let {password, confirm_password, ...adminData} = form.data;
                 newAdmin.set(adminData);
+                newAdmin.set('created_date', moment().format());
+                newAdmin.set('updated_date', moment().format());
                 hashedPW = getHashedPassword(password);
                 newAdmin.set('password', hashedPW);
                 await newAdmin.save();
@@ -85,6 +89,7 @@ router.post('/profile', async function (req, res) {
             let newPassword = getHashedPassword(form.data.password);
             if (newPassword != oldPassword) {
                 admin.set('password', newPassword);
+                admin.set('updated_date', moment().format())
                 await admin.save();
                 req.flash('success_messages', 'password has been successfully updated');
                 res.redirect('/admins/profile')
