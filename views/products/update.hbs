@@ -143,6 +143,7 @@
             document.querySelector('#id_image_url').value = result.info.url;
             document.querySelector('#uploaded_image').src = result.info.url;
             document.querySelector('#uploaded_image').style.display = 'inline';
+            document.querySelector('#id_thumbnail_url').value = result.info.thumbnail_url;
         }
     })
     document.getElementById('upload_widget').addEventListener('click', function () {

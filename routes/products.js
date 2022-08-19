@@ -130,6 +130,7 @@ router.post('/create', async function (req, res) {
             figure.set('series_id', series_id);
             figure.set('collection_id', collection_id);
             figure.set('listing_date', moment().format());
+            figure.set('last_updated', moment().format());
             figure.set('cost', cost * 100);
             await figure.save();
             const series = await dataLayer.getSeriesById(series_id);
@@ -177,6 +178,7 @@ router.get('/:figure_id/update', async function (req, res) {
     figureForm.fields.series_id.value = figure.get('series_id');
     figureForm.fields.collection_id.value = figure.get('collection_id');
     figureForm.fields.image_url.value = figure.get('image_url');
+    figureForm.fields.thumbnail_url.value = figure.get('thumbnail_url');
     let selectedMediums = await associatedSeries.related('mediums').pluck('id');
     figureForm.fields.medium_id.value = selectedMediums;
 
@@ -210,6 +212,7 @@ router.post('/:figure_id/update', async function (req, res) {
             figure.set('collection_id', collection_id);
             figure.set('listing_date', moment().format());
             figure.set('cost', cost * 100);
+            figure.set('last_updated', moment().format());
             await figure.save();
             const series = await dataLayer.getSeriesById(series_id);
             let selectedMediums = medium_id.split(',').map(id => parseInt(id));
