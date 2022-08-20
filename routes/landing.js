@@ -21,12 +21,22 @@ router.post('/', async function (req, res) {
     const loginForm = createLoginForm();
     loginForm.handle(req, {
         success: async function (form) {
-            let admin = await Admin.where({
+            let adminByUser = await Admin.where({
+                username: form.data.email,
+                password: getHashedPassword(form.data.password)
+            }).fetch({
+                require: false
+            });
+            let adminByEmail = await Admin.where({
                 email: form.data.email,
                 password: getHashedPassword(form.data.password)
             }).fetch({
                 require: false
-            })
+            });
+            let admin = adminByUser;
+            if (adminByEmail) {
+                admin = adminByEmail
+            }
             if (!admin) {
                 req.flash('error_messages', 'sorry, it seems that you have entered the wrong email/password');
                 res.redirect('/')
