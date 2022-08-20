@@ -113,6 +113,9 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         }),
         image_url: fields.string({
             widget: widgets.hidden()
+        }),
+        thumbnail_url: fields.string({
+            widget: widgets.hidden()
         })
     }, { validatePastFirstError: true })
 };

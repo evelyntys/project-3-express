@@ -19,7 +19,7 @@ router.get('/:figure_id/add', async function (req, res) {
     if (checkIfItemExist) {
         addToCart = await cartServices.setQuantity(customerId, figureId, quantity);
     } else {
-        addToCart = await cartServices.addToCart(customerId, figureId, 1);
+        addToCart = await cartServices.addToCart(customerId, figureId, quantity);
     }
     if (!addToCart) {
         errorMsg.push({errorMessage: 'not enough stock quantity for this product'})

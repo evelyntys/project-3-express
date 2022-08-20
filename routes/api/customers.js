@@ -65,6 +65,8 @@ router.post('/register', async function (req, res) {
                 let { password, confirm_password, ...customerData } = form.data;
                 let newCustomer = new Customer(customerData);
                 newCustomer.set('password', hashedPassword);
+                newCustomer.set('created_date', moment().format());
+                newCustomer.set('updated_date', moment().format());
                 await newCustomer.save();
                 res.status(200);
                 res.json({
