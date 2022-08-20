@@ -121,7 +121,6 @@ router.post('/register', async function (req, res) {
 router.post('/login', async function (req, res) {
     let customerUserOrEmail = req.body.user;
     let password = getHashedPassword(req.body.password);
-    console.log(password);
     let customerByUser = await Customer.where({
         username: customerUserOrEmail,
         password: password
@@ -135,7 +134,6 @@ router.post('/login', async function (req, res) {
     }).fetch({
         require: false
     });
-    console.log(customerByEmail);
     if (customerByUser || customerByEmail) {
         let customer = customerByEmail;
         if (customerByUser) {
@@ -163,8 +161,8 @@ router.post('/login', async function (req, res) {
 });
 
 router.get('/profile', checkIfJWT, async function (req, res) {
-    const user = req.session.user;
-    res.send(user);
+    const customer = req.customer;
+    res.send(customer);
 });
 
 router.post('/refresh', async function (req, res) {

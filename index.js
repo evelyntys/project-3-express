@@ -32,6 +32,8 @@ let app = express();
 
 app.set('view engine', 'hbs');
 
+app.use(cors());
+
 app.use(express.static('public'));
 
 wax.on(hbs.handlebars);
