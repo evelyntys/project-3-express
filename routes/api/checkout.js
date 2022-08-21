@@ -4,10 +4,11 @@ const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Taipei');
 const router = express.Router();
 const CartServices = require('../../services/cart_services');
+const { checkIfJWT } = require('../../middlewares');
 const Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY,
     { apiVersion: '2020-08-27' });
 
-router.post('/', async function (req, res) {
+router.post('/', express.json(), checkIfJWT, async function (req, res) {
     let customerId = req.customer.id
     let customerEmail = req.body.customer_email;
     let items = await CartServices.getCart(customerId);
@@ -29,10 +30,7 @@ router.post('/', async function (req, res) {
         lineItems.push(lineItem);
         meta.push({
             figure_id: eachItem.get('figure_id'),
-            quantity: eachItem.get('quantity'),
-            block_street: block_street,
-            unit: unit,
-            postal: postal
+            quantity: eachItem.get('quantity')
         })
     }
     console.log(lineItems);
@@ -88,7 +86,10 @@ router.post('/', async function (req, res) {
           ],
         metadata: {
             orders: metaData,
-            customer_id: customerId
+            customer_id: customerId,
+            block_street: block_street,
+            unit: unit,
+            postal: postal
         }
     };
     let quantityCheck = 0;
