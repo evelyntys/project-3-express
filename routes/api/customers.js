@@ -161,8 +161,29 @@ router.post('/login', async function (req, res) {
 });
 
 router.get('/profile', checkIfJWT, async function (req, res) {
-    const customer = req.customer;
-    res.send(customer);
+    let customerId = req.customer.id;
+    let customerToRetrieve = await customerDataLayer.getCustomerById(customerId);
+    customerToRetrieve = customerToRetrieve.toJSON();
+    delete customerToRetrieve.password;
+    res.status(200);
+    res.send({
+        customer: customerToRetrieve
+    })
+    // let customerId = parseInt(req.params.customerId);
+    //     if (customerId === req.customer.id){
+    //         let customerToRetrieve = await customerDataLayer.getCustomerById(customerId);
+    //         customerToRetrieve = customerToRetrieve.toJSON();
+    //         delete customerToRetrieve.password;
+    //     res.status(200);
+    //     res.send({
+    //         customer: customerToRetrieve
+    //     })
+    // } else {
+    //     res.status(400);
+    //     res.send({
+    //         error: "you are trying to access someone else's data :("
+    //     })
+    // }
 });
 
 router.post('/refresh', async function (req, res) {
@@ -225,22 +246,22 @@ router.post('/logout', async function (req, res) {
     }
 });
 
-router.get('/:customerId/details', checkIfJWT, async function(req,res){
-    let customerId = parseInt(req.params.customerId);
-    if (customerId === req.customer.id){
-        let customerToRetrieve = await customerDataLayer.getCustomerById(customerId);
-        customerToRetrieve = customerToRetrieve.toJSON();
-        delete customerToRetrieve.password;
-    res.status(200);
-    res.send({
-        customer: customerToRetrieve
-    })
-} else {
-    res.status(400);
-    res.send({
-        error: "you are trying to access someone else's data :("
-    })
-}
-})
+// router.get('/:customerId/details', checkIfJWT, async function(req,res){
+//     let customerId = parseInt(req.params.customerId);
+//     if (customerId === req.customer.id){
+//         let customerToRetrieve = await customerDataLayer.getCustomerById(customerId);
+//         customerToRetrieve = customerToRetrieve.toJSON();
+//         delete customerToRetrieve.password;
+//     res.status(200);
+//     res.send({
+//         customer: customerToRetrieve
+//     })
+// } else {
+//     res.status(400);
+//     res.send({
+//         error: "you are trying to access someone else's data :("
+//     })
+// }
+// })
 
 module.exports = router;
