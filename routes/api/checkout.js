@@ -11,10 +11,11 @@ const Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY,
 router.post('/', express.json(), checkIfJWT, async function (req, res) {
     let customerId = req.customer.id
     let customerEmail = req.body.customer_email;
-    let items = await CartServices.getCart(customerId);
     let block_street = req.body.block_street;
     let unit = req.body.unit;
     let postal = req.body.postal;
+    let items = await CartServices.getCart(customerId);
+    if (items.length > 0){
     let lineItems = [];
     let meta = [];
     for (let eachItem of items) {
@@ -120,6 +121,12 @@ router.post('/', express.json(), checkIfJWT, async function (req, res) {
         // res.redirect(303, stripeSession.url);
         res.status(200);
         res.send({url: stripeSession.url})
+    }}
+    else{
+        res.status(400);
+        res.send({
+            message: "no items in cart currently"
+        })
     }
 });
 
