@@ -253,7 +253,7 @@ const createNewUserForm = () => {
             errorAfterField: true,
             validators: [validators.minlength(8)]
         }),
-        street: fields.string({
+        block_street: fields.string({
             required: true,
             errorAfterField: true,
         }),
