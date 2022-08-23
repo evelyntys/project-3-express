@@ -26,6 +26,7 @@
                     <th>Customer</th>
                     <th>Order summary</th>
                     <th>Order status</th>
+                    <th>Remarks</tH>
                     <th>Last updated</th>
                     <th></th>
                 </tr>
@@ -51,6 +52,7 @@
                         </ol>
                     </td>
                     <td>{{this.order_status.order_status}}</td>
+                    <td>{{this.remarks}}</td>
                     <td>{{displayDateTime this.updated_date}}</td>
                     <td>
                         <a href="/orders/{{this.id}}/update" class="btn edit-btn btn-sm"><i

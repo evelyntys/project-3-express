@@ -4,7 +4,7 @@ const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Taipei');
 const ordersDataLayer = require('../dal/orders');
 const { getFigureById, getCollectionByName } = require('../dal/products');
-const { createOrderStatusForm, bootstrapField, createSearchOrdersForm } = require('../forms');
+const { createOrderStatusForm, bootstrapField, createSearchOrdersForm, createRemarksForm } = require('../forms');
 const { Order, OrderStatus, OrderedItem } = require('../models');
 
 router.get('/', async function (req, res) {
@@ -71,8 +71,10 @@ router.get('/:order_id/update', async function (req, res) {
     let order = await ordersDataLayer.getOrderById(req.params.order_id);
     let orderId = order.get('id');
     const allOrderStatus = await ordersDataLayer.getAllOrderStatuses();
-    const form = createOrderStatusForm(allOrderStatus);
-    form.fields.order_status_id.value = order.get('order_status_id');
+    const statusForm = createOrderStatusForm(allOrderStatus);
+    const remarksForm = createRemarksForm();
+    statusForm.fields.order_status_id.value = order.get('order_status_id');
+    remarksForm.fields.remarks.value = order.get('remarks');
     let orderedItems = await ordersDataLayer.getOrderedItems(orderId);
     order = order.toJSON();
     order.orderedItems = orderedItems.toJSON();
@@ -86,7 +88,8 @@ router.get('/:order_id/update', async function (req, res) {
     };
     res.render('orders/update_status', {
         order: order,
-        form: form.toHTML(bootstrapField)
+        statusForm: statusForm.toHTML(bootstrapField),
+        remarksForm: remarksForm.toHTML(bootstrapField)
     })
 });
 
@@ -94,14 +97,23 @@ router.post('/:order_id/update', async function (req, res) {
     let orderId = req.params.order_id;
     let order = await ordersDataLayer.getOrderById(req.params.order_id);
     const allOrderStatus = await ordersDataLayer.getAllOrderStatuses();
-    const form = createOrderStatusForm(allOrderStatus);
-    form.handle(req, {
+    const statusForm = createOrderStatusForm(allOrderStatus);
+    const remarksForm = createRemarksForm();
+    statusForm.handle(req, {
         success: async function (form) {
             order.set(form.data);
             order.set('updated_date', moment().format());
             await order.save();
+        },
+        empty: async function (form) {
+        }
+    });
+    remarksForm.handle(req, {
+        success: async function(form){
+            order.set(form.data);
+            await order.save();
             req.flash('success_messages', 'successfully updated order');
-            res.redirect(`/orders/${orderId}/update`)
+            res.redirect(`/orders/${orderId}/update`);
         },
         empty: async function (form) {
         }

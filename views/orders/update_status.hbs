@@ -3,73 +3,80 @@
 <div class="container">
     <h2>Order details for order #{{order.id}}</h2>
     <div class="container" style="overflow:auto">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Customer</th>
-                <th>Order summary</th>
-                <th>Order status</th>
-                <th>Last updated</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{order.id}}</td>
-                <td>{{order.customer.first_name}} {{order.customer.last_name}}<br />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Order summary</th>
+                    <th>Order status</th>
+                    <th>Last updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{order.id}}</td>
+                    <td>{{order.customer.first_name}} {{order.customer.last_name}}<br />
                         {{order.customer.email}} <br />
                         {{order.block_street}}, {{order.unit}}, {{order.postal}}</td>
-                <td><b>{{order.payment_reference}}</b> <br />
+                    <td><b>{{order.payment_reference}}</b> <br />
                         Ordered on {{displayDate order.ordered_date}} <br />
-                        <span class="italicize">{{order.shipping_type.shipping_type}} delivery (${{divide order.shipping_type.amount 100}}),
-                        delivers in {{order.shipping_type.min_day}} - {{order.shipping_type.max_day}} days</span></br>
+                        <span class="italicize">{{order.shipping_type.shipping_type}} delivery (${{divide
+                            order.shipping_type.amount 100}}),
+                            delivers in {{order.shipping_type.min_day}} - {{order.shipping_type.max_day}}
+                            days</span></br>
                         Total: ${{costWithDecimal order.total_cost}} <br />
                     </td>
-                <td>
                     <form method="POST">
-                        {{{form}}}
+                        <td>{{{statusForm}}}</td>
                         <input type="hidden" value="{{csrfToken}}" name="_csrf" />
-                        <input type="submit" class="btn btn-primary my-1" value="update" />
-                    </form>
-                </td>
-                <td>{{displayDateTime order.updated_date}}</td>
-            </tr>
-        </tbody>
-    </table>
+                        <td>{{displayDateTime order.updated_date}}</td>
+                </tr>
+            </tbody>
+        </table>
 
-<h4>ordered items: </h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Cost</th>
-                <th>Collection</th>
-                <th>Manufacturer</th>
-                <th>Quantity purchased</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each order.orderedItems}}
-            <tr>
-                <td>{{this.figure.id}}</td>
-                <td>
-                    {{#if this.figure.image_url}}
-                    <img src="{{this.figure.image_url}}" class="display-image"/>
-                    {{else}}
-                    <img src="/placeholder.png" class="display-image"/>
-                    {{/if}}
-                </td>
-                <td>{{this.figure.name}}</td>
-                <td>{{costWithDecimal this.figure.cost}}</td>
-                <td>{{this.collection}}</td>
-                <td>{{this.manufacturer}}</td>
-                <td>{{this.quantity}}</td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
+        <div>
+            <h6>Remarks</h6>
+            {{{remarksForm}}}
+            <div class="d-flex flex-end">
+                <input type="submit" class="btn btn-primary my-1 text-end" value="update" />
+            </div>
+        </div>
+        </form>
+
+        <h4>ordered items: </h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Cost</th>
+                    <th>Collection</th>
+                    <th>Manufacturer</th>
+                    <th>Quantity purchased</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each order.orderedItems}}
+                <tr>
+                    <td>{{this.figure.id}}</td>
+                    <td>
+                        {{#if this.figure.image_url}}
+                        <img src="{{this.figure.image_url}}" class="display-image" />
+                        {{else}}
+                        <img src="/placeholder.png" class="display-image" />
+                        {{/if}}
+                    </td>
+                    <td>{{this.figure.name}}</td>
+                    <td>{{costWithDecimal this.figure.cost}}</td>
+                    <td>{{this.collection}}</td>
+                    <td>{{this.manufacturer}}</td>
+                    <td>{{this.quantity}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
 </div>
 {{/block}}

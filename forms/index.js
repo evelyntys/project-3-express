@@ -214,6 +214,18 @@ const createOrderStatusForm = (status) => {
     }, { validatePastFirstError: true })
 };
 
+const createRemarksForm = () => {
+    return forms.create({
+        remarks: fields.string({
+            required: false,
+            widget: widgets.textarea(),
+            cssClasses: {
+                label: ['d-none']
+            }
+        })
+    })
+}
+
 const createNewUserForm = () => {
     return forms.create({
         username: fields.string({
@@ -377,5 +389,5 @@ module.exports = {
     createFigureForm, bootstrapField, createLoginForm, createSearchForm,
     createOrderStatusForm, createNewUserForm, changeAdminPassword,
     createSearchOrdersForm, updateCollectionForm,
-    updateManufacturerForm, CreateNewAdminForm
+    updateManufacturerForm, CreateNewAdminForm, createRemarksForm
 }
