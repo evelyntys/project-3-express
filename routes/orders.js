@@ -29,10 +29,20 @@ router.get('/', async function (req, res) {
             if (form.data.order_id) {
                 q.where('id', '=', form.data.order_id)
             };
-            if (form.data.order_status_id && form.data.order_status_id != 0){
+
+            if (form.data.email){
+                q.query('join', 'customers', 'customers.id', '=', 'customer_id')
+                .where('email', 'like', '%'+form.data.email+'%')
+            }
+            // if (form.data.email) {
+            //     q.query('join', 'customers', 'customers.id', 'customer_id')
+            //         .where('email', 'in', form.data.tags.split(','))
+
+            // };
+            if (form.data.order_status_id && form.data.order_status_id != 0) {
                 q.where('order_status_id', '=', form.data.order_status_id)
             };
-            if (form.data.ordered_date){
+            if (form.data.ordered_date) {
                 let date = new Date(form.data.ordered_date);
                 date.setHours(date.getHours() - 8);
                 let day = 60 * 60 * 24 * 1000 - 1000;
@@ -49,7 +59,7 @@ router.get('/', async function (req, res) {
                 // q.orderBy('ordered_date', 'DESC')
             };
 
-            if (form.data.payment_reference){
+            if (form.data.payment_reference) {
                 q.where('payment_reference', '=', form.data.payment_reference)
             }
 
@@ -109,7 +119,7 @@ router.post('/:order_id/update', async function (req, res) {
         }
     });
     remarksForm.handle(req, {
-        success: async function(form){
+        success: async function (form) {
             order.set(form.data);
             await order.save();
             req.flash('success_messages', 'successfully updated order');
