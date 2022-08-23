@@ -38,11 +38,12 @@ router.post('/', express.json(), checkIfJWT, async function (req, res) {
 
     let metaData = JSON.stringify(meta);
     const payment = {
-        payment_method_types: ['card'],
+        payment_method_types: [],
         line_items: lineItems,
         success_url: process.env.STRIPE_SUCCESS_URL + '?sessionId={CHECKOUT_SESSION_ID}',
         cancel_url: process.env.STRIPE_CANCEL_URL,
         customer_email: customerEmail,
+        allow_promotion_codes: true,
         shipping_options: [
             {
               shipping_rate_data: {

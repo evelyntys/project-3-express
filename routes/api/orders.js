@@ -7,7 +7,7 @@ moment.tz.setDefault('Asia/Taipei');
 router.get('/', async function (req, res) {
     // let customerId = parseInt(req.params.customer_id)
     let customerId = req.customer.id;
-    console.log(customerId);
+    // console.log(customerId);
     // if (customerId == req.customer.id){
     let orders = await ordersDataLayer.getOrderByCustomerId(customerId);
     orders = orders.toJSON();
