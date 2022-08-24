@@ -148,7 +148,14 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
         event = Stripe.webhooks.constructEvent(payload, sigHeader, endpointSecret);
         let stripeEvent = event.data.object;
         console.log(stripeEvent)
-        if (event.type == 'checkout.session.completed') {
+        if (event.type == 'payment_intent.succeeded'){
+            console.log(stripeEvent.charges.data[0].payment_method_details.type);
+            console.log(stripeEvent.charges.data[0].receipt_url);
+            res.send({
+                'success': true
+            });
+        }
+        else if (event.type == 'checkout.session.completed') {
             let customer = await Customer.where({
                 id: stripeEvent.metadata.customer_id
             }).fetch({

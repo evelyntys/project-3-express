@@ -11,6 +11,7 @@ router.get('/', async function(req, res){
 
 router.get('/search', async function(req, res){
     let q = Figure.collection();
+    console.log(req.query);
     if (req.query.name) {
         q.where('name', 'like', '%' + req.query.name + '%')
     }
