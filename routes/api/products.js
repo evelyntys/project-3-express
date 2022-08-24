@@ -46,4 +46,13 @@ router.get('/search', async function(req, res){
     res.send(figures);
 });
 
+router.get("/:figureId/view", async function(req,res){
+    let figureId = req.params.figureId;
+    let productToShow = await productDataLayer.FigureByIdWithMediums(figureId);
+    res.status(200);
+    res.send({
+        product: productToShow
+    })
+})
+
 module.exports = router;

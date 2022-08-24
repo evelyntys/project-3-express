@@ -14,6 +14,7 @@ router.get('/:figure_id/add', async function (req, res) {
     let figureId = parseInt(req.params.figure_id);
     let quantity = parseInt(req.query.quantity);
     let errorMsg = [];
+    console.log(quantity);
     let checkIfItemExist = await cartServices.getCartItemByUserAndFigure(customerId, figureId);
     let addToCart = false;
     if (checkIfItemExist) {

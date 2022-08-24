@@ -25,7 +25,7 @@ async function getAllMediums() {
     });
 };
 
-async function getAllManufacturers(){
+async function getAllManufacturers() {
     return await Manufacturer.fetchAll().map(manufacturer => {
         return [manufacturer.get('id'), manufacturer.get('manufacturer_name')]
     })
@@ -70,6 +70,31 @@ async function getFigureById(figureId) {
     });
 }
 
+async function FigureByIdWithMediums(figureId) {
+    let figure = await Figure.where({
+        id: figureId
+    }).fetch({
+        require: true,
+        withRelated: ['figure_type', 'series', 'collection']
+    });
+    figure = figure.toJSON();
+    let manufacturer = await Manufacturer.where({
+        id: figure.collection.manufacturer_id
+    }).fetch({
+        require: true,
+    })
+    manufacturer = manufacturer.toJSON();
+    figure.manufacturer = manufacturer;
+    let series = await Series.where({
+        id: figure.series_id
+    }).fetch({
+        withRelated: ['mediums']
+    })
+    series = series.toJSON();
+    figure.series = series;
+    return figure
+};
+
 async function addNewSeries(seriesName) {
     const newSeries = new Series();
     newSeries.set('series_name', seriesName);
@@ -92,7 +117,7 @@ async function addNewManufacturer(manufacturerName) {
     return newManufacturer.get('id');
 };
 
-async function getCollectionByName(collectionName){
+async function getCollectionByName(collectionName) {
     return await Collection.where({
         collection_name: collectionName
     }).fetch({
@@ -141,7 +166,7 @@ async function getRelatedMediumsForCheckbox() {
     return mediums
 }
 
-async function getValuesForForm(){
+async function getValuesForForm() {
     let allFigureTypes = await getAllFigureTypes();
     allFigureTypes.unshift([-1, '---select a figure type---']);
     let allSeries = await getAllSeries();
@@ -159,5 +184,5 @@ module.exports = {
     getAllFigureTypes, getAllSeries, displayFigures, getAllCollections, getAllMediums,
     getAllSeriesFull, getFigureById, addNewSeries, getManufacturerByName,
     addNewManufacturer, addNewCollection, getSeriesById, getRelatedMediumsForCheckbox,
-    getValuesForForm, getCollectionByName, getAllManufacturers
+    getValuesForForm, getCollectionByName, getAllManufacturers, FigureByIdWithMediums
 }
