@@ -83,7 +83,15 @@ router.get('/', async function (req, res) {
 
             if (form.data.stock_status == 0) {
                 q.where('quantity', form.data.stock_status)
-            }
+            };
+
+            if (form.data.manufacturer_id && form.data.manufacturer_id != 0) {
+                // q.query('join', 'customers', 'customers.id', '=', 'customer_id')
+                //     .where('email', 'like', '%' + form.data.email + '%')
+                // figures = figures.filter(each => {
+                //     return each.manufacturer.id == form.data.manufacturer_id
+                // })
+            };
 
             let figures = await dataLayer.displayFigures(q);
             if (form.data.manufacturer_id && form.data.manufacturer_id != 0) {

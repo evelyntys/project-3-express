@@ -43,12 +43,14 @@ app.use(express.urlencoded({
     extended: false
 }));
 
+app.use(flash());
+
 app.use(session({
     store: new FileStore(),
     secret: process.env.SESSION_SECRET_KEY,
     resave: false,
     saveUninitialized: true
-}))
+}));
 
 app.use(function (req, res, next) {
     if (req.url === '/checkout/process_payment' || req.url.slice(0, 5) == '/api/') {
@@ -56,8 +58,6 @@ app.use(function (req, res, next) {
     }
     csrfInstance(req, res, next);
 })
-
-app.use(flash());
 
 app.use(function (req, res, next) {
     res.locals.admin = req.session.admin;

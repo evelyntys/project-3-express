@@ -187,6 +187,7 @@ router.get('/profile', checkIfJWT, async function (req, res) {
 });
 
 router.post('/refresh', async function (req, res) {
+    console.log("new access token")
     let refreshToken = req.body.refreshToken;
     if (!refreshToken) {
         res.status(401);

@@ -147,6 +147,7 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
     try {
         event = Stripe.webhooks.constructEvent(payload, sigHeader, endpointSecret);
         let stripeEvent = event.data.object;
+        console.log(stripeEvent)
         if (event.type == 'checkout.session.completed') {
             let customer = await Customer.where({
                 id: stripeEvent.metadata.customer_id
