@@ -39,10 +39,10 @@ router.get('/', async function (req, res) {
                 q.where('name', 'like', '%' + form.data.name + '%')
             }
             if (form.data.min_cost) {
-                q.where('cost', '>=', form.data.min_cost)
+                q.where('cost', '>=', parseInt(form.data.min_cost)*100)
             }
             if (form.data.max_cost) {
-                q.where('cost', '<=', form.data.max_cost)
+                q.where('cost', '<=', parseInt(form.data.max_cost)*100)
             }
 
             if (form.data.figure_type_id && form.data.figure_type_id != 0) {

@@ -16,10 +16,10 @@ router.get('/search', async function(req, res){
         q.where('name', 'like', '%' + req.query.name + '%')
     }
     if (req.query.min_cost) {
-        q.where('cost', '>=', req.query.min_cost)
+        q.where('cost', '>=', parseInt(req.query.min_cost) * 100)
     }
     if (req.query.max_cost) {
-        q.where('cost', '<=', req.query.max_cost)
+        q.where('cost', '<=', parseInt(req.query.max_cost) * 100)
     }
 
     if (req.query.figure_type_id && req.query.figure_type_id != 0) {
