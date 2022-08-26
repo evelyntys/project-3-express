@@ -3,13 +3,24 @@ const router = express.Router();
 const productDataLayer = require('../../dal/products');
 const { Figure } = require('../../models');
 
-router.get('/', async function(req, res){
+router.get('/', async function (req, res) {
     let q = Figure.collection();
     let products = await productDataLayer.displayFigures(q);
     res.send(products);
 });
 
-router.get('/search', async function(req, res){
+router.get('/fields', async function (req, res) {
+    let allFigureTypes = await productDataLayer.getAllFigureTypes();
+    let allSeries = await productDataLayer.getAllSeries();
+    let allCollections = await productDataLayer.getAllCollections();
+    res.send({
+        allFigureTypes,
+        allSeries,
+        allCollections
+    })
+})
+
+router.get('/search', async function (req, res) {
     let q = Figure.collection();
     console.log(req.query);
     if (req.query.name) {
@@ -47,7 +58,7 @@ router.get('/search', async function(req, res){
     res.send(figures);
 });
 
-router.get("/:figureId/view", async function(req,res){
+router.get("/:figureId/view", async function (req, res) {
     let figureId = req.params.figureId;
     let productToShow = await productDataLayer.FigureByIdWithMediums(figureId);
     res.status(200);
