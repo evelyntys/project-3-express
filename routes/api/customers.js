@@ -91,31 +91,6 @@ router.post('/register', async function (req, res) {
             errorCheck
         )
     }
-    // if (errorCheck.length == 0) {
-    //     let newCustomer = new Customer();
-    //     newCustomer.set({
-    //         username,
-    //         email,
-    //         password,
-    //         first_name,
-    //         last_name,
-    //         contact_number,
-    //         street,
-    //         unit,
-    //         postal
-    //     });
-    //     await newCustomer.save();
-    //     res.status(200);
-    //     res.json({
-    //         message: 'new account created successfully'
-    //     })
-    // }
-    // else {
-    //     res.status(400);
-    //     res.json(
-    //         errorCheck
-    //     )
-    // }
 })
 
 router.post('/login', async function (req, res) {
@@ -127,7 +102,6 @@ router.post('/login', async function (req, res) {
     }).fetch({
         require: false
     });
-    console.log(customerByUser);
     let customerByEmail = await Customer.where({
         email: customerUserOrEmail,
         password: password
@@ -149,6 +123,8 @@ router.post('/login', async function (req, res) {
         res.status(200);
         res.json({
             message: 'successfully logged in',
+            first_name: customer.get('first_name'),
+            last_name: customer.get('last_name'),
             accessToken,
             refreshToken
         })
@@ -169,21 +145,6 @@ router.get('/profile', checkIfJWT, async function (req, res) {
     res.send({
         customer: customerToRetrieve
     })
-    // let customerId = parseInt(req.params.customerId);
-    //     if (customerId === req.customer.id){
-    //         let customerToRetrieve = await customerDataLayer.getCustomerById(customerId);
-    //         customerToRetrieve = customerToRetrieve.toJSON();
-    //         delete customerToRetrieve.password;
-    //     res.status(200);
-    //     res.send({
-    //         customer: customerToRetrieve
-    //     })
-    // } else {
-    //     res.status(400);
-    //     res.send({
-    //         error: "you are trying to access someone else's data :("
-    //     })
-    // }
 });
 
 router.post('/refresh', async function (req, res) {
@@ -247,22 +208,5 @@ router.post('/logout', async function (req, res) {
     }
 });
 
-// router.get('/:customerId/details', checkIfJWT, async function(req,res){
-//     let customerId = parseInt(req.params.customerId);
-//     if (customerId === req.customer.id){
-//         let customerToRetrieve = await customerDataLayer.getCustomerById(customerId);
-//         customerToRetrieve = customerToRetrieve.toJSON();
-//         delete customerToRetrieve.password;
-//     res.status(200);
-//     res.send({
-//         customer: customerToRetrieve
-//     })
-// } else {
-//     res.status(400);
-//     res.send({
-//         error: "you are trying to access someone else's data :("
-//     })
-// }
-// })
 
 module.exports = router;
