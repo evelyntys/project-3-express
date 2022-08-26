@@ -35,7 +35,7 @@ router.post('/register', async function (req, res) {
     // let street = req.body.street;
     // let unit = req.body.unit;
     // let postal = req.body.postal;
-    let errorCheck = [];
+    let errors = {};
     // let validation = [];
     // check if user exists
     let checkUsername = await Customer.where({
@@ -43,25 +43,24 @@ router.post('/register', async function (req, res) {
     }).fetch({
         require: false
     });
-    if (checkUsername) {
-        errorCheck.push({
-            username: 'username already exists'
-        })
-    };
+
     let checkEmail = await Customer.where({
         email
     }).fetch({
         require: false
     });
-    if (checkEmail) {
-        errorCheck.push({
-            email: 'email already registered'
-        })
+
+    if (checkUsername) {
+        errors['username'] = "Username has already been registered"
     };
-    if (errorCheck.length == 0) {
-        const registerForm = createNewUserForm();
-        registerForm.handle(req, {
-            success: async function (form) {
+    if (checkEmail) {
+        errors['email'] = "Email has already been registered"
+    };
+
+    const registerForm = createNewUserForm();
+    registerForm.handle(req, {
+        success: async function (form) {
+            if (errors.length == 0) {
                 let { password, confirm_password, ...customerData } = form.data;
                 let newCustomer = new Customer(customerData);
                 newCustomer.set('password', hashedPassword);
@@ -72,25 +71,44 @@ router.post('/register', async function (req, res) {
                 res.json({
                     message: 'new account created successfully'
                 })
-            },
-            error: async function (form) {
-                let errors = {};
-                for (let key in form.fields) {
-                    if (form.fields[key].error) {
-                        errors[key] = form.fields[key].error;
-                    }
-                }
+            } else {
                 res.status(400);
                 res.send(JSON.stringify(errors));
             }
-        })
-    }
-    else {
-        res.status(400);
-        res.json(
-            errorCheck
-        )
-    }
+        },
+        error: async function (form) {
+            let errors = {};
+            for (let key in form.fields) {
+                if (form.fields[key].error) {
+                    errors[key] = form.fields[key].error;
+                }
+            };
+            if (checkUsername) {
+                errors['username'] = "username already registered"
+            };
+            if (checkEmail) {
+                errors['email'] = "email has already been registered"
+            };
+            res.status(400);
+            res.send(JSON.stringify(errors));
+        },
+        empty: async function (form) {
+            let errors = {};
+            for (let key in form.fields) {
+                if (form.fields[key].error) {
+                    errors[key] = form.fields[key].error;
+                }
+            };
+            if (checkUsername) {
+                errors['username'] = "username already registered"
+            };
+            if (checkEmail) {
+                errors['email'] = "email has already been registered"
+            };
+            res.status(400);
+            res.send(JSON.stringify(errors));
+        }
+    })
 })
 
 router.post('/login', async function (req, res) {
