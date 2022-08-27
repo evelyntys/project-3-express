@@ -1,16 +1,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&family=Kosugi+Maru&family=Mochiy+Pop+One&family=Yomogi&family=Yrsa:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
-a{
+a {
     color: #66402B;
 }
 
-a:hover{
+a:hover {
     color: #FFC276
 }
 
-.alert-main{
+.alert-main {
     background-color: #f9d1a0;
     color: #66402B;
+}
+
+.btn {
+    color: #66402B;
+}
+
+.btn:hover {
+    color: #66402B;
+}
+
+.bg-main {
+    background-color: #66402B;
+    color: white;
 }
 
 .navbar-brand {
@@ -30,7 +43,7 @@ a:hover{
 
 }
 
-.form-control{
+.form-control {
     border: 1px solid #66402B;
 }
 
@@ -99,8 +112,8 @@ a:hover{
 
 .med-badge {
     background-color: transparent;
-    color: black;
-    border: 1px solid black;
+    color: #66402B;
+    border: 1px solid #66402B;
 }
 
 .reset,

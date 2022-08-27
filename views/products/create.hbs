@@ -6,19 +6,19 @@
         <input type="hidden" name="_csrf" value="{{csrfToken}}" />
         <div class="row">
             {{{figureForm}}}
-      
-        <div class="image-div my-1">
-        <div class="d-flex justify-content-center">
-            <img src="" style="display: none" id="uploaded_image" />
+
+            <div class="image-div my-1">
+                <div class="d-flex justify-content-center">
+                    <img src="" style="display: none" id="uploaded_image" />
+                </div>
+                <div class="d-flex justify-content-end">
+                    <a href="#" class="btn search text-end my-1" id="upload_widget">add image</a>
+                </div>
+            </div>
         </div>
-        <div class="d-flex justify-content-end">
-        <a href="#" class="btn btn-primary text-end my-1" id="upload_widget">add image</a>
-        </div>
-        </div>
-    </div>
-        <input type="submit" value="Create new product" class="btn btn-primary my-2" />
+        <input type="submit" value="Create new product" class="btn search my-2" />
     </form>
-    </div>
+</div>
 </div>
 {{/block}}
 
@@ -141,7 +141,7 @@
     }, (error, result) => {
         if (!error && result && result.event === 'success') {
             console.log('completed, image info => ', result.info);
-            
+
             document.querySelector('#id_image_url').value = result.info.url;
             document.querySelector('#uploaded_image').src = result.info.url;
             document.querySelector('#uploaded_image').style.display = 'inline';

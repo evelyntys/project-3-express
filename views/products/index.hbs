@@ -11,11 +11,11 @@
                 </div>
                 <div class="d-flex justify-content-end">
                     <a href="/products" class="m-2 btn reset"><i class="bi bi-arrow-counterclockwise"></i></a>
-                    {{!-- <input type="submit" class="m-2 btn search" value="search" /> --}}
                     <button class="m-2 btn search"><i class="bi bi-search"></i></button>
                 </div>
             </form>
         </div>
+        <div class="alert alert-main">{{ length figures }} figure(s) found</div>
     </div>
     <div class="row">
         <div class="col-6 justify-content-start">
@@ -54,9 +54,9 @@
                         <h6>{{uppercase this.name}}</h6>
                         {{#if this.launch_status}}
                         {{else}}
-                        <span class="badge bg-danger">PRE-ORDER</span>
+                        <span class="badge bg-danger">PRE-ORDER</span><br/>
                         {{/if}}
-                        <span class="badge bg-dark">
+                        <span class="badge bg-main">
                             {{uppercase this.figure_type.figure_type}} {{uppercase 'FIGURE'}}
                         </span>
                         <div class="italicize">
