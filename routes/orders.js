@@ -19,9 +19,17 @@ router.get('/', async function (req, res) {
             for (let eachOrder of orders) {
                 let orderedItems = await ordersDataLayer.getOrderedItems(eachOrder.id);
                 eachOrder.orderedItems = orderedItems.toJSON()
-            }
+            };
+            let completed = orders.filter(each => {
+                return each.order_status_id >=5
+            });
+            let incomplete = orders.filter(each => {
+                return each.order_status_id <5
+            })
             res.render('orders/index', {
-                orders: orders,
+                completed: completed,
+                incomplete: incomplete,
+                totalOrders: completed.length + incomplete.length,
                 form: form.toHTML(bootstrapField)
             })
         },
@@ -81,9 +89,17 @@ router.get('/', async function (req, res) {
                 orders = orders.filter(each => {
                    return moment(each.ordered_date).format("YYYY-MM-DD") == form.data.ordered_date
                 })
-            }
+            };
+            let completed = orders.filter(each => {
+                return each.order_status_id >=5
+            });
+            let incomplete = orders.filter(each => {
+                return each.order_status_id <5
+            });
             res.render('orders/index', {
-                orders: orders,
+                completed: completed,
+                incomplete: incomplete,
+                totalOrders: completed.length + incomplete.length,
                 form: form.toHTML(bootstrapField)
             });
         }

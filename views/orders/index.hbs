@@ -15,8 +15,9 @@
                 </div>
             </form>
         </div>
+        <div class="alert alert-main">{{ totalOrders }} order(s) found</div>
     </div>
-    <h4>orders</h4>
+    <h2>PENDING Orders</h2>
     <div class="container" style="overflow:auto">
         <table class="table table-hover">
             <thead>
@@ -32,7 +33,61 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each orders}}
+                {{#each incomplete}}
+                <tr>
+                    <td>{{this.id}}</td>
+                    <td>{{this.customer.first_name}} {{this.customer.last_name}}<br />
+                        {{this.customer.email}} <br />
+                        {{this.block_street}}, {{this.unit}}, {{this.postal}}</td>
+                    <td><b><a href={{this.receipt_url}}>{{this.payment_reference}}</b></a> <br />
+                        Ordered on {{displayDate this.ordered_date}} <br />
+                        <span class="italicize">{{this.shipping_type.shipping_type}} delivery (${{divide
+                            this.shipping_type.amount 100}}),
+                            delivers in {{this.shipping_type.min_day}} - {{this.shipping_type.max_day}}
+                            days</span><br />
+                        Total: ${{costWithDecimal this.total_cost}}<br />
+                        {{#if this.coupon_used}}
+                        Discount applied: {{this.coupon_used}}
+                        {{/if}}
+                        <ol>
+                            {{#each this.orderedItems}}
+                            <li class="ol-list">
+                                {{this.figure.name}} x {{this.quantity}}
+                            </li>
+                            {{/each}}
+                        </ol>
+                    </td>
+                    <td>{{this.payment_method}}</td>
+                    <td>{{this.order_status.order_status}}</td>
+                    <td>{{this.remarks}}</td>
+                    <td>{{displayDateTime this.updated_date}}</td>
+                    <td>
+                        <a href="/orders/{{this.id}}/update" class="btn edit-btn btn-sm"><i
+                                class="bi bi-pencil-square"></i></a>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    <h2>DELIVERED Orders</h2>
+    <div class="container" style="overflow:auto">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Order summary</th>
+                    <th>Payment method</th>
+                    <th>Order status</th>
+                    <th>Remarks</th>
+                    <th>Last updated</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each completed}}
                 <tr>
                     <td>{{this.id}}</td>
                     <td>{{this.customer.first_name}} {{this.customer.last_name}}<br />

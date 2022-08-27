@@ -8,6 +8,11 @@ a:hover{
     color: #FFC276
 }
 
+.alert-main{
+    background-color: #f9d1a0;
+    color: #66402B;
+}
+
 .navbar-brand {
     font-family: 'Yomogi';
     letter-spacing: 2px;

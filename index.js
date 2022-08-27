@@ -28,6 +28,10 @@ hbs.registerHelper('displayDateTime', function (date) {
     return moment(date).format('DD/MM/YYYY, LTS')
 });
 
+hbs.registerHelper('arraySum', function(array1, array2){
+    return array1.length + array2.length
+});
+
 let app = express();
 
 app.set('view engine', 'hbs');
