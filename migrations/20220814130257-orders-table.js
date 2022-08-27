@@ -114,6 +114,10 @@ exports.up = function(db) {
       type: 'datetime',
       notNull: true,
       defaultValue: moment().format()
+    },
+    coupon_used: {
+      type: 'string',
+      length: 30
     }
   });
 };

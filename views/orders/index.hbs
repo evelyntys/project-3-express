@@ -46,6 +46,9 @@
                             delivers in {{this.shipping_type.min_day}} - {{this.shipping_type.max_day}}
                             days</span><br />
                         Total: ${{costWithDecimal this.total_cost}}<br />
+                        {{#if this.coupon_used}}
+                        Discount applied: {{this.coupon_used}}
+                        {{/if}}
                         <ol>
                             {{#each this.orderedItems}}
                             <li class="ol-list">

@@ -188,6 +188,9 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
             newOrder.postal = stripeEvent.metadata.postal;
             newOrder.total_cost = stripeEvent.amount_total;
             newOrder.payment_reference = stripeEvent.payment_intent;
+            if (stripeEvent.total_details.amount_discount){
+                newOrder.coupon_used = "FREESHIPPING"
+            }
             checkoutCheck = true;
         };
 
@@ -210,7 +213,7 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
                 await orderedItem.save();
                 figure.set('quantity', (figure.get('quantity') - each.quantity))
                 await figure.save();
-                console.log('ordered items => ', metadata);
+                console.log('ordered items => ', itemsOrdered);
             }
             let cart = await CartServices.getCart(newOrder.customer_id);
             for (let each of cart) {
