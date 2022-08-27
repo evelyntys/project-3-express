@@ -51,29 +51,28 @@
                             <img src="/placeholder.png" class="display-image" />
                             {{/if}}
                         </div>
-                        <h6>{{this.name}}</h6>
+                        <h6>{{uppercase this.name}}</h6>
+                        {{#if this.launch_status}}
+                        {{else}}
+                        <span class="badge bg-danger">PRE-ORDER</span>
+                        {{/if}}
                         <span class="badge bg-dark">
-                        {{uppercase this.figure_type.figure_type}} {{uppercase 'FIGURE'}}
+                            {{uppercase this.figure_type.figure_type}} {{uppercase 'FIGURE'}}
                         </span>
                         <div class="italicize">
-                            {{this.height}}mm </br />
-                            Collection: {{this.collection.collection_name}}<br />
-                            Manufactured by {{this.manufacturer.manufacturer_name}} <br />
-                            From the {{this.series.series_name}} franchise
+                            Height: {{this.height}}mm </br />
+                            Collection: {{uppercase this.collection.collection_name}}<br />
+                            Manufactured by {{uppercase this.manufacturer.manufacturer_name}} <br />
+                            From the {{uppercase this.series.series_name}} franchise
                         </div>
                         <div>
                             {{#each this.series.mediums}}
                             <span class="badge med-badge">{{this.media_medium}}</span>
                             {{/each}}
                         </div>
-                        {{#if this.launch_status}}
-                        <span class="badge bg-dark">LAUNCHED</span>
-                        {{else}}
-                        <span class="badge bg-dark">PRE-ORDER</span>
-                        {{/if}}
                         {{#if this.blind_box}}
-                        <span class="badge bg-dark">BLIND-BOX</span>
-                        {{/if}} <br />
+                        <span class="badge bg-dark">BLIND-BOX</span> <br />
+                        {{/if}}
                         <div class="italicize">
                             Listed on {{displayDate this.listing_date}} <br />
                             Last updated on {{displayDateTime this.last_updated}}

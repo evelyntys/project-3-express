@@ -9,6 +9,7 @@
                     <th>ID</th>
                     <th>Customer</th>
                     <th>Order summary</th>
+                    <th>Payment method</th>
                     <th>Order status</th>
                     <th>Last updated</th>
                 </tr>
@@ -19,7 +20,7 @@
                     <td>{{order.customer.first_name}} {{order.customer.last_name}}<br />
                         {{order.customer.email}} <br />
                         {{order.block_street}}, {{order.unit}}, {{order.postal}}</td>
-                    <td><b>{{order.payment_reference}}</b> <br />
+                    <td><b><a href={{order.receipt_url}}>{{order.payment_reference}}</b></a> <br />
                         Ordered on {{displayDate order.ordered_date}} <br />
                         <span class="italicize">{{order.shipping_type.shipping_type}} delivery (${{divide
                             order.shipping_type.amount 100}}),
@@ -27,6 +28,7 @@
                             days</span></br>
                         Total: ${{costWithDecimal order.total_cost}} <br />
                     </td>
+                    <td>{{order.payment_method}}</td>
                     <form method="POST">
                         <td>{{{statusForm}}}</td>
                         <input type="hidden" value="{{csrfToken}}" name="_csrf" />
@@ -39,7 +41,7 @@
             <h6>Remarks</h6>
             {{{remarksForm}}}
             <div class="d-flex flex-end">
-                <input type="submit" class="btn btn-primary my-1 text-end" value="update" />
+                <input type="submit" class="btn reset my-1 text-end" value="update" />
             </div>
         </div>
         </form>

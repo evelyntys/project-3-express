@@ -1,60 +1,63 @@
 @import url('https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&family=Kosugi+Maru&family=Mochiy+Pop+One&family=Yomogi&family=Yrsa:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
+a{
+    color: #66402B;
+}
+
+a:hover{
+    color: #FFC276
+}
+
 .navbar-brand {
     font-family: 'Yomogi';
     letter-spacing: 2px;
     font-weight: 800;
-    color: white;
+    color: #66402B;
 }
 
-.navbar-brand:hover{
-    color: white;
+.navbar-brand:hover {
+    color: #66402B;
 }
 
-.navbar{
+.navbar {
     color: white;
-    background-color: black;
-    
-};
+    background-color: #FFC276;
 
-.navbar-bg {
-    /* background-color: #FFF4E3 */
-    background-color: black;
-    color: white;
+}
+
+.form-control{
+    border: 1px solid #66402B;
 }
 
 .navbar-expand-lg .navbar-nav .dropdown-menu {
-    /* background-color: #FFF4E3; */
-    background-color: black;
-    color: white;
+    background-color: #FFC276;
+    color: #66402B;
 }
 
-.dropdown-item{
-    color: white;
+.dropdown-item {
+    color: #66402B;
+    background-color: #FFC276
 }
 
 
 .nav-link {
-    color: white;
+    color: #66402B;
 }
 
-.nav-link:hover{
+.nav-link:hover {
     color: white;
 }
-
-/* body {
-    font-family: 'Yrsa';
-} */
 
 .main-btns {
-    background-color: #ffd496;
+    background-color: #FFC276;
+    border: 1px solid #66402B;
 }
 
 
 .main-btns:hover {
     background-color: white;
-    border-color: 1px solid #ffd496;
-    color: #ffd496;
+    border-color: 1px solid #FFC276;
+    color: #FFC276;
 }
 
 .table-striped>tbody>tr:nth-of-type(odd)>* {
@@ -66,45 +69,49 @@
     font-style: italic;
 }
 
-.table{
-    border-color: black;
+.table {
+    border-color: #66402B;
 }
 
-#uploaded_image{
+#uploaded_image {
     height: 200px;
     object-fit: cover;
 }
 
-.search-box{
-    border: 1px solid black;
+.search-box {
+    border: 1px solid #66402B;
     border-radius: 0.35rem;
     /* background-color: #FFFAEC; */
 }
 
-.delete-btn{
-    background: transparent;
-}
-.edit-btn{
+.delete-btn {
     background: transparent;
 }
 
-.med-badge{
+.edit-btn {
+    background: transparent;
+}
+
+.med-badge {
     background-color: transparent;
     color: black;
     border: 1px solid black;
 }
 
-.reset, .search{
-    background-color: black;
-    color: white;
+.reset,
+.search {
+    border: 1px solid #66402B;
+    background-color: #66402B;
+    color: #FFC276;
 }
 
-.reset:hover, .search:hover{
+.reset:hover,
+.search:hover {
     background-color: white;
-    color: black;
+    color: #66402B;
 }
 
-.display-image{
+.display-image {
     height: 100px;
     width: 100px;
     object-fit: contain;
@@ -112,7 +119,7 @@
     border-radius: 0.35rem;
 }
 
-.italicize{
+.italicize {
     font-style: italic;
     font-size: 14px
 }
@@ -120,7 +127,8 @@
 .product-description {
     font-size: 12px;
 }
-.fix-size{
+
+.fix-size {
     height: 60vh;
     width: 500px;
     bottom: 25vh;
@@ -130,23 +138,20 @@
     background-color: rgba(255, 255, 255, 0.635);
 }
 
-.profile-icon{
+.profile-icon {
     font-size: 40px;
 }
 
-.main-cont{
+.main-cont {
     height: 90vh;
 }
 
-.login-img{
+.login-img {
     width: 100vw;
     height: 92vh;
     object-fit: cover;
 }
 
-.sold-out{
+.sold-out {
     background-color: rgba(250, 171, 171, 0.349);
 }
-
-/* .profile-content{
-} */
