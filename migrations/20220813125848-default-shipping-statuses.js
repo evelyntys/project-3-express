@@ -16,10 +16,12 @@ exports.setup = function(options, seedLink) {
 
 exports.up = function(db) {
   let statuses = [];
+  statuses.push(db.insert('order_statuses', ['order_status'], ['pending']));
+  statuses.push(db.insert('order_statuses', ['order_status'], ['processing']));
   statuses.push(db.insert('order_statuses', ['order_status'], ['paid']));
-  statuses.push(db.insert('order_statuses', ['order_status'], ['picked up by courier']));
-  statuses.push(db.insert('order_statuses', ['order_status'], ['out for delivery']));
+  statuses.push(db.insert('order_statuses', ['order_status'], ['shipping']));
   statuses.push(db.insert('order_statuses', ['order_status'], ['delivered']));
+  statuses.push(db.insert('order_statuses', ['order_status'], ['completed']));
   for (let each of statuses){
     return each
   }
