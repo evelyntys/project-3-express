@@ -26,13 +26,17 @@ router.get('/', async function (req, res) {
             })
         },
         success: async function (form) {
+            let queryTerm = "like";
+            if (process.env.DB_DRIVER == "postgres"){
+                queryTerm = "ilike"
+            }
             if (form.data.order_id) {
                 q.where('id', '=', form.data.order_id)
             };
 
             if (form.data.email) {
                 q.query('join', 'customers', 'customers.id', '=', 'customer_id')
-                    .where('email', 'like', '%' + form.data.email + '%')
+                    .where('email', queryTerm, '%' + form.data.email + '%')
             }
 
             if (form.data.order_status_id && form.data.order_status_id != 0) {

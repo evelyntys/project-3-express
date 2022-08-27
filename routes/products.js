@@ -35,8 +35,12 @@ router.get('/', async function (req, res) {
             });
         },
         success: async function (form) {
+            let queryTerm = "like";
+            if (process.env.DB_DRIVER == "postgres"){
+                queryTerm = "ilike"
+            }
             if (form.data.name) {
-                q.where('name', 'like', '%' + form.data.name + '%')
+                q.where('name', queryTerm, '%' + form.data.name + '%')
             }
             if (form.data.min_cost) {
                 q.where('cost', '>=', parseInt(form.data.min_cost)*100)
@@ -68,7 +72,6 @@ router.get('/', async function (req, res) {
                 q.query(function (dateQuery) {
                     dateQuery.whereBetween('release_date', [date, endDate]);
                 });
-                // q.orderBy('listing_date', 'DESC');
             };
             if (form.data.blind_box != -1) {
                 q.where('blind_box', form.data.blind_box)
