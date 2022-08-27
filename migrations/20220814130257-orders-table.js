@@ -60,7 +60,7 @@ exports.up = function(db) {
       type: 'smallint',
       unsigned: true,
       notNull: true,
-      defaultValue: 1,
+      defaultValue: 3,
       foreignKey: {
         name: 'orders_order_status_fk',
         table: 'order_statuses',
@@ -98,6 +98,16 @@ exports.up = function(db) {
     postal: {
       type: 'string',
       length: 10,
+      notNull: true
+    },
+    payment_method:{
+      type: 'string',
+      length: 20,
+      notNull: true
+    },
+    receipt_url: {
+      type: 'string',
+      length: 500,
       notNull: true
     },
     updated_date: {
