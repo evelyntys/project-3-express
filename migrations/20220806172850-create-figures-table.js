@@ -65,11 +65,11 @@ exports.up = function (db) {
     },
     image_url: {
       type: 'string',
-      length: '255',
+      length: '500',
     },
     thumbnail_url: {
       type: 'string',
-      length: '255'
+      length: '500'
     },
     blind_box: {
       type: 'boolean',
