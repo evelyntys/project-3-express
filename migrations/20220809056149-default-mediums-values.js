@@ -16,9 +16,9 @@ exports.setup = function(options, seedLink) {
 
 exports.up = function(db) {
   let mediumToInsert = [];
-  mediumToInsert.push(db.insert('mediums', ['media_medium'], ['movies-tv']));
-  mediumToInsert.push(db.insert('mediums', ['media_medium'], ['animations-cartoon']));
-  mediumToInsert.push(db.insert('mediums', ['media_medium'], ['video-games']));
+  mediumToInsert.push(db.insert('mediums', ['media_medium'], ['movies & tv']));
+  mediumToInsert.push(db.insert('mediums', ['media_medium'], ['animations & cartoons']));
+  mediumToInsert.push(db.insert('mediums', ['media_medium'], ['video games']));
   mediumToInsert.push(db.insert('mediums', ['media_medium'], ['original']));
   for (let each of mediumToInsert){
     return each

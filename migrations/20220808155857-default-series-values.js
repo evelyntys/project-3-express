@@ -21,7 +21,7 @@ exports.up = function(db) {
   defaultSeries.push(db.insert('series', ['series_name'], ['one piece']));
   defaultSeries.push(db.insert('series', ['series_name'], ['the office']));
   defaultSeries.push(db.insert('series', ['series_name'], ['attack on titan']));
-  defaultSeries.push(db.insert('series', ['series_name'], ['devil may cry']));
+  defaultSeries.push(db.insert('series', ['series_name'], ['devil may cry 5']));
   defaultSeries.push(db.insert('series', ['series_name'], ['labubu']));
   for (let each of defaultSeries){
     return each
