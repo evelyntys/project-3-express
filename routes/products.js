@@ -36,17 +36,17 @@ router.get('/', async function (req, res) {
         },
         success: async function (form) {
             let queryTerm = "like";
-            if (process.env.DB_DRIVER == "postgres"){
+            if (process.env.DB_DRIVER == "postgres") {
                 queryTerm = "ilike"
             }
             if (form.data.name) {
                 q.where('name', queryTerm, '%' + form.data.name + '%')
             }
             if (form.data.min_cost) {
-                q.where('cost', '>=', parseInt(form.data.min_cost)*100)
+                q.where('cost', '>=', parseInt(form.data.min_cost) * 100)
             }
             if (form.data.max_cost) {
-                q.where('cost', '<=', parseInt(form.data.max_cost)*100)
+                q.where('cost', '<=', parseInt(form.data.max_cost) * 100)
             }
 
             if (form.data.figure_type_id && form.data.figure_type_id != 0) {
@@ -154,13 +154,19 @@ router.post('/create', async function (req, res) {
         error: async function (form) {
             res.render('products/create', {
                 figureForm: form.toHTML(bootstrapField),
-                series_mediums: JSON.stringify(localMedium)
+                series_mediums: JSON.stringify(localMedium),
+                cloudinaryName: process.env.CLOUDINARY_NAME,
+                cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+                cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
             })
         },
         empty: function (form) {
             res.render('/products/create', {
                 figureForm: form.toHTML(bootstrapField),
-                series_mediums: JSON.stringify(localMedium)
+                series_mediums: JSON.stringify(localMedium),
+                cloudinaryName: process.env.CLOUDINARY_NAME,
+                cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+                cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
             }
             )
         }
@@ -236,13 +242,19 @@ router.post('/:figure_id/update', async function (req, res) {
         error: async function (form) {
             res.render('products/update', {
                 form: form.toHTML(bootstrapField),
-                series_mediums: JSON.stringify(localMedium)
+                series_mediums: JSON.stringify(localMedium),
+                cloudinaryName: process.env.CLOUDINARY_NAME,
+                cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+                cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
             })
         },
         empty: function (form) {
             res.render('/products/update', {
                 figureForm: form.toHTML(bootstrapField),
-                series_mediums: JSON.stringify(localMedium)
+                series_mediums: JSON.stringify(localMedium),
+                cloudinaryName: process.env.CLOUDINARY_NAME,
+                cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+                cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
             }
             )
         }
