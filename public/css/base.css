@@ -9,7 +9,7 @@ a:hover {
 }
 
 .alert-main {
-    background-color: #f9d1a0;
+    background-color: #FFECD3;
     color: #66402B;
 }
 
@@ -68,7 +68,7 @@ a:hover {
 
 .main-btns {
     background-color: #FFC276;
-    border: 1px solid #66402B;
+    border: 1px solid #FFECD3;
 }
 
 
@@ -118,9 +118,8 @@ a:hover {
 
 .reset,
 .search {
-    border: 1px solid #66402B;
-    background-color: #66402B;
-    color: #FFC276;
+    background-color: #FFECD3;
+    color: #66402B;
 }
 
 .reset:hover,
@@ -148,9 +147,7 @@ a:hover {
 
 .fix-size {
     height: 60vh;
-    width: 500px;
-    bottom: 25vh;
-    left: 31vw;
+    width: 60vw;
     border: 1px solid black;
     position: absolute;
     background-color: rgba(255, 255, 255, 0.635);
