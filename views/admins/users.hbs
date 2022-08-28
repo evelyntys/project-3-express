@@ -1,0 +1,54 @@
+{{#extends 'base'}}
+{{#block 'content'}}
+<div class="container">
+    <div class="container" style="overflow:auto">
+        <h2>Admins</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each allAdmins}}
+                <tr>
+                    <td>{{this.id}}</td>
+                    <td>{{this.first_name}} {{this.last_name}}</td>
+                    <td>{{this.username}}</td>
+                    <td>{{this.email}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <div class="container" style="overflow:auto">
+        <h2>Customers</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Contact Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each allCustomers}}
+                <tr>
+                    <td>{{this.id}}</td>
+                    <td>{{this.first_name}} {{this.last_name}}</td>
+                    <td>{{this.username}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.contact_number}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+{{/block}}
+{{/extends}}

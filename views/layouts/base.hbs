@@ -28,27 +28,40 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="d-block d-md-none" style="color: #66402B">
+          <li class="d-block d-lg-none" style="color: #66402B">
             <i class="bi bi-person-circle mx-2"></i>{{admin.first_name}}
-            </li>
-          <li class="nav-item d-block d-md-none">
+          </li>
+          <li class="nav-item d-block d-lg-none">
             <a class="nav-link" href="/admins/profile">Profile</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="/products">Products</a>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Product Details
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/details/collection">Collections</a></li>
+              <li><a class="dropdown-item" href="/details/manufacturer">Manufacturers</a></li>
+            </ul>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="/orders">Orders</a>
           </li>
-          <li class="nav-item d-block d-md-none">
+          <li class="nav-item d-block d-lg-none">
+            <a class="nav-link" href="/admins/users">View users</a>
+          </li>
+          <li class="nav-item d-block d-lg-none">
             <a class="nav-link" href="/admins/logout">Logout</a>
           </li>
-          <li class="nav-item dropdown d-none d-md-block">
+          <li class="nav-item dropdown d-none d-lg-block">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle mx-2"></i>{{admin.first_name}}
             </a>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="/admins/profile">Profile</a></li>
+              <li><a class="dropdown-item" href="/admins/users">View users</a></li>
               <li><a class="dropdown-item" href="/admins/logout">Logout</a></li>
             </ul>
           </li>

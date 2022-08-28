@@ -22,6 +22,11 @@ async function getAdminByEmail(email){
     }).fetch({
         require: false
     })
+};
+
+async function getAllAdmins(){
+    return await Admin.fetchAll();
 }
 
-module.exports = { getAdminById, getAdminByUserName, getAdminByEmail }
+module.exports = { getAdminById, getAdminByUserName, getAdminByEmail,
+getAllAdmins }

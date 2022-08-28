@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adminDataLayer = require('../dal/admins');
+const customerDataLayer = require('../dal/customers');
 const { changeAdminPassword, bootstrapField, CreateNewAdminForm } = require('../forms');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Taipei');
@@ -25,27 +26,27 @@ router.post('/register', async function (req, res) {
         success: async function (form) {
             let checkExistingUserName = await adminDataLayer.getAdminByUserName(form.data.username);
             let checkExistingEmail = await adminDataLayer.getAdminByEmail(form.data.email);
-            if (checkExistingEmail && checkExistingUserName){
+            if (checkExistingEmail && checkExistingUserName) {
                 res.render('admins/register', {
                     form: form.toHTML(bootstrapField),
                     errorMsg: 'already have an existing admin with the same username and email'
                 })
             }
-            else if (checkExistingUserName){
+            else if (checkExistingUserName) {
                 res.render('admins/register', {
                     form: form.toHTML(bootstrapField),
                     errorMsg: 'already have an existing admin with the same username'
                 })
             }
-            else if (checkExistingEmail){
+            else if (checkExistingEmail) {
                 res.render('admins/register', {
                     form: form.toHTML(bootstrapField),
                     errorMsg: 'already have an existing admin with same email'
                 })
             }
-            if (!checkExistingUserName && !checkExistingEmail){
+            if (!checkExistingUserName && !checkExistingEmail) {
                 let newAdmin = new Admin();
-                let {password, confirm_password, ...adminData} = form.data;
+                let { password, confirm_password, ...adminData } = form.data;
                 newAdmin.set(adminData);
                 newAdmin.set('created_date', moment().format());
                 newAdmin.set('updated_date', moment().format());
@@ -55,7 +56,7 @@ router.post('/register', async function (req, res) {
                 req.flash('success_messages', 'new admin successfully created')
                 res.redirect('/admins/register');
             }
-         },
+        },
         error: async function (form) {
             res.render('admins/register', {
                 form: form.toHTML(bootstrapField)
@@ -66,6 +67,15 @@ router.post('/register', async function (req, res) {
                 form: form.toHTML(bootstrapField)
             })
         }
+    })
+});
+
+router.get('/users', async function (req, res) {
+    let allAdmins = await adminDataLayer.getAllAdmins();
+    let allCustomers = await customerDataLayer.getAllCustomers();
+    res.render('admins/users', {
+        allAdmins: allAdmins.toJSON(),
+        allCustomers: allCustomers.toJSON()
     })
 })
 

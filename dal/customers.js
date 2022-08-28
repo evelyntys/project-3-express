@@ -6,6 +6,10 @@ async function getCustomerById(id) {
     }).fetch({
         require: true
     })
+};
+
+async function getAllCustomers(){
+    return await Customer.fetchAll()
 }
 
-module.exports = { getCustomerById };
+module.exports = { getCustomerById, getAllCustomers };
