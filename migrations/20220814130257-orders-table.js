@@ -40,7 +40,8 @@ exports.up = function(db) {
     },
     payment_reference: {
       type:'string',
-      varchar: '500'
+      varchar: '500',
+      notNull: true
     },
     shipping_type_id: {
       type: 'smallint',
@@ -113,7 +114,6 @@ exports.up = function(db) {
     updated_date: {
       type: 'datetime',
       notNull: true,
-      defaultValue: moment().format()
     },
     coupon_used: {
       type: 'string',
