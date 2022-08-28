@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const adminDataLayer = require('../dal/admins');
 const customerDataLayer = require('../dal/customers');
-const { changeAdminPassword, bootstrapField, CreateNewAdminForm } = require('../forms');
+const { changeAdminPassword, bootstrapField, CreateNewAdminForm, createNewUserForm, updateCustomerForm } = require('../forms');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Taipei');
 const crypto = require('crypto');
@@ -76,6 +76,51 @@ router.get('/users', async function (req, res) {
     res.render('admins/users', {
         allAdmins: allAdmins.toJSON(),
         allCustomers: allCustomers.toJSON()
+    })
+});
+
+router.get('/customer/:customerId/update', async function (req, res) {
+    const customerForm = updateCustomerForm();
+    let customer = await customerDataLayer.getCustomerById(req.params.customerId);
+    customerForm.fields.username.value = customer.get('username');
+    customerForm.fields.first_name.value = customer.get('first_name');
+    customerForm.fields.last_name.value = customer.get('last_name');
+    customerForm.fields.email.value = customer.get('email');
+    customerForm.fields.contact_number.value = customer.get('contact_number');
+    customerForm.fields.block_street.value = customer.get('block_street');
+    customerForm.fields.unit.value = customer.get('unit');
+    customerForm.fields.postal.value = customer.get('postal');
+    res.render('admins/update_customer', {
+        form: customerForm.toHTML(bootstrapField),
+        customer: customer.toJSON()
+    })
+});
+
+router.post('/customer/:customerId/update', async function (req, res) {
+    const customerForm = updateCustomerForm();
+    let customer = await customerDataLayer.getCustomerById(req.params.customerId);
+    customerForm.handle(req, {
+        success: async function (form) {
+            console.log(form.data)
+            let { password, confirm_password, ...customerData } = form.data;
+            customer.set(customerData);
+            customer.set('updated_date', moment().format());
+            await customer.save();
+            req.flash('success_messages', `Customer #${customer.get('id')} has been updated successfully`);
+            res.redirect('/admins/users');
+        },
+        error: async function (form) {
+            res.render('admins/update_customer', {
+                form: form.toHTML(bootstrapField),
+                customer: customer.toJSON()
+            })
+        },
+        empty: async function (form) {
+            res.render('admins/update_customer', {
+                form: form.toHTML(bootstrapField),
+                customer: customer.toJSON()
+            })
+        }
     })
 })
 
