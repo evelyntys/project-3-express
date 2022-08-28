@@ -38,7 +38,7 @@ router.post('/', async function (req, res) {
                 admin = adminByEmail
             }
             if (!admin) {
-                req.flash('error_messages', 'sorry, it seems that you have entered the wrong email/password');
+                req.flash('error_messages', 'Sorry, it seems that you have entered the wrong email/password');
                 res.redirect('/')
             }
             else {
@@ -54,12 +54,12 @@ router.post('/', async function (req, res) {
                     email: 'admin@email.com',
                     first_name: 'test'
                 }
-                req.flash('success_messages', 'welcome back, ' + admin.get('first_name'));
+                req.flash('success_messages', 'Welcome back, ' + admin.get('first_name') + " " + admin.get('last_name'));
                 res.redirect('/products');
             }
         },
         error: function (form) {
-            req.flash('error_messages', 'sorry, it seems that there are some difficulty logging you in. please try again.');
+            req.flash('error_messages', 'Sorry, it seems that there are some difficulty logging you in. please try again.');
             res.render('index', {
                 form: form.toHTML(bootstrapField)
             })

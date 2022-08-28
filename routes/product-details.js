@@ -127,10 +127,10 @@ router.post('/collection/:id/delete', async function(req,res){
         require: false
     });
     if (figureCheck){
-        req.flash('error_messages', 'unable to delete collection as there are existing figures')
+        req.flash('error_messages', 'Unable to delete collection as there are existing figures')
     } else{
         await collection.destroy();
-        req.flash('success_messages', 'collection has been successfully deleted');
+        req.flash('success_messages', 'Collection has been successfully deleted');
     }
     res.redirect('/details/collection')
 })
@@ -159,7 +159,7 @@ router.post('/manufacturer/create', async function(req,res){
             let newManu = new Manufacturer();
             newManu.set(form.data);
             await newManu.save();
-            req.flash('success_messages', 'added new manufacturer successfully')
+            req.flash('success_messages', 'New manufacturer successfully added')
             res.redirect('/details/manufacturer');
         },
         empty: function (form) {
@@ -255,10 +255,10 @@ router.post('/manufacturer/:id/delete', async function(req,res){
         }
     }
     if (figureCheck){
-        req.flash('error_messages', 'unable to delete manufacturer as there are existing collections & figures')
+        req.flash('error_messages', 'Unable to delete manufacturer as there are existing collections & figures')
     } else{
         await manufacturer.destroy();
-        req.flash('success_messages', 'manufacturer has been successfully deleted');
+        req.flash('success_messages', 'Manufacturer has been successfully deleted');
     }
     res.redirect('/details/manufacturer')
 })

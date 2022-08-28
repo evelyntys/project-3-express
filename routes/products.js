@@ -148,11 +148,10 @@ router.post('/create', async function (req, res) {
             if (medium_id) {
                 await series.mediums().attach(medium_id.split(','));
             };
-            req.flash('success_messages', `new product ${figureData.name} has been added successfully`);
+            req.flash('success_messages', `New product ${figureData.name} has been added successfully`);
             res.redirect('/products');
         },
         error: async function (form) {
-            req.flash('error_messages', 'please check the fields again')
             res.render('products/create', {
                 figureForm: form.toHTML(bootstrapField),
                 series_mediums: JSON.stringify(localMedium)
@@ -265,10 +264,10 @@ router.post('/:figure_id/delete', async function (req, res) {
     let checkOrderItems = await getOrderItemsByFigureId(figureID);
     if (!checkCart && !checkOrderItems) {
         await figure.destroy();
-        req.flash('success_messages', `product has been succesfully delete`);
+        req.flash('success_messages', `Product has been succesfully deleted`);
     } else {
         req.flash('error_messages',
-            `product cannot be deleted as it is in a customer's cart/order`)
+            `Product cannot be deleted as it is in a customer's cart/order`)
     }
     res.redirect('/products');
 });

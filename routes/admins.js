@@ -146,10 +146,10 @@ router.post('/profile', async function (req, res) {
                 admin.set('password', newPassword);
                 admin.set('updated_date', moment().format())
                 await admin.save();
-                req.flash('success_messages', 'password has been successfully updated');
+                req.flash('success_messages', 'Password has been successfully updated');
                 res.redirect('/admins/profile')
             } else {
-                req.flash('error_messages', 'new password cannot be the same as old password')
+                req.flash('error_messages', 'New password cannot be the same as old password')
                 res.redirect('/admins/profile')
             }
         },
@@ -164,7 +164,7 @@ router.post('/profile', async function (req, res) {
 
 router.get('/logout', function (req, res) {
     req.session.admin = null;
-    req.flash('success_messages', 'successful logout');
+    req.flash('success_messages', 'Logged out successfully');
     res.redirect('/')
 });
 
