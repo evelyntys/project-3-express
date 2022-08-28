@@ -111,6 +111,6 @@ app.use('/api/users', express.json(), api.customers);
 app.use('/api/checkout', api.checkout);
 app.use('/api/orders', express.json(), checkIfJWT, api.orders);
 
-app.listen(3000, function () {
+app.listen(process.env.PORT, function () {
     console.log('server started')
 })
