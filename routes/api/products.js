@@ -22,9 +22,13 @@ router.get('/fields', async function (req, res) {
 
 router.get('/search', async function (req, res) {
     let q = Figure.collection();
+    let queryTerm = "like";
+    if (process.env.DB_DRIVER == "postgres"){
+        queryTerm = "ilike"
+    }
     console.log(req.query);
     if (req.query.name) {
-        q.where('name', 'like', '%' + req.query.name + '%')
+        q.where('name', queryTerm, '%' + req.query.name + '%')
     }
     if (req.query.min_cost) {
         q.where('cost', '>=', parseInt(req.query.min_cost) * 100)
