@@ -70,10 +70,10 @@
                         <img src="/placeholder.png" class="display-image" />
                         {{/if}}
                     </td>
-                    <td>{{this.figure.name}}</td>
+                    <td>{{uppercase this.figure.name}}</td>
                     <td>{{costWithDecimal this.figure.cost}}</td>
-                    <td>{{this.collection}}</td>
-                    <td>{{this.manufacturer}}</td>
+                    <td>{{uppercase this.collection}}</td>
+                    <td>{{uppercase this.manufacturer}}</td>
                     <td>{{this.quantity}}</td>
                 </tr>
                 {{/each}}

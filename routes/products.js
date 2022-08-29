@@ -130,7 +130,7 @@ router.post('/create', async function (req, res) {
     figureForm.handle(req, {
         success: async function (form) {
             const figure = new Figure();
-            let { medium_id, series_id, collection_id, cost, ...figureData } = form.data;
+            let { medium_id, series_id, collection_id, cost, height, ...figureData } = form.data;
             if (series_id == 0) {
                 series_id = await dataLayer.addNewSeries(req.body['new-series']);
             }
@@ -143,6 +143,7 @@ router.post('/create', async function (req, res) {
             figure.set('listing_date', moment().format());
             figure.set('last_updated', moment().format());
             figure.set('cost', cost * 100);
+            figure.set('height', height * 10)
             await figure.save();
             const series = await dataLayer.getSeriesById(series_id);
             if (medium_id) {
@@ -185,7 +186,7 @@ router.get('/:figure_id/update', async function (req, res) {
     figureForm.fields.name.value = figure.get('name');
     figureForm.fields.description.value = figure.get('description');
     figureForm.fields.cost.value = (figure.get('cost') / 100).toFixed(2);
-    figureForm.fields.height.value = figure.get('height');
+    figureForm.fields.height.value = (figure.get('height')/10);
     figureForm.fields.launch_status.value = figure.get('launch_status');
     figureForm.fields.blind_box.value = figure.get('blind_box');
     figureForm.fields.release_date.value = moment(figure.get('release_date')).format('YYYY-MM-DD');
@@ -216,7 +217,7 @@ router.post('/:figure_id/update', async function (req, res) {
     const figureForm = createFigureForm(allFigureTypes, allSeries, allCollections, allMediums);
     figureForm.handle(req, {
         success: async function (form) {
-            let { medium_id, series_id, collection_id, cost, ...figureData } = form.data;
+            let { medium_id, series_id, collection_id, cost, height, ...figureData } = form.data;
             if (series_id == 0) {
                 series_id = await dataLayer.addNewSeries(req.body['new-series']);
             }
@@ -228,6 +229,7 @@ router.post('/:figure_id/update', async function (req, res) {
             figure.set('collection_id', collection_id);
             figure.set('listing_date', moment().format());
             figure.set('cost', cost * 100);
+            figure.set('height', height * 10);
             figure.set('last_updated', moment().format());
             await figure.save();
             const series = await dataLayer.getSeriesById(series_id);

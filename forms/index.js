@@ -49,7 +49,7 @@ const createFigureForm = (figureType, series, collection, groupings) => {
             required: true,
             errorAfterField: true,
             validators: [validators.integer(), validators.min(0)],
-            label: ['Height(mm)']
+            label: ['Height(cm)']
         }),
         launch_status: fields.string({
             required: true,
