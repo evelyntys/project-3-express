@@ -23,7 +23,7 @@ router.get('/fields', async function (req, res) {
 router.get('/search', async function (req, res) {
     let q = Figure.collection();
     let queryTerm = "like";
-    if (process.env.DB_DRIVER == "postgres"){
+    if (process.env.DB_DRIVER == "postgres") {
         queryTerm = "ilike"
     }
     console.log(req.query);
@@ -36,28 +36,30 @@ router.get('/search', async function (req, res) {
     if (req.query.max_cost) {
         q.where('cost', '<=', parseInt(req.query.max_cost) * 100)
     }
-
     if (req.query.figure_type_id && req.query.figure_type_id != 0) {
         q.where('figure_type_id', req.query.figure_type_id)
     }
-    if (req.query.series_id && req.query.series_id != 0) {
-        q.where('series_id', req.query.series_id)
-    }
+
     if (req.query.collection_id && req.query.collection_id != 0) {
         q.where('collection_id', req.query.collection_id)
     };
-    if (req.query.last_updated) {
-        let date = new Date(req.query.last_updated);
-        let day = 60 * 60 * 24 * 1000 - 1000;
-        let endDate = new Date(date.getTime() + day);
-        console.log(endDate)
-        date = moment(date).format();
-        endDate = moment(endDate).format();
-        q.query(function (dateQuery) {
-            dateQuery.whereBetween('listing_date', [date, endDate]);
-        });
-        q.orderBy('listing_date', 'DESC');
+
+    if (req.query.min_height) {
+        q.where('height', '>=', parseInt(req.query.min_height) * 10)
     }
+
+    if (req.query.max_height) {
+        q.where('height', '<=', parseInt(req.query.max_height) * 10)
+    }
+
+    if (parseInt(req.query.blind_box) >= 0) {
+        q.where('blind_box', parseInt(req.query.blind_box))
+    }
+
+    if (parseInt(req.query.launch_status) >= 0) {
+        q.where('launch_status', parseInt(req.query.launch_status))
+    }
+
     let figures = await productDataLayer.displayFigures(q);
     res.send(figures);
 });
