@@ -36,9 +36,9 @@ router.get('/search', async function (req, res) {
     if (req.query.max_cost) {
         q.where('cost', '<=', parseInt(req.query.max_cost) * 100)
     }
-    if (req.query.figure_type_id && req.query.figure_type_id != 0) {
-        q.where('figure_type_id', req.query.figure_type_id)
-    }
+    // if (req.query.figure_type_id && req.query.figure_type_id != 0) {
+    //     q.where('figure_type_id', req.query.figure_type_id)
+    // }
 
     if (req.query.collection_id && req.query.collection_id != 0) {
         q.where('collection_id', req.query.collection_id)
@@ -59,6 +59,11 @@ router.get('/search', async function (req, res) {
     if (parseInt(req.query.launch_status) >= 0) {
         q.where('launch_status', parseInt(req.query.launch_status))
     }
+
+    if (req.query.figure_type_id) {
+        q.where('figure_type_id', 'in', req.query.figure_type_id)
+    }
+
 
     let figures = await productDataLayer.displayFigures(q);
     res.send(figures);
