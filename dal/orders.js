@@ -7,7 +7,7 @@ async function getAllOrderStatuses(){
 };
 
 async function getAllOrders(query) {
-    return await query.fetch({
+    return await query.orderBy('id', 'asc').fetch({
         withRelated: ['order_status', 'ordered_items', 'customer', 'shipping_type']
     });
 };

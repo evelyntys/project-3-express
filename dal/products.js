@@ -31,8 +31,8 @@ async function getAllManufacturers() {
     })
 }
 
-async function displayFigures(query) {
-    let figures = await query.fetch({
+async function displayFigures(searchQuery) {
+    let figures = await searchQuery.orderBy('id', 'asc').fetch({
         withRelated: ['figure_type', 'series', 'collection']
     });
     figures = figures.toJSON();
