@@ -142,8 +142,8 @@ router.post('/create', async function (req, res) {
             figure.set('collection_id', collection_id);
             figure.set('listing_date', moment().format());
             figure.set('last_updated', moment().format());
-            figure.set('cost', cost * 100);
-            figure.set('height', height * 10)
+            figure.set('cost', (cost * 100).toFixed(0));
+            figure.set('height', (height * 10).toFixed(0));
             await figure.save();
             const series = await dataLayer.getSeriesById(series_id);
             if (medium_id) {
@@ -210,6 +210,7 @@ router.get('/:figure_id/update', async function (req, res) {
 })
 
 router.post('/:figure_id/update', async function (req, res) {
+    console.log(req.body);
     let figureID = req.params.figure_id;
     let figure = await dataLayer.getFigureById(figureID);
     let [allFigureTypes, allSeries, allCollections, allMediums] = await dataLayer.getValuesForForm();
@@ -224,12 +225,13 @@ router.post('/:figure_id/update', async function (req, res) {
             if (collection_id == 0) {
                 collection_id = await dataLayer.addNewCollection(req.body['new-manufacturer'], req.body['new-collection']);
             }
+            console.log(form.data);
             figure.set(figureData);
             figure.set('series_id', series_id);
             figure.set('collection_id', collection_id);
             figure.set('listing_date', moment().format());
-            figure.set('cost', cost * 100);
-            figure.set('height', height * 10);
+            figure.set('cost', (cost * 100).toFixed(0));
+            figure.set('height', (height * 10).toFixed(0));
             figure.set('last_updated', moment().format());
             await figure.save();
             const series = await dataLayer.getSeriesById(series_id);
