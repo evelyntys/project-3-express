@@ -3,7 +3,7 @@ const { CartItem } = require('../models');
 async function getCart (customerId) {
     return await CartItem.collection().where({
         customer_id: customerId
-    }).fetch({
+    }).orderBy('figure_id', 'asc').fetch({
         require: false,
         withRelated: ['figure', 'figure.series', 'figure.collection']
     })

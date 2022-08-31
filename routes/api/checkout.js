@@ -127,6 +127,11 @@ router.post('/', express.json(), checkIfJWT, async function (req, res) {
         }
         else {
             let stripeSession = await Stripe.checkout.sessions.create(payment);
+            // res.status(200);
+            // res.send({
+            //     sessionId: stripeSession.id, 
+            //     publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+            // })
             res.status(200);
             res.send({ url: stripeSession.url })
         }
@@ -152,6 +157,8 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
     let endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
     let sigHeader = req.headers['stripe-signature'];
     let event = null;
+    console.log("paymentCheck", paymentCheck);
+    console.log("checkoutSuccess", checkoutCheck);
     try {
         event = Stripe.webhooks.constructEvent(payload, sigHeader, endpointSecret);
     } catch (e) {
@@ -188,7 +195,7 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
             newOrder.postal = stripeEvent.metadata.postal;
             newOrder.total_cost = stripeEvent.amount_total;
             newOrder.payment_reference = stripeEvent.payment_intent;
-            if (stripeEvent.total_details.amount_discount){
+            if (stripeEvent.total_details.amount_discount) {
                 newOrder.coupon_used = "FREESHIPPING"
             }
             checkoutCheck = true;
@@ -218,12 +225,13 @@ router.post('/process_payment', express.raw({ type: 'application/json' }), async
             let cart = await CartServices.getCart(newOrder.customer_id);
             for (let each of cart) {
                 await each.destroy();
+                console.log('error')
             };
         }
+        res.send({
+            'success': true
+        });
     };
-    res.send({
-        'success': true
-    });
 })
 
 module.exports = router;
