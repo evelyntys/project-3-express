@@ -33,7 +33,7 @@ async function getOrderById(orderId){
 async function getOrderByCustomerId(customerId){
     return await Order.where({
         customer_id: customerId
-    }).fetchAll({
+    }).orderBy('ordered_date', 'desc').fetchAll({
         require: false,
         withRelated: ['order_status', 'ordered_items', 'shipping_type']
     });
