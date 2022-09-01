@@ -60,7 +60,7 @@ router.post('/register', async function (req, res) {
     const registerForm = createNewUserForm();
     registerForm.handle(req, {
         success: async function (form) {
-            if (errors.length == 0) {
+            if (Object.keys(errors).length === 0 && errors.constructor === Object) {
                 let { password, confirm_password, ...customerData } = form.data;
                 let newCustomer = new Customer(customerData);
                 newCustomer.set('password', hashedPassword);
@@ -72,6 +72,8 @@ router.post('/register', async function (req, res) {
                     message: 'new account created successfully'
                 })
             } else {
+                console.log(form.data);
+                console.log(errors);
                 res.status(400);
                 res.send(JSON.stringify(errors));
             }
