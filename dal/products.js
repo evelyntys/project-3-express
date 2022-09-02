@@ -95,6 +95,42 @@ async function FigureByIdWithMediums(figureId) {
     return figure
 };
 
+async function getProductsBySeries(seriesId) {
+    let figures = await Figure.where({
+        series_id: seriesId
+    }).fetchAll({
+        require: false,
+        withRelated: ['figure_type', 'series', 'collection']
+    });
+    figures = figures.toJSON();
+    for (let each of figures) {
+        let manufacturer = await Manufacturer.where({
+            id: each.collection.manufacturer_id
+        }).fetch({
+            require: true,
+        })
+        manufacturer = manufacturer.toJSON();
+        each.manufacturer = manufacturer;
+        let series = await Series.where({
+            id: each.series_id
+        }).fetch({
+            withRelated: ['mediums']
+        })
+        series = series.toJSON();
+        each.series = series;
+    }
+    return figures
+}
+
+async function getNewlyListed() {
+    let figures = await Figure.query(function (queries) {
+        queries.orderBy('listing_date', 'desc').limit(6)
+    }).fetchAll({
+        withRelated: ['figure_type', 'series', 'collection']
+    });
+    return figures.toJSON()
+}
+
 async function addNewSeries(seriesName) {
     const newSeries = new Series();
     newSeries.set('series_name', seriesName);
@@ -184,5 +220,6 @@ module.exports = {
     getAllFigureTypes, getAllSeries, displayFigures, getAllCollections, getAllMediums,
     getAllSeriesFull, getFigureById, addNewSeries, getManufacturerByName,
     addNewManufacturer, addNewCollection, getSeriesById, getRelatedMediumsForCheckbox,
-    getValuesForForm, getCollectionByName, getAllManufacturers, FigureByIdWithMediums
+    getValuesForForm, getCollectionByName, getAllManufacturers, FigureByIdWithMediums,
+    getProductsBySeries, getNewlyListed
 }

@@ -78,4 +78,22 @@ router.get("/:figureId/view", async function (req, res) {
     })
 })
 
+router.get("/series/:seriesId", async function (req, res) {
+    let seriesId = parseInt(req.params.seriesId);
+    let relatedProducts = await productDataLayer.getProductsBySeries(seriesId);
+    console.log(relatedProducts);
+    res.status(200);
+    res.send({
+        relatedProducts
+    })
+});
+
+router.get("/newlylisted", async function(req,res){
+    let products = await productDataLayer.getNewlyListed();
+    res.status(200);
+    res.send({
+        products
+    })
+})
+
 module.exports = router;
