@@ -38,7 +38,8 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         description: fields.string({
             required: true,
             errorAfterField: true,
-            widget: widgets.textarea()
+            widget: widgets.textarea(),
+            validators: [validators.maxlength(1000)]
         }),
         cost: fields.number({
             required: true,
@@ -57,6 +58,7 @@ const createFigureForm = (figureType, series, collection, groupings) => {
             choices: [
                 [0, 'no'], [1, 'yes']
             ],
+            label: ["Launched on market?"],
             widget: widgets.select(),
         }),
         blind_box: fields.string({
