@@ -49,7 +49,7 @@ const createFigureForm = (figureType, series, collection, groupings) => {
         height: fields.number({
             required: true,
             errorAfterField: true,
-            validators: [validators.integer(), validators.min(0)],
+            validators: [validators.min(0)],
             label: ['Height(cm)']
         }),
         launch_status: fields.string({
@@ -413,7 +413,7 @@ const updateCustomerForm = () => {
         contact_number: fields.string({
             required: true,
             errorAfterField: true,
-            validators: [validators.minlength(8)]
+            validators: [validators.minlength(8), validators.integer()]
         }),
         block_street: fields.string({
             required: true,
