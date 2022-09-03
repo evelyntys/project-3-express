@@ -14,32 +14,16 @@ router.get('/:figure_id/add', async function (req, res) {
     let figureId = parseInt(req.params.figure_id);
     let quantity = parseInt(req.query.quantity);
     let errorMsg = [];
-    console.log(quantity);
     let checkIfItemExist = await cartServices.getCartItemByUserAndFigure(customerId, figureId);
     let addToCart = false;
     if (checkIfItemExist) {
-        addToCart = await cartServices.setQuantity(customerId, figureId, quantity);
+        addToCart = await cartServices.setQuantity(customerId, figureId, quantity + checkIfItemExist.get('quantity'));
     } else {
         addToCart = await cartServices.addToCart(customerId, figureId, quantity);
     }
     if (!addToCart) {
-        errorMsg.push({errorMessage: 'not enough stock quantity for this product'})
+        errorMsg.push({ errorMessage: 'not enough stock quantity for this product' })
     }
-    // let figure = await cartServices.getFigureById(figureId);
-    // if (figure.get('quantity') >= quantity) {
-    //     let checkIfItemExist = await cartServices.getCartItemByUserAndFigure(customerId, figureId);
-    //     console.log(checkIfItemExist);
-    //     if (checkIfItemExist) {
-    //         console.log('here')
-    //         await cartServices.setQuantity(customerId, figureId, quantity);
-    //     } else {
-    //         console.log('no')
-    //         await cartServices.addToCart(customerId, figureId, 1);
-    //     }
-    // } else {
-    //     errorMsg.push({errorMessage: 'not enough stock quantity for this product'})
-    //     console.log(errorMsg.errorMessage);
-    // }
     let cart = await cartServices.getCart(customerId);
     if (errorMsg.length == 0) {
         res.status(200);

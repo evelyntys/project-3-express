@@ -54,7 +54,7 @@
                         <h6>{{uppercase this.name}}</h6>
                         {{#if this.launch_status}}
                         {{else}}
-                        <span class="badge bg-danger">PRE-ORDER</span><br/>
+                        <span class="badge bg-danger">PRE-ORDER</span><br />
                         {{/if}}
                         <span class="badge bg-main">
                             {{uppercase this.figure_type.figure_type}} {{uppercase 'FIGURE'}}
@@ -91,13 +91,12 @@
                         <span class="badge bg-danger">SOLD OUT</span>
                         {{/if}}
                     </td>
-                    {{!-- <td>{{displayDateTime this.listing_date}}</td> --}}
                     <td>
                         <div class="d-flex">
                             <a href="/products/{{this.id}}/update" class="btn edit-btn btn-sm my-1 mx-1">
-                            <i class="bi bi-pencil-square"></i></a>
+                                <i class="bi bi-pencil-square"></i></a>
                             <a href="/products/{{this.id}}/delete" class="btn btn-sm my-1 mx-1 delete-btn">
-                            <i class="bi bi-trash3"></i></a>
+                                <i class="bi bi-trash3"></i></a>
                         </div>
                     </td>
                 </tr>

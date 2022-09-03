@@ -128,7 +128,24 @@ async function getNewlyListed() {
     }).fetchAll({
         withRelated: ['figure_type', 'series', 'collection']
     });
-    return figures.toJSON()
+    figures = figures.toJSON();
+    for (let each of figures) {
+        let manufacturer = await Manufacturer.where({
+            id: each.collection.manufacturer_id
+        }).fetch({
+            require: true,
+        })
+        manufacturer = manufacturer.toJSON();
+        each.manufacturer = manufacturer;
+        let series = await Series.where({
+            id: each.series_id
+        }).fetch({
+            withRelated: ['mediums']
+        })
+        series = series.toJSON();
+        each.series = series;
+    }
+    return figures
 }
 
 async function addNewSeries(seriesName) {

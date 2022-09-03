@@ -8,7 +8,7 @@ var seed;
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
   */
-exports.setup = function(options, seedLink) {
+exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
@@ -17,7 +17,7 @@ exports.setup = function(options, seedLink) {
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Taipei');
 
-exports.up = function(db) {
+exports.up = function (db) {
   return db.createTable('orders', {
     id: {
       type: 'int',
@@ -39,7 +39,7 @@ exports.up = function(db) {
       length: '500'
     },
     payment_reference: {
-      type:'string',
+      type: 'string',
       varchar: '500',
       notNull: true
     },
@@ -101,7 +101,7 @@ exports.up = function(db) {
       length: 10,
       notNull: true
     },
-    payment_method:{
+    payment_method: {
       type: 'string',
       length: 20,
       notNull: true
@@ -122,7 +122,7 @@ exports.up = function(db) {
   });
 };
 
-exports.down = function(db) {
+exports.down = function (db) {
   return db.dropTable('orders')
 };
 

@@ -28,7 +28,7 @@ hbs.registerHelper('displayDateTime', function (date) {
     return moment(date).format('DD/MM/YYYY, LTS')
 });
 
-hbs.registerHelper('arraySum', function(array1, array2){
+hbs.registerHelper('arraySum', function (array1, array2) {
     return array1.length + array2.length
 });
 
@@ -85,8 +85,6 @@ app.use(function (err, req, res, next) {
 const landingRoutes = require('./routes/landing');
 const productRoutes = require('./routes/products');
 const cloudinaryRoutes = require('./routes/cloudinary');
-const cartRoutes = require('./routes/cart');
-const checkoutRoutes = require('./routes/checkout');
 const orderRoutes = require('./routes/orders');
 const adminRoutes = require('./routes/admins');
 const detailRoutes = require('./routes/product-details');
@@ -100,8 +98,6 @@ const api = {
 app.use('/', landingRoutes);
 app.use('/products', CheckIfAdmin, productRoutes);
 app.use('/cloudinary', cloudinaryRoutes);
-app.use('/cart', cartRoutes);
-app.use('/checkout', checkoutRoutes);
 app.use('/orders', CheckIfAdmin, orderRoutes);
 app.use('/admins', CheckIfAdmin, adminRoutes);
 app.use('/details', CheckIfAdmin, detailRoutes);

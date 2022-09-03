@@ -88,14 +88,6 @@ router.get('/', async function (req, res) {
                 q.where('quantity', form.data.stock_status)
             };
 
-            if (form.data.manufacturer_id && form.data.manufacturer_id != 0) {
-                // q.query('join', 'customers', 'customers.id', '=', 'customer_id')
-                //     .where('email', 'like', '%' + form.data.email + '%')
-                // figures = figures.filter(each => {
-                //     return each.manufacturer.id == form.data.manufacturer_id
-                // })
-            };
-
             let figures = await dataLayer.displayFigures(q);
             if (form.data.manufacturer_id && form.data.manufacturer_id != 0) {
                 figures = figures.filter(each => {
@@ -186,7 +178,7 @@ router.get('/:figure_id/update', async function (req, res) {
     figureForm.fields.name.value = figure.get('name');
     figureForm.fields.description.value = figure.get('description');
     figureForm.fields.cost.value = (figure.get('cost') / 100).toFixed(2);
-    figureForm.fields.height.value = (figure.get('height')/10);
+    figureForm.fields.height.value = (figure.get('height') / 10);
     figureForm.fields.launch_status.value = figure.get('launch_status');
     figureForm.fields.blind_box.value = figure.get('blind_box');
     figureForm.fields.release_date.value = moment(figure.get('release_date')).format('YYYY-MM-DD');

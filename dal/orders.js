@@ -1,6 +1,6 @@
 const { Order, OrderedItem, OrderStatus } = require("../models");
 
-async function getAllOrderStatuses(){
+async function getAllOrderStatuses() {
     return await OrderStatus.fetchAll().map(status => {
         return [status.get('id'), status.get('order_status')]
     });
@@ -12,7 +12,7 @@ async function getAllOrders(query) {
     });
 };
 
-async function getOrderedItems(orderId){
+async function getOrderedItems(orderId) {
     return await OrderedItem.where({
         order_id: orderId
     }).fetchAll({
@@ -21,7 +21,7 @@ async function getOrderedItems(orderId){
     });
 };
 
-async function getOrderById(orderId){
+async function getOrderById(orderId) {
     return await Order.where({
         id: orderId
     }).fetch({
@@ -30,7 +30,7 @@ async function getOrderById(orderId){
     });
 };
 
-async function getOrderByCustomerId(customerId){
+async function getOrderByCustomerId(customerId) {
     return await Order.where({
         customer_id: customerId
     }).orderBy('ordered_date', 'desc').fetchAll({
@@ -39,7 +39,7 @@ async function getOrderByCustomerId(customerId){
     });
 };
 
-async function getOrderItemsByFigureId(figureId){
+async function getOrderItemsByFigureId(figureId) {
     return await OrderedItem.where({
         figure_id: figureId
     }).fetchAll({
@@ -47,5 +47,7 @@ async function getOrderItemsByFigureId(figureId){
     })
 }
 
-module.exports = { getAllOrders, getOrderedItems, getOrderById, getAllOrderStatuses
-    ,getOrderByCustomerId, getOrderItemsByFigureId }
+module.exports = {
+    getAllOrders, getOrderedItems, getOrderById, getAllOrderStatuses
+    , getOrderByCustomerId, getOrderItemsByFigureId
+}

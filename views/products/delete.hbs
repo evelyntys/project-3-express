@@ -6,12 +6,12 @@
             <h4>Delete {{figure.name}}</h4>
             <div class="row">
                 <div class="col-12">
-                Are you sure that you want to delete the listing for {{figure.name}}?
+                    Are you sure that you want to delete the listing for {{figure.name}}?
                 </div>
                 <div class="col-12">
-                <a href="/products" class="btn btn-success">cancel</a>
-                <input type="submit" class="btn btn-danger" value="yes, delete" />
-                <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+                    <a href="/products" class="btn btn-success">cancel</a>
+                    <input type="submit" class="btn btn-danger" value="yes, delete" />
+                    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
                 </div>
             </div>
         </div>

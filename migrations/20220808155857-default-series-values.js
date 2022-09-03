@@ -8,13 +8,13 @@ var seed;
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
   */
-exports.setup = function(options, seedLink) {
+exports.setup = function (options, seedLink) {
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
 
-exports.up = function(db) {
+exports.up = function (db) {
   let defaultSeries = [];
   defaultSeries.push(db.insert('series', ['series_name'], ['marvel']));
   defaultSeries.push(db.insert('series', ['series_name'], ['pokemon']));
@@ -23,12 +23,12 @@ exports.up = function(db) {
   defaultSeries.push(db.insert('series', ['series_name'], ['attack on titan']));
   defaultSeries.push(db.insert('series', ['series_name'], ['devil may cry 5']));
   defaultSeries.push(db.insert('series', ['series_name'], ['the monsters']));
-  for (let each of defaultSeries){
+  for (let each of defaultSeries) {
     return each
   }
 };
 
-exports.down = function(db) {
+exports.down = function (db) {
   return null;
 };
 

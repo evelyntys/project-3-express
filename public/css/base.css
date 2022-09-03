@@ -56,9 +56,10 @@ a:hover {
     color: #66402B;
     background-color: #FFC276;
 }
+
 .dropdown-menu {
-    min-width:inherit;
-  }
+    min-width: inherit;
+}
 
 .nav-link {
     color: #66402B;

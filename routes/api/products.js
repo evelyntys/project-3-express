@@ -25,20 +25,19 @@ router.get('/search', async function (req, res) {
     let queryTerm = "like";
     if (process.env.DB_DRIVER == "postgres") {
         queryTerm = "ilike"
-    }
-    console.log(req.query);
+    };
+
     if (req.query.name) {
         q.where('name', queryTerm, '%' + req.query.name + '%')
-    }
+    };
+
     if (req.query.min_cost) {
         q.where('cost', '>=', parseInt(req.query.min_cost) * 100)
-    }
+    };
+
     if (req.query.max_cost) {
         q.where('cost', '<=', parseInt(req.query.max_cost) * 100)
-    }
-    // if (req.query.figure_type_id && req.query.figure_type_id != 0) {
-    //     q.where('figure_type_id', req.query.figure_type_id)
-    // }
+    };
 
     if (req.query.collection_id && req.query.collection_id != 0) {
         q.where('collection_id', req.query.collection_id)
@@ -46,23 +45,23 @@ router.get('/search', async function (req, res) {
 
     if (req.query.min_height) {
         q.where('height', '>=', parseInt(req.query.min_height) * 10)
-    }
+    };
 
     if (req.query.max_height) {
         q.where('height', '<=', parseInt(req.query.max_height) * 10)
-    }
+    };
 
     if (parseInt(req.query.blind_box) >= 0) {
         q.where('blind_box', parseInt(req.query.blind_box))
-    }
+    };
 
     if (parseInt(req.query.launch_status) >= 0) {
         q.where('launch_status', parseInt(req.query.launch_status))
-    }
+    };
 
     if (req.query.figure_type_id) {
         q.where('figure_type_id', 'in', req.query.figure_type_id)
-    }
+    };
 
 
     let figures = await productDataLayer.displayFigures(q);
@@ -81,14 +80,13 @@ router.get("/:figureId/view", async function (req, res) {
 router.get("/series/:seriesId", async function (req, res) {
     let seriesId = parseInt(req.params.seriesId);
     let relatedProducts = await productDataLayer.getProductsBySeries(seriesId);
-    console.log(relatedProducts);
     res.status(200);
     res.send({
         relatedProducts
     })
 });
 
-router.get("/newlylisted", async function(req,res){
+router.get("/newlylisted", async function (req, res) {
     let products = await productDataLayer.getNewlyListed();
     res.status(200);
     res.send({

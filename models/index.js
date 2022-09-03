@@ -88,13 +88,13 @@ const Order = bookshelf.model('Order', {
     order_status() {
         return this.belongsTo('OrderStatus')
     },
-    ordered_items(){
+    ordered_items() {
         return this.hasMany('OrderedItem')
     },
     customer() {
         return this.belongsTo('Customer')
     },
-    shipping_type(){
+    shipping_type() {
         return this.belongsTo('ShippingType')
     }
 })
@@ -111,7 +111,7 @@ const OrderedItem = bookshelf.model('OrderedItem', {
 
 const ShippingType = bookshelf.model('ShippingType', {
     tableName: 'shipping_types',
-    orders(){
+    orders() {
         return this.hasMany('Order')
     }
 })

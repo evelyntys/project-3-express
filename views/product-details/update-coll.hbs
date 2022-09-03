@@ -3,11 +3,11 @@
 {{#if createColl}}
 <div class="container mt-2">
     <h1>Add new collection</h1>
-<form method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
-    {{{createColl}}}
-    <input type="submit" value="Update product" class="btn search my-1"/>
-</form>
+    <form method="POST">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+        {{{createColl}}}
+        <input type="submit" value="Update product" class="btn search my-1" />
+    </form>
 </div>
 </div>
 {{/if}}
@@ -15,11 +15,11 @@
 {{#if updateColl}}
 <div class="container mt-2">
     <h1>Updating {{collection.collection_name}}</h1>
-<form method="POST">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}"/>
-    {{{updateColl}}}
-    <input type="submit" value="Update product" class="btn search my-1"/>
-</form>
+    <form method="POST">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+        {{{updateColl}}}
+        <input type="submit" value="Update product" class="btn search my-1" />
+    </form>
 </div>
 </div>
 {{/if}}
@@ -36,7 +36,7 @@
         <input type="text" name="new-manufacturer" class="form-control"/>
         </div>
         `
-        let allFields = document.querySelectorAll('.form-group');
+    let allFields = document.querySelectorAll('.form-group');
     for (let each of allFields) {
         if (each.innerHTML.includes('id_manufacturer_id')) {
             each.appendChild(newManufacturer)

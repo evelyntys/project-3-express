@@ -8,7 +8,7 @@ async function getCustomerById(id) {
     })
 };
 
-async function getAllCustomers(){
+async function getAllCustomers() {
     return await Customer.fetchAll()
 }
 

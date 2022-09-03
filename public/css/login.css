@@ -1,4 +1,4 @@
-.login-box{
+.login-box {
     height: 60vh;
     width: 60vw;
     border: 1px solid black;
@@ -9,7 +9,7 @@
     top: 20vh;
 }
 
-.wrapper{
+.wrapper {
     left: 0px;
     padding: 0px;
     margin: 0px;
@@ -18,16 +18,16 @@
     display: flex;
 }
 
-form{
+form {
     bottom: 10px;
 }
 
-.login-img{
+.login-img {
     width: 100vw;
     height: 92vh;
     object-fit: cover;
 }
 
-.form-control{
+.form-control {
     text-align: center;
 }

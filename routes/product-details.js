@@ -14,7 +14,7 @@ router.get('/collection', async function (req, res) {
     })
 });
 
-router.get('/collection/create', async function(req,res){
+router.get('/collection/create', async function (req, res) {
     let manufacturers = await getAllManufacturers();
     manufacturers.push([0, '---add new manufacturer---']);
     const form = updateCollectionForm(manufacturers);
@@ -23,14 +23,14 @@ router.get('/collection/create', async function(req,res){
     })
 });
 
-router.post('/collection/create', async function(req,res){
+router.post('/collection/create', async function (req, res) {
     let manufacturers = await getAllManufacturers();
     manufacturers.push([0, '---add new manufacturer---']);
     const form = updateCollectionForm(manufacturers);
     form.handle(req, {
-        success: async function(form){
+        success: async function (form) {
             let { manufacturer_id, collection_name } = form.data;
-            if (manufacturer_id == 0 ){
+            if (manufacturer_id == 0) {
                 manufacturer_id = await addNewManufacturer(req.body['new-manufacturer'])
             };
             let newColl = new Collection();
@@ -69,7 +69,7 @@ router.get('/collection/:id/update', async function (req, res) {
     })
 });
 
-router.post('/collection/:id/update', async function(req,res){
+router.post('/collection/:id/update', async function (req, res) {
     let collectionId = req.params.id;
     let collection = await Collection.where({
         id: collectionId
@@ -80,9 +80,9 @@ router.post('/collection/:id/update', async function(req,res){
     manufacturers.push([0, '---add new manufacturer---']);
     const form = updateCollectionForm(manufacturers);
     form.handle(req, {
-        success: async function(form){
+        success: async function (form) {
             let { manufacturer_id, collection_name } = form.data;
-            if (manufacturer_id == 0 ){
+            if (manufacturer_id == 0) {
                 manufacturer_id = await addNewManufacturer(req.body['new-manufacturer'])
             };
             collection.set('manufacturer_id', manufacturer_id);
@@ -103,7 +103,7 @@ router.post('/collection/:id/update', async function(req,res){
     })
 });
 
-router.get('/collection/:id/delete', async function(req,res){
+router.get('/collection/:id/delete', async function (req, res) {
     let collectionId = req.params.id;
     let collection = await Collection.where({
         id: collectionId
@@ -111,10 +111,10 @@ router.get('/collection/:id/delete', async function(req,res){
     res.render('product-details/delete', {
         collection: collection.toJSON()
     })
-    
+
 });
 
-router.post('/collection/:id/delete', async function(req,res){
+router.post('/collection/:id/delete', async function (req, res) {
     let collectionId = req.params.id;
     let collection = await Collection.where({
         id: collectionId
@@ -126,9 +126,9 @@ router.post('/collection/:id/delete', async function(req,res){
     }).fetch({
         require: false
     });
-    if (figureCheck){
+    if (figureCheck) {
         req.flash('error_messages', 'Unable to delete collection as there are existing figures')
-    } else{
+    } else {
         await collection.destroy();
         req.flash('success_messages', 'Collection has been successfully deleted');
     }
@@ -145,14 +145,14 @@ router.get('/manufacturer', async function (req, res) {
     })
 });
 
-router.get('/manufacturer/create', async function(req,res){
+router.get('/manufacturer/create', async function (req, res) {
     const form = updateManufacturerForm();
     res.render('product-details/update-manu', {
         createManu: form.toHTML(bootstrapField)
     })
 });
 
-router.post('/manufacturer/create', async function(req,res){
+router.post('/manufacturer/create', async function (req, res) {
     const form = updateManufacturerForm();
     form.handle(req, {
         success: async function (form) {
@@ -219,7 +219,7 @@ router.post('/manufacturer/:id/update', async function (req, res) {
     })
 });
 
-router.get('/manufacturer/:id/delete', async function(req,res){
+router.get('/manufacturer/:id/delete', async function (req, res) {
     let manuId = req.params.id;
     let manufacturer = await Manufacturer.where({
         id: manuId
@@ -229,10 +229,10 @@ router.get('/manufacturer/:id/delete', async function(req,res){
     res.render('product-details/delete', {
         manufacturer: manufacturer.toJSON()
     })
-    
+
 });
 
-router.post('/manufacturer/:id/delete', async function(req,res){
+router.post('/manufacturer/:id/delete', async function (req, res) {
     let manuId = req.params.id;
     let manufacturer = await Manufacturer.where({
         id: manuId
@@ -244,19 +244,19 @@ router.post('/manufacturer/:id/delete', async function(req,res){
     console.log(manufacturer.toJSON())
     let collections = manufacturer.toJSON().collections;
     let figureCheck = 0;
-    for (let each of collections){
+    for (let each of collections) {
         let figures = await Figure.where({
             collection_id: each.id
         }).fetchAll({
             require: false
         })
-        if (figures){
-            figureCheck +=1
+        if (figures) {
+            figureCheck += 1
         }
     }
-    if (figureCheck){
+    if (figureCheck) {
         req.flash('error_messages', 'Unable to delete manufacturer as there are existing collections & figures')
-    } else{
+    } else {
         await manufacturer.destroy();
         req.flash('success_messages', 'Manufacturer has been successfully deleted');
     }

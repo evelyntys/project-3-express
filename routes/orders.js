@@ -21,10 +21,10 @@ router.get('/', async function (req, res) {
                 eachOrder.orderedItems = orderedItems.toJSON()
             };
             let completed = orders.filter(each => {
-                return each.order_status_id >=5
+                return each.order_status_id >= 5
             });
             let incomplete = orders.filter(each => {
-                return each.order_status_id <5
+                return each.order_status_id < 5
             })
             res.render('orders/index', {
                 completed: completed,
@@ -35,7 +35,7 @@ router.get('/', async function (req, res) {
         },
         success: async function (form) {
             let queryTerm = "like";
-            if (process.env.DB_DRIVER == "postgres"){
+            if (process.env.DB_DRIVER == "postgres") {
                 queryTerm = "ilike"
             }
             if (form.data.order_id) {
@@ -51,32 +51,9 @@ router.get('/', async function (req, res) {
                 q.where('order_status_id', '=', form.data.order_status_id)
             };
 
-            // if (form.data.ordered_date) {
-            //     let date = new Date(form.data.ordered_date);
-            //     // date.setHours(date.getHours() - 8);
-            //     date.setHours(date.getHours());
-            //     let day = 60 * 60 * 24 * 1000 - 1000;
-            //     let endDate = new Date(date.getTime() + day);
-            //     console.log(date)
-            //     console.log(endDate)
-            //     date = moment(date).format();
-            //     endDate = moment(endDate).format();
-            //     console.log(date)
-            //     console.log(endDate)
-            //     q.query(function (dateQuery) {
-            //         dateQuery.whereBetween('ordered_date', [date, endDate]);
-            //     });
-            //     console.log(form.data.ordered_date)
-            //     // q.orderBy('ordered_date', 'DESC')
-            // };
-
-            // if (form.data.ordered_date){
-            //     q.where('ordered_date', '='. form.data.ordered_date)
-            // }
-
             if (form.data.payment_reference) {
                 q.where('payment_reference', '=', form.data.payment_reference)
-            }
+            };
 
             let orders = await ordersDataLayer.getAllOrders(q);
             orders = orders.toJSON();
@@ -85,17 +62,20 @@ router.get('/', async function (req, res) {
                 eachOrder.orderedItems = orderedItems.toJSON();
                 console.log(eachOrder.ordered_date);
             };
+
             if (form.data.ordered_date) {
                 orders = orders.filter(each => {
-                   return moment(each.ordered_date).format("YYYY-MM-DD") == form.data.ordered_date
+                    return moment(each.ordered_date).format("YYYY-MM-DD") == form.data.ordered_date
                 })
             };
+
             let completed = orders.filter(each => {
-                return each.order_status_id >=5
+                return each.order_status_id >= 5
             });
             let incomplete = orders.filter(each => {
-                return each.order_status_id <5
+                return each.order_status_id < 5
             });
+
             res.render('orders/index', {
                 completed: completed,
                 incomplete: incomplete,

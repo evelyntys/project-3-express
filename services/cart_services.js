@@ -56,4 +56,8 @@ async function getCartItemByUserAndFigure(customerId, figureId) {
     return await cartDataLayer.getCartItemByUserAndFigure(customerId, figureId)
 }
 
-module.exports = { addToCart, removeFromCart, setQuantity, getCart, getFigureById, getCartItemByUserAndFigure }
+module.exports = {
+    addToCart, removeFromCart,
+    setQuantity, getCart, getFigureById,
+    getCartItemByUserAndFigure, updateQuantity
+}

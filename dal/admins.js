@@ -8,7 +8,7 @@ async function getAdminById(adminId) {
     });
 };
 
-async function getAdminByUserName(username){
+async function getAdminByUserName(username) {
     return await Admin.where({
         username: username
     }).fetch({
@@ -16,7 +16,7 @@ async function getAdminByUserName(username){
     });
 };
 
-async function getAdminByEmail(email){
+async function getAdminByEmail(email) {
     return await Admin.where({
         email: email
     }).fetch({
@@ -24,9 +24,11 @@ async function getAdminByEmail(email){
     })
 };
 
-async function getAllAdmins(){
+async function getAllAdmins() {
     return await Admin.fetchAll();
 }
 
-module.exports = { getAdminById, getAdminByUserName, getAdminByEmail,
-getAllAdmins }
+module.exports = {
+    getAdminById, getAdminByUserName, getAdminByEmail,
+    getAllAdmins
+}
