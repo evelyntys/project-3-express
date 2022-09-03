@@ -26,18 +26,10 @@ const generateAccessToken = (user, secret, expiresIn) => {
 };
 
 router.post('/register', async function (req, res) {
-    let username = req.body.username;
-    let email = req.body.email;
+    let username = req.body.username.toLowerCase();
+    let email = req.body.email.toLowerCase();
     let hashedPassword = getHashedPassword(req.body.password);
-    // let first_name = req.body.first_name;
-    // let last_name = req.body.last_name;
-    // let contact_number = req.body.contact_number;
-    // let street = req.body.street;
-    // let unit = req.body.unit;
-    // let postal = req.body.postal;
     let errors = {};
-    // let validation = [];
-    // check if user exists
     let checkUsername = await Customer.where({
         username
     }).fetch({
@@ -114,7 +106,7 @@ router.post('/register', async function (req, res) {
 })
 
 router.post('/login', async function (req, res) {
-    let customerUserOrEmail = req.body.user;
+    let customerUserOrEmail = req.body.user.toLowerCase();
     let password = getHashedPassword(req.body.password);
     let customerByUser = await Customer.where({
         username: customerUserOrEmail,
