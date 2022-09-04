@@ -4,7 +4,7 @@ const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Taipei');
 const crypto = require('crypto');
 const { Customer, BlacklistedToken } = require('../../models');
-const { createNewUserForm } = require('../../forms');
+const { createNewUserForm, updateCustomerForm, changeAdminPassword } = require('../../forms');
 const jwt = require('jsonwebtoken');
 const { checkIfJWT } = require('../../middlewares');
 const customerDataLayer = require('../../dal/customers');
@@ -158,6 +158,52 @@ router.get('/profile', checkIfJWT, async function (req, res) {
         customer: customerToRetrieve
     })
 });
+
+router.post('/password/update', checkIfJWT, async function (req, res) {
+    let customerId = req.customer.id;
+    const changePasswordForm = changeAdminPassword();
+    let customer = await customerDataLayer.getCustomerById(customerId);
+    let oldPassword = customer.get('password');
+    let errors = {};
+    changePasswordForm.handle(req, {
+        success: async function (form) {
+            let newPassword = getHashedPassword(form.data.password);
+            if (newPassword != oldPassword) {
+                customer.set('password', newPassword);
+                customer.set('updated_date', moment().format())
+                await customer.save();
+                res.status(200);
+                res.json({
+                    message: "Password successfully updated"
+                })
+            } else {
+                res.status(400);
+                errors['password'] = "New password cannot be the same as old password"
+                res.send(JSON.stringify(errors))
+            }
+        },
+        error: async function (form) {
+            let errors = {}
+            for (let key in form.fields) {
+                if (form.fields[key].error) {
+                    errors[key] = form.fields[key].error;
+                }
+            };
+            res.status(400);
+            res.send(JSON.stringify(errors))
+        },
+        empty: async function (form) {
+            let errors = {}
+            for (let key in form.fields) {
+                if (form.fields[key].error) {
+                    errors[key] = form.fields[key].error;
+                }
+            };
+            res.status(400);
+            res.send(JSON.stringify(errors))
+        }
+    })
+})
 
 router.post('/refresh', async function (req, res) {
     console.log("new access token")
