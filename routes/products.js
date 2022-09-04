@@ -179,8 +179,17 @@ router.get('/:figure_id/update', async function (req, res) {
     figureForm.fields.description.value = figure.get('description');
     figureForm.fields.cost.value = (figure.get('cost') / 100).toFixed(2);
     figureForm.fields.height.value = (figure.get('height') / 10);
-    figure.get('launch_status') ? figureForm.fields.launch_status.value = 1 : figureForm.fields.launch_status.value = 0
-    figure.get('blind_box') ? figureForm.fields.blind_box.value = 1 : figureForm.fields.blind_box = 0
+    if (figure.get('launch_status')) {
+        figureForm.fields.launch_status.value = 1
+    } else {
+        figureForm.fields.launch_status.value = 0
+    }
+    if (figure.get('blind_box')) {
+        figureForm.fields.blind_box.value = 1
+    }
+    else {
+        figureForm.fields.blind_box.value = 0
+    }
     figureForm.fields.release_date.value = moment(figure.get('release_date')).format('YYYY-MM-DD');
     figureForm.fields.quantity.value = figure.get('quantity');
     figureForm.fields.figure_type_id.value = figure.get('figure_type_id');
