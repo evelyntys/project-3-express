@@ -130,7 +130,7 @@ router.post('/login', async function (req, res) {
             email: customer.get('email'),
             id: customer.get('id')
         }
-        let accessToken = generateAccessToken(customerObj, process.env.TOKEN_SECRET, '15m');
+        let accessToken = generateAccessToken(customerObj, process.env.TOKEN_SECRET, '1h');
         let refreshToken = generateAccessToken(customerObj, process.env.REFRESH_TOKEN_SECRET, '7d');
         res.status(200);
         res.json({
@@ -227,7 +227,7 @@ router.post('/refresh', async function (req, res) {
             if (err) {
                 return res.status(403);
             } else {
-                let accessToken = generateAccessToken(user, process.env.TOKEN_SECRET, '15m');
+                let accessToken = generateAccessToken(user, process.env.TOKEN_SECRET, '1h');
                 res.status(200)
                 res.send({
                     accessToken
