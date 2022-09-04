@@ -54,7 +54,7 @@ router.post('/register', async function (req, res) {
                 newAdmin.set('password', hashedPW);
                 await newAdmin.save();
                 req.flash('success_messages', 'new admin successfully created')
-                res.redirect('/admins/register');
+                res.redirect('/admins/users');
             }
         },
         error: async function (form) {
@@ -101,7 +101,6 @@ router.post('/customer/:customerId/update', async function (req, res) {
     let customer = await customerDataLayer.getCustomerById(req.params.customerId);
     customerForm.handle(req, {
         success: async function (form) {
-            console.log(form.data)
             let customerData = form.data;
             customer.set(customerData);
             customer.set('updated_date', moment().format());
