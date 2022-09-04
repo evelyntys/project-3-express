@@ -179,8 +179,8 @@ router.get('/:figure_id/update', async function (req, res) {
     figureForm.fields.description.value = figure.get('description');
     figureForm.fields.cost.value = (figure.get('cost') / 100).toFixed(2);
     figureForm.fields.height.value = (figure.get('height') / 10);
-    figureForm.fields.launch_status.value = figure.get('launch_status');
-    figureForm.fields.blind_box.value = figure.get('blind_box');
+    figure.get('launch_status') ? figureForm.fields.launch_status.value = 1 : figureForm.fields.launch_status.value = 0
+    figure.get('blind_box') ? figureForm.fields.blind_box.value = 1 : figureForm.fields.blind_box = 0
     figureForm.fields.release_date.value = moment(figure.get('release_date')).format('YYYY-MM-DD');
     figureForm.fields.quantity.value = figure.get('quantity');
     figureForm.fields.figure_type_id.value = figure.get('figure_type_id');
@@ -221,7 +221,6 @@ router.post('/:figure_id/update', async function (req, res) {
             figure.set(figureData);
             figure.set('series_id', series_id);
             figure.set('collection_id', collection_id);
-            figure.set('listing_date', moment().format());
             figure.set('cost', (cost * 100).toFixed(0));
             figure.set('height', (height * 10).toFixed(0));
             figure.set('last_updated', moment().format());
@@ -237,6 +236,7 @@ router.post('/:figure_id/update', async function (req, res) {
         },
         error: async function (form) {
             res.render('products/update', {
+                figure: figure.toJSON(),
                 form: form.toHTML(bootstrapField),
                 series_mediums: JSON.stringify(localMedium),
                 cloudinaryName: process.env.CLOUDINARY_NAME,
@@ -246,6 +246,7 @@ router.post('/:figure_id/update', async function (req, res) {
         },
         empty: function (form) {
             res.render('/products/update', {
+                figure: figure.toJSON(),
                 figureForm: form.toHTML(bootstrapField),
                 series_mediums: JSON.stringify(localMedium),
                 cloudinaryName: process.env.CLOUDINARY_NAME,
