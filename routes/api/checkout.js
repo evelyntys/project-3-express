@@ -33,7 +33,7 @@ router.post('/', express.json(), checkIfJWT, async function (req, res) {
     let unit = req.body.unit;
     let postal = req.body.postal;
     let items = await CartServices.getCart(customerId);
-    if (items.length > 0) {
+    if (items.length > 0 && customerEmail) {
         let lineItems = [];
         let meta = [];
         for (let eachItem of items) {
