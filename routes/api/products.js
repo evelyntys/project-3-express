@@ -13,10 +13,12 @@ router.get('/fields', async function (req, res) {
     let allFigureTypes = await productDataLayer.getAllFigureTypes();
     let allSeries = await productDataLayer.getAllSeries();
     let allCollections = await productDataLayer.getAllCollections();
+    let allManufacturers = await productDataLayer.getAllManufacturers();
     res.send({
         allFigureTypes,
         allSeries,
-        allCollections
+        allCollections,
+        allManufacturers
     })
 })
 
