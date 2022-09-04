@@ -9,7 +9,9 @@ async function getCustomerById(id) {
 };
 
 async function getAllCustomers() {
-    return await Customer.fetchAll()
+    return await Customer.query(function (queries) {
+        queries.orderBy('id', 'asc')
+    }).fetchAll()
 }
 
 module.exports = { getCustomerById, getAllCustomers };

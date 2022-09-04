@@ -102,7 +102,7 @@ router.post('/customer/:customerId/update', async function (req, res) {
     customerForm.handle(req, {
         success: async function (form) {
             console.log(form.data)
-            let { password, confirm_password, ...customerData } = form.data;
+            let customerData = form.data;
             customer.set(customerData);
             customer.set('updated_date', moment().format());
             await customer.save();
