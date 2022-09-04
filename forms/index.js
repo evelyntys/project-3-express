@@ -265,7 +265,7 @@ const createNewUserForm = () => {
         contact_number: fields.string({
             required: true,
             errorAfterField: true,
-            validators: [validators.minlength(8)]
+            validators: [validators.minlength(8), validators.maxlength(8), validators.integer()]
         }),
         block_street: fields.string({
             required: true,
@@ -413,7 +413,7 @@ const updateCustomerForm = () => {
         contact_number: fields.string({
             required: true,
             errorAfterField: true,
-            validators: [validators.minlength(8), validators.integer()]
+            validators: [validators.minlength(8), validators.maxlength(8), validators.integer()]
         }),
         block_street: fields.string({
             required: true,
