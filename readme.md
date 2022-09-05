@@ -1,6 +1,6 @@
 # Summary
 This is a restful API and backend web application meant for admins for the [FIGU屋](https://figuya.netlify.app) project.
-Details for the project FIGU屋 can be found in the readme [here](https://github.com/evelyntys/project-3-figuya).
+Please visit the README for FIGU屋 found [here](https://github.com/evelyntys/project-3-figuya) for more details on the project.
 
     TEST ACCOUNT:
     username: admin
@@ -25,10 +25,11 @@ Details for the project FIGU屋 can be found in the readme [here](https://github
 9. [express-flash](https://github.com/RGBboy/express-flash) to display lflash messages
 10. [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken) for user authentication on front-end
 11. [handlebars](https://handlebarsjs.com/) to generate templates
-12. [Cloudinary](https://cloudinary.com/) for image upload
-13. [Bootstrap v5.2](https://getbootstrap.com/) for general styling of the website
-14. [Bootstrap icons](https://icons.getbootstrap.com/)
-15. [Canva color wheel](https://www.canva.com/colors/color-wheel/) to help generate color palettes
+12. [handlebar helpers](https://github.com/helpers/handlebars-helpers)
+13. [Cloudinary](https://cloudinary.com/) for image upload
+14. [Bootstrap v5.2](https://getbootstrap.com/) for general styling of the website
+15. [Bootstrap icons](https://icons.getbootstrap.com/)
+16. [Canva color wheel](https://www.canva.com/colors/color-wheel/) to help generate color palettes
 
 ## API Endpoints
 
