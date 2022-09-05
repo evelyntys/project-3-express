@@ -6,6 +6,9 @@ Please visit the README for FIGU屋 found [here](https://github.com/evelyntys/pr
     username: admin
     password: admin123
 
+## Structure of the website
+![Structure](/readme/structure.png)
+
 ## Database design
 1. Entity relationship diagram
 ![ERD](readme/erd.png)
