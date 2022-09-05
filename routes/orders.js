@@ -131,7 +131,7 @@ router.post('/:order_id/update', async function (req, res) {
         success: async function (form) {
             order.set(form.data);
             await order.save();
-            req.flash('success_messages', `Successfully updated order ${orderId}`);
+            req.flash('success_messages', `Successfully updated order #${orderId}`);
             res.redirect(`/orders/${orderId}/update`);
         },
         empty: async function (form) {
