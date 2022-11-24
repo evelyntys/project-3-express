@@ -2,7 +2,7 @@
 This is a restful API and backend web application meant for admins for the [FIGU屋](https://figuya.netlify.app) project.
 Please visit the README for FIGU屋 found [here](https://github.com/evelyntys/project-3-figuya) for more details on the project.
 
-[Link to test admin panel](https://etys-figuya-express.herokuapp.com)
+[Link to test admin panel](https://project-3-express.onrender.com)
     TEST ACCOUNT:
     username: admin
     password: admin123
@@ -37,7 +37,7 @@ Please visit the README for FIGU屋 found [here](https://github.com/evelyntys/pr
 
 ## API Endpoints
 
-    BASE API URL: https://etys-figuya-express.herokuapp.com/api
+    BASE API URL: https://project-3-express.onrender.com/api
 
 ### 1. Products
 1.1 Get ALL products
